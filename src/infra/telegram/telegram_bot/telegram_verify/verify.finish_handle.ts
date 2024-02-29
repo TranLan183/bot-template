@@ -1,4 +1,4 @@
-import { game_bot } from ".."
+import { tele_bot } from ".."
 import { ErrorHandler } from "../../../../lib/error_handler"
 import { ConvertTeleError } from "../../telegram.error"
 import { SendMessageByBot } from "../../telegram.lib"
@@ -10,9 +10,9 @@ export const verify_finish_handle = async (dataContext: TDataContext, language?:
     const { userId, chatId, } = dataContext
     try {
         const message = bot_script.template_message({ template: 'finish', language })
-        SendMessageByBot(game_bot, chatId, message)
+        SendMessageByBot(tele_bot, chatId, message)
     } catch (error) {
         ErrorHandler(error, { userId, chatId }, verify_finish_handle.name)
-        ConvertTeleError(error, game_bot, chatId, language)
+        ConvertTeleError(error, tele_bot, chatId, language)
     }
 }

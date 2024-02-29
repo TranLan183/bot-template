@@ -1,4 +1,4 @@
-import { game_bot } from ".."
+import { tele_bot } from ".."
 import { LINK_DAPP_TELEGRAM } from "../../../../config"
 import { ErrorHandler } from "../../../../lib/error_handler"
 import { ConvertTeleError } from "../../telegram.error"
@@ -10,7 +10,7 @@ const methodAction = {
 }
 
 export const handleBotAction = () => {
-    game_bot.on('callback_query', async (ctx) => {
+    tele_bot.on('callback_query', async (ctx) => {
         const { callbackData, userId, callbackId, gameInfo, gameShortName, username } = convertActionContext(ctx);
         try {
             let dataUserStorage = await getUserStorage(userId)
@@ -26,7 +26,7 @@ export const handleBotAction = () => {
             }
         } catch (error) {
             ErrorHandler(error, { callbackData, userId }, handleBotAction.name)
-            ConvertTeleError(error, game_bot, callbackId)
+            ConvertTeleError(error, tele_bot, callbackId)
         }
     });
 }

@@ -1,4 +1,4 @@
-import { game_bot } from ".."
+import { tele_bot } from ".."
 import { ErrorHandler } from "../../../../lib/error_handler"
 import { ConvertTeleError } from "../../telegram.error"
 import { convertMessageContext } from "../../telegram.lib"
@@ -19,6 +19,6 @@ export const start_handler = async (ctx: TMessageContext, user_cache?: TCacheDat
         await verify_welcome_handler(dataMessageContext, user_cache?.language)
     } catch (e) {
         ErrorHandler(e, { userId, chatId }, start_handler.name)
-        ConvertTeleError(e, game_bot, chatId, user_cache?.language)
+        ConvertTeleError(e, tele_bot, chatId, user_cache?.language)
     }
 }

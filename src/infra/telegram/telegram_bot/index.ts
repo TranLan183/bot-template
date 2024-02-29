@@ -15,31 +15,31 @@ const Steps = {
     finish: "finish",
 }
 
-const game_bot = new Telegraf(TELEGRAM_TPLANT_BOT_TOKEN)
+const tele_bot = new Telegraf(TELEGRAM_TPLANT_BOT_TOKEN)
 
 const initTelegramTplantBot = async () => {
     try {
         if (ENABLE_TELEGRAM) {
-            SetCommandsByBot(game_bot, all_commands())
+            SetCommandsByBot(tele_bot, all_commands())
             handleBotStart()
             handleBotCommand()
             handleBotAction()
             handleBotMessage()
             handleBotInlineMode()
             successConsoleLog(`🚀 Telegram bot ${TELEGRAM_TPLANT_BOT_NAME}: ready`)
-            await game_bot.launch()
+            await tele_bot.launch()
         } else {
             console.log(`Disable Telegram Bot ... To open please change env ENABLE_TELEGRAM to true`)
         }
     } catch (e) {
         console.log(`initTelegramBotMarket error!`)
         ErrorHandler(e, {}, initTelegramTplantBot.name)
-        await game_bot.launch()
+        await tele_bot.launch()
     }
 }
 
 export {
     Steps,
-    initTelegramTplantBot, game_bot
+    initTelegramTplantBot, tele_bot
 }
 

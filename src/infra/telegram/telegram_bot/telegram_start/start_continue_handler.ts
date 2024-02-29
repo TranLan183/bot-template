@@ -1,4 +1,4 @@
-import { Steps, game_bot } from ".."
+import { Steps, tele_bot } from ".."
 import { ErrorHandler } from "../../../../lib/error_handler"
 import { ConvertTeleError } from "../../telegram.error"
 import { TCacheDataUser, TDataContext } from "../../telegram.type"
@@ -20,6 +20,6 @@ export const start_continue_handler = async (dataContext: TDataContext, user_cac
         }
     } catch (e) {
         ErrorHandler(e, { userId, username, chatId }, start_continue_handler.name)
-        ConvertTeleError(e, game_bot, chatId, language)
+        ConvertTeleError(e, tele_bot, chatId, language)
     }
 }

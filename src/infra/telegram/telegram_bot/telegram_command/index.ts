@@ -1,5 +1,5 @@
 import { BotCommand } from "telegraf/typings/core/types/typegram"
-import { game_bot } from ".."
+import { tele_bot } from ".."
 import { ERROR_CODE, ErrMsg, ErrorHandler } from "../../../../lib/error_handler"
 import { ConvertTeleError } from "../../telegram.error"
 import { convertMessageContext } from "../../telegram.lib"
@@ -35,7 +35,7 @@ const handleBotCommand = () => {
     const dataCommand = all_commands()
     dataCommand.forEach(data => {
         const { command } = data
-        game_bot.command(command, async (ctx) => {
+        tele_bot.command(command, async (ctx) => {
             const dataConvertContext = convertMessageContext(ctx)
             const { chatId, userId, username } = dataConvertContext
             try {
@@ -45,7 +45,7 @@ const handleBotCommand = () => {
                 methodCommand[command](dataConvertContext, dataCacheUser)
             } catch (error) {
                 ErrorHandler(error, { chatId, userId }, handleBotCommand.name)
-                ConvertTeleError(error, game_bot, chatId)
+                ConvertTeleError(error, tele_bot, chatId)
             }
         })
     })
