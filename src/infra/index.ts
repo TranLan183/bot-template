@@ -3,7 +3,7 @@ import { MONGO_DB_NAME, MONGO_URI } from './../config';
 import { initRedis } from "./cache/redis";
 import { connectMongo, mongo } from "./database/mongo/mongo";
 import { initSentry } from "./logging/sentry";
-import { initTelegramTplantBot } from "./telegram/telegram_tplant_bot";
+import { initTelegramTplantBot } from "./telegram/telegram_bot";
 
 const connectInfra = async () => {
     try {
