@@ -1,0 +1,33 @@
+{
+  "name": "bot-tplant",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "scripts": "node script.mjs",
+    "test": "ts-node src/test/index.ts",
+    "test:api": "ts-node src/test/api.test.ts",
+    "test:tele": "ts-node src/test/telegram.test.ts",
+    "build": "rm -rf dist && tsc",
+    "start": "node --no-warnings dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "dep": "docker-compose -f docker-compose.yml up --build -d",
+    "dep:log": "docker-compose -f docker-compose.yml up --build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@sentry/node": "^7.91.0",
+    "dotenv": "^16.3.1",
+    "ioredis": "^5.3.2",
+    "kafkajs": "^2.2.4",
+    "mongodb": "^6.3.0",
+    "qrcode": "^1.5.3",
+    "telegraf": "^4.15.3",
+    "uuid-apikey": "^1.5.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.5"
+  }
+}

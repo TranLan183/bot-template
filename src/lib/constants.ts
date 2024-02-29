@@ -1,0 +1,12 @@
+
+export const MILLISECOND_PER_ONE_SEC = 1000
+export const MILLISECOND_PER_ONE_DAY = 86400000
+export const SECOND_OF_ONE_DAY = 86400
+export const SECOND_OF_ONE_HOUR = 3600
+export const SECOND_OF_ONE_MINUTE = 60
+export const BLOCK_TIME_SECOND = 3
+export const PERCENT = 100
+export const MIN_SUN_DELEGATE = 100000
+export const SUN_PER_TRX = 1000000
+export const MIN_BANDWIDTH_DELEGATE_AMOUNT = 50000
+export const TRON_BLOCK_TIME_IN_SECONDS = 3

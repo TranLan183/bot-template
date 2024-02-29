@@ -1,0 +1,10 @@
+{
+    "welcome": "Welcome *{{username}}*",
+    "address_invalid": "⚠️ The target address must be an active TRON address and not a contract.\n\nPlease enter your TRON wallet address to receive the energy",
+    "error": "ℹ️ Something went wrong, please try again!",
+    "verify_success": "Congratulation! verify successfully",
+    "cancel": "Are you sure you want to cancel?",
+    "unknown_command": "❌ Unknown Command!\n\nYou have sent a Message directly into the Bot's chat or Menu structure has been modified by Admin.\nℹ️ Do not send Messages directly to the Bot or reload the Menu by pressing /start",
+    "finish": "The message format is incorrect.",
+    "server_maintain": "Server maintain. We will come back soon"
+}
