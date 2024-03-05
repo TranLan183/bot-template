@@ -4,7 +4,7 @@ import { ConvertTeleError } from "../../telegram.error"
 import { convertMessageContext } from "../../telegram.lib"
 import { TMessageContext } from "../../telegram.type"
 import { handleInvalidCacheUserStorage } from "../helper_bot"
-import { getUserStorage } from "../telegram_cache/cache.telegram_user_storage"
+import { getUserStorage } from "../telegram_cache/cache.data_user"
 import { handlePrivateChat } from "./private_message"
 import { handlePublicChat } from "./public_message"
 

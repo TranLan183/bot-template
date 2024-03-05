@@ -8,7 +8,6 @@ import { handleBotStart } from "./telegram_start"
 import { handleBotInlineMode } from "./telegram_inline_query"
 import { SetCommandsByBot } from "../telegram.lib"
 import { all_commands, handleBotCommand } from "./telegram_command"
-import { TReplyMarkup } from "../telegram_template/type"
 
 const Steps = {
     welcome: "welcome",

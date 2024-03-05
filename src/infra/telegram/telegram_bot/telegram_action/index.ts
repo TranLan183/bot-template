@@ -4,7 +4,7 @@ import { ErrorHandler } from "../../../../lib/error_handler"
 import { ConvertTeleError } from "../../telegram.error"
 import { convertActionContext } from "../../telegram.lib"
 import { handleInvalidCacheUserStorage } from "../helper_bot"
-import { getUserStorage } from "../telegram_cache/cache.telegram_user_storage"
+import { getUserStorage } from "../telegram_cache/cache.data_user"
 
 const methodAction = {
 }

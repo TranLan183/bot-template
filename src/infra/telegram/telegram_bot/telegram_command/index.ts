@@ -5,7 +5,7 @@ import { ConvertTeleError } from "../../telegram.error"
 import { convertMessageContext } from "../../telegram.lib"
 import { TCacheDataUser, TDataContext } from "../../telegram.type"
 import { handleInvalidCacheUserStorage } from '../helper_bot'
-import { getUserStorage } from "../telegram_cache/cache.telegram_user_storage"
+import { getUserStorage } from "../telegram_cache/cache.data_user"
 import { TTemplateLanguage } from "../../telegram_template/type"
 
 const all_commands = (language: TTemplateLanguage = 'en'): BotCommand[] => {
