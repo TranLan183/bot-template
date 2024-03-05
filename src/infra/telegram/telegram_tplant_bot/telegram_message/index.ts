@@ -1,10 +1,10 @@
-import { game_bot } from ".."
+import { tele_bot } from ".."
 import { ErrorHandler } from "../../../../lib/error_handler"
 import { ConvertTeleError } from "../../telegram.error"
 import { convertMessageContext } from "../../telegram.lib"
 import { TMessageContext } from "../../telegram.type"
 import { handleInvalidCacheUserStorage } from "../helper_bot"
-import { getUserStorage } from "../telegram_cache/cache.telegram_user_storage"
+import { getUserStorage } from "../telegram_cache/cache.data_user"
 import { handlePrivateChat } from "./private_message"
 import { handlePublicChat } from "./public_message"
 
@@ -28,8 +28,8 @@ const listenMessageToHandleChatType = async (ctx: TMessageContext) => {
         }
     } catch (error) {
         ErrorHandler(error, { chatId, userId, message }, listenMessageToHandleChatType.name)
-        ConvertTeleError(error, game_bot, chatId, language)
+        ConvertTeleError(error, tele_bot, chatId, language)
     }
 }
 
-export const handleBotMessage = () => game_bot.on("message", (ctx) => listenMessageToHandleChatType(ctx))
+export const handleBotMessage = () => tele_bot.on("message", (ctx) => listenMessageToHandleChatType(ctx))

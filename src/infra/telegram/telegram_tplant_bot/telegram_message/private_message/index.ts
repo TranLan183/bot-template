@@ -1,4 +1,4 @@
-import { Steps, game_bot } from "../.."
+import { Steps, tele_bot } from "../.."
 import { ErrorHandler } from "../../../../../lib/error_handler"
 import { ConvertTeleError } from "../../../telegram.error"
 import { TCacheDataUser, TDataContext } from "../../../telegram.type"
@@ -36,7 +36,7 @@ const messageVerifyStep = async (dataMessageContext: TDataContext, user_storage:
         }
     } catch (error) {
         ErrorHandler(error, { message, userId, chatId }, messageVerifyStep.name)
-        ConvertTeleError(error, game_bot, chatId, language)
+        ConvertTeleError(error, tele_bot, chatId, language)
     }
 }
 
@@ -51,6 +51,6 @@ export const handlePrivateChat = async (dataMessageContext: TDataContext, user_s
         }
     } catch (e: any) {
         ErrorHandler(e, { chatId, userId }, handlePrivateChat.name)
-        ConvertTeleError(e, game_bot, chatId, language)
+        ConvertTeleError(e, tele_bot, chatId, language)
     }
 }

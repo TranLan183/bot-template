@@ -2,11 +2,11 @@ import { create_key_with_prefix } from "../../../cache"
 import { ioredis } from "../../../cache/redis"
 import { TCacheDataUser } from "../../telegram.type"
 
-const DEFAULT_KEY_BUY_ENERGY = "USER_STORAGE"
+const DEFAULT_KEY_BUY_ENERGY = "DATA_USER_CACHE"
 
 const createCacheKey = (value: string) => create_key_with_prefix(`telegram.${DEFAULT_KEY_BUY_ENERGY}_${value}`)
 
-export const getUserStorage = async (userId: string): Promise<TCacheDataUser | null> => {
+export const getDataUserCache = async (userId: string): Promise<TCacheDataUser | null> => {
     try {
         const key = createCacheKey(userId)
         const result = await ioredis.get(key)
@@ -15,7 +15,7 @@ export const getUserStorage = async (userId: string): Promise<TCacheDataUser | n
         throw e
     }
 }
-export const setUserStorage = async (userId: string, args: TCacheDataUser) => {
+export const setDataUserCache = async (userId: string, args: TCacheDataUser) => {
     try {
         const key = createCacheKey(userId)
         const result = await ioredis.set(key, JSON.stringify(args))
@@ -25,7 +25,7 @@ export const setUserStorage = async (userId: string, args: TCacheDataUser) => {
     }
 }
 
-export const delUserStorage = async (userId: string) => {
+export const delDataUserCache = async (userId: string) => {
     const key = createCacheKey(userId)
     const result = await ioredis.del(key)
     return result

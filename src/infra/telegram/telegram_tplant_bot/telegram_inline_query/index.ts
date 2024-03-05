@@ -1,9 +1,9 @@
 import { InlineQueryResult } from "telegraf/typings/core/types/typegram";
-import { game_bot } from "..";
+import { tele_bot } from "..";
 import { convertInlineContext } from "../../telegram.lib";
 
 export const handleBotInlineMode = () => {
-    game_bot.on('inline_query', async (ctx) => {
+    tele_bot.on('inline_query', async (ctx) => {
         // console.log(JSON.stringify(ctx));
         const { } = convertInlineContext(ctx)
         const result: InlineQueryResult[] = [

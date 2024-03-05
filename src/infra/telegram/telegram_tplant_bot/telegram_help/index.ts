@@ -1,11 +1,11 @@
-import { game_bot } from "..";
+import { tele_bot } from "..";
 import { ErrorHandler } from "../../../../lib/error_handler";
 import { ConvertTeleError } from '../../telegram.error';
 import { convertMessageContext } from "../../telegram.lib";
 import { bot_script } from "../../telegram_template";
 
 export const handleBotHelp = () => {
-    game_bot.help(async (ctx) => {
+    tele_bot.help(async (ctx) => {
         const { userId, chatId } = convertMessageContext(ctx)
         try {
             //TODO: get cache user language
@@ -13,7 +13,7 @@ export const handleBotHelp = () => {
             // ctx.reply(message)
         } catch (error) {
             ErrorHandler(error, { userId, chatId }, handleBotHelp.name)
-            ConvertTeleError(error, game_bot, chatId)
+            ConvertTeleError(error, tele_bot, chatId)
         }
     })
 }
