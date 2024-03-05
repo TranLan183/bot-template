@@ -4,14 +4,14 @@ import { ConvertTeleError } from "../../telegram.error"
 import { convertMessageContext } from "../../telegram.lib"
 import { TMessageContext } from "../../telegram.type"
 import { handleInvalidCacheUserStorage } from "../helper_bot"
-import { getUserStorage } from "../telegram_cache/cache.data_user"
+import { getDataUserCache } from "../telegram_cache/cache.data_user"
 import { handlePrivateChat } from "./private_message"
 import { handlePublicChat } from "./public_message"
 
 const listenMessageToHandleChatType = async (ctx: TMessageContext) => {
     const dataMessageContext = convertMessageContext(ctx)
     const { chatType, chatId, message, userId, username } = dataMessageContext
-    let dataUserStorage = await getUserStorage(userId)
+    let dataUserStorage = await getDataUserCache(userId)
     if (!dataUserStorage) dataUserStorage = await handleInvalidCacheUserStorage(userId, username)
     const { language } = dataUserStorage
     try {

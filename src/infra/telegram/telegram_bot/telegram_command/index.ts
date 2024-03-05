@@ -5,7 +5,7 @@ import { ConvertTeleError } from "../../telegram.error"
 import { convertMessageContext } from "../../telegram.lib"
 import { TCacheDataUser, TDataContext } from "../../telegram.type"
 import { handleInvalidCacheUserStorage } from '../helper_bot'
-import { getUserStorage } from "../telegram_cache/cache.data_user"
+import { getDataUserCache } from "../telegram_cache/cache.data_user"
 import { TTemplateLanguage } from "../../telegram_template/type"
 
 const all_commands = (language: TTemplateLanguage = 'en'): BotCommand[] => {
@@ -39,7 +39,7 @@ const handleBotCommand = () => {
             const dataConvertContext = convertMessageContext(ctx)
             const { chatId, userId, username } = dataConvertContext
             try {
-                let dataCacheUser = await getUserStorage(userId)
+                let dataCacheUser = await getDataUserCache(userId)
                 if (!dataCacheUser) dataCacheUser = await handleInvalidCacheUserStorage(userId, username)
                 if (!('keyCommand' in dataConvertContext)) throw ErrMsg(ERROR_CODE.COMMAND_INVALID_ARGUMENTS)
                 methodCommand[command](dataConvertContext, dataCacheUser)
