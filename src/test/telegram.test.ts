@@ -1,9 +1,8 @@
 import { initRedis } from '../infra/cache/redis';
-import { handMultipleInlineKeyBoard } from '../infra/telegram/telegram.lib';
-import { initTelegramTplantBot } from '../infra/telegram/telegram_tplant_bot';
+import { InitTelegramBot } from '../infra/telegram/telegram_bot/index'
 
 const test = async () => {
     await initRedis()
-    initTelegramTplantBot()
+    InitTelegramBot()
 }
 test()

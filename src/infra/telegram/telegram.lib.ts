@@ -5,7 +5,7 @@ import { BotCommand, ParseMode, Update } from 'telegraf/typings/core/types/typeg
 import { SECOND_OF_ONE_DAY, SECOND_OF_ONE_HOUR, SECOND_OF_ONE_MINUTE, SUN_PER_TRX } from '../../lib/constants';
 import { RoundNumber } from "../../lib/utils";
 import { TBotTelegram, TDataContext, TDataContextAction, TDataInlineContext } from "./telegram.type";
-import { TELEGRAM_TPLANT_BOT_TOKEN } from '../../config';
+import { TELEGRAM_BOT_TOKEN } from '../../config';
 import { TReplyMarkup, TTemplate, TTemplateLanguage } from './telegram_template/type';
 import { bot_script } from './telegram_template';
 
@@ -110,7 +110,7 @@ const convertDurationToString = (timeSec: number) => timeSec / SECOND_OF_ONE_HOU
 
 const verifyTelegramWebAppData = async (telegramInitData: string) => {
     const encoded = decodeURIComponent(telegramInitData);
-    const secret = crypto.createHmac('sha256', 'WebAppData').update(TELEGRAM_TPLANT_BOT_TOKEN);
+    const secret = crypto.createHmac('sha256', 'WebAppData').update(TELEGRAM_BOT_TOKEN);
     const arr = encoded.split('&');
     const hashIndex = arr.findIndex(str => str.startsWith('hash='));
     const hash = arr.splice(hashIndex)[0].split('=')[1];

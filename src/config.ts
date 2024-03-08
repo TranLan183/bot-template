@@ -22,9 +22,9 @@ export const REDIS_DB_NUMBER = getIntFromEnv("REDIS_DB_NUMBER")
 
 //Telegram
 export const ENABLE_TELEGRAM = getBooleanFromEnv("ENABLE_TELEGRAM")
-export const TELEGRAM_TPLANT_BOT_TOKEN = getEnvString("TELEGRAM_TPLANT_BOT_TOKEN")
+export const TELEGRAM_BOT_TOKEN = getEnvString("TELEGRAM_BOT_TOKEN")
+export const TELEGRAM_BOT_NAME = getEnvString("TELEGRAM_BOT_NAME")
 export const LINK_DAPP_TELEGRAM = getEnvString("LINK_DAPP_TELEGRAM")
-export const TELEGRAM_TPLANT_BOT_NAME = getEnvString("TELEGRAM_TPLANT_BOT_NAME")
 export const TELEGRAM_GAME_NAME = getEnvString("TELEGRAM_GAME_NAME")
 export const TELEGRAM_IMAGE_BACKGROUND = 'https://res.cloudinary.com/dfxltugeh/image/upload/v1704884542/t-dragon/tele_vscyvj.png'
 

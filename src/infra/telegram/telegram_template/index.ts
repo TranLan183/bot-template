@@ -15,12 +15,15 @@ class TelegramBotScript {
 
     }
     public reply_markup = (language: TTemplateLanguage = this.default_language): ReplyMarkup => {
-        const dataReplyMarkup = {
+        const dataReplyMarkup: ReplyMarkup = {
             welcome: {
                 resize_keyboard: true,
                 force_reply: true,
-                one_time_keyboard: true,
-                keyboard: [[]],
+                // inline_keyboard: [
+                //     [{ text: 'test', callback_data: 'test' }]
+                // ],
+                // one_time_keyboard: true,
+                // keyboard: [[]],
             },
         }
         return dataReplyMarkup
