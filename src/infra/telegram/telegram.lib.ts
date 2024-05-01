@@ -6,8 +6,8 @@ import { SECOND_OF_ONE_DAY, SECOND_OF_ONE_HOUR, SECOND_OF_ONE_MINUTE, SUN_PER_TR
 import { RoundNumber } from "../../lib/utils";
 import { TBotTelegram, TDataContext, TDataContextAction, TDataInlineContext } from "./telegram.type";
 import { TELEGRAM_BOT_TOKEN } from '../../config';
-import { TReplyMarkup, TTemplate, TTemplateLanguage } from './telegram_template/type';
-import { bot_script } from './telegram_template';
+import { TReplyMarkup, TTemplate, TTemplateLanguage } from './telegram_script/type';
+import { bot_script } from './telegram_script';
 
 //TODO: Haven't found a way to get the input context yet
 const convertMessageContext = (ctx: any): TDataContext => {

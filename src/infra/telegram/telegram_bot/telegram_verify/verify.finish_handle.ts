@@ -3,8 +3,8 @@ import { ErrorHandler } from "../../../../lib/error_handler"
 import { ConvertTeleError } from "../../telegram.error"
 import { SendMessageByBot } from "../../telegram.lib"
 import { TDataContext } from "../../telegram.type"
-import { bot_script } from "../../telegram_template"
-import { TTemplateLanguage } from "../../telegram_template/type"
+import { bot_script } from "../../telegram_script"
+import { TTemplateLanguage } from "../../telegram_script/type"
 
 export const verify_finish_handle = async (dataContext: TDataContext, language?: TTemplateLanguage) => {
     const { userId, chatId, } = dataContext

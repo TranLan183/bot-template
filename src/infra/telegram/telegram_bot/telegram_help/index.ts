@@ -2,7 +2,7 @@ import { tele_bot } from "..";
 import { ErrorHandler } from "../../../../lib/error_handler";
 import { ConvertTeleError } from '../../telegram.error';
 import { convertMessageContext } from "../../telegram.lib";
-import { bot_script } from "../../telegram_template";
+import { bot_script } from "../../telegram_script";
 
 export const handleBotHelp = () => {
     tele_bot.help(async (ctx) => {

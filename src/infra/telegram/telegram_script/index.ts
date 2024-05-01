@@ -1,4 +1,5 @@
-import en from './en.json';
+import { TBotTelegram } from '../telegram.type';
+import en from '../telegram_template/en.json';
 import { ReplyMarkup, TTemplateLanguage, TTemplateMessageConfig } from './type';
 
 const file_template = {
@@ -11,10 +12,18 @@ enum EFlag {
 
 class TelegramBotScript {
     private default_language: TTemplateLanguage = 'en'
-    public callback_data = {
+
+    private callback_data = {
 
     }
-    public reply_markup = (language: TTemplateLanguage = this.default_language): ReplyMarkup => {
+    private _bot_tele: TBotTelegram
+    private _bot_id?: string 
+    constructor (params: { bot_tele: TBotTelegram, bot_id?: string }) {
+        const { bot_tele, bot_id } = params
+        this._bot_tele = bot_tele
+        this._bot_id = bot_id
+    }
+    reply_markup = (language: TTemplateLanguage = this.default_language): ReplyMarkup => {
         const dataReplyMarkup: ReplyMarkup = {
             welcome: {
                 resize_keyboard: true,
@@ -29,7 +38,7 @@ class TelegramBotScript {
         return dataReplyMarkup
     }
 
-    public entities_message = {
+    entities_message = {
         setBoldMessage: (message: string) => '*' + message + '*',
         setItalicMessage: (message: string) => '_' + message + '_',
         setCodeMessage: (message: string) => '`' + message + '`', // text blue
@@ -43,9 +52,9 @@ class TelegramBotScript {
         }
     }
 
-    public template_message = (parameters: TTemplateMessageConfig) => {
-        const { template, bot_id, args, language = this.default_language } = parameters
-        let message: string = file_template[`${bot_id}_${language}`]?.[template] || file_template[language][template]
+    template_message = (parameters: TTemplateMessageConfig) => {
+        const { template, args, language = this.default_language } = parameters
+        let message: string = file_template[`${ this._bot_id }_${ language }`]?.[template] || file_template[language][template]
         if (!args) return message
         Object.keys(args).forEach(key => {
             message = message.replace(`{{${key}}}`, args[key])
@@ -53,8 +62,6 @@ class TelegramBotScript {
         return message
     }
 }
-
-export const bot_script = new TelegramBotScript()
 
 export {
     file_template,

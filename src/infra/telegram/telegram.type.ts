@@ -1,7 +1,7 @@
 import { Context, NarrowedContext } from "telegraf/typings/context"
 import { Message, Update } from "telegraf/typings/core/types/typegram"
 import { Telegraf } from "telegraf"
-import { TTemplateLanguage } from "./telegram_template/type"
+import { TTemplateLanguage } from "./telegram_script/type"
 
 type TDataContext = {
     message: string

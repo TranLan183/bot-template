@@ -1,8 +1,8 @@
 import { Context, Telegraf } from "telegraf";
 import { Update } from "telegraf/typings/core/types/typegram";
 import { SendAnswerCbQueryByBot, SendMessageByBot } from "./telegram.lib";
-import { bot_script } from "./telegram_template";
-import { TTemplate, TTemplateLanguage } from "./telegram_template/type";
+import { bot_script } from "./telegram_script";
+import { TTemplate, TTemplateLanguage } from "./telegram_script/type";
 
 type TTeleErrorList = keyof typeof TeleErrorList
 

@@ -6,7 +6,7 @@ type TTemplate = keyof typeof file_template.en
 
 
 type TReplyMarkup = InlineKeyboardMarkup | ReplyKeyboardMarkup | ReplyKeyboardRemove | ForceReply | undefined
-type TTemplateMessageConfig = { template: TTemplate, bot_id?: string, args?: object, language?: TTemplateLanguage }
+type TTemplateMessageConfig = { template: TTemplate, args?: object, language?: TTemplateLanguage }
 
 type ReplyMarkup = {
     welcome: TReplyMarkup
