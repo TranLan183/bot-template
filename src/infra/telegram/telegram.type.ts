@@ -1,8 +1,15 @@
-import { Context, NarrowedContext } from "telegraf/typings/context"
-import { Message, Update } from "telegraf/typings/core/types/typegram"
-import { Telegraf } from "telegraf"
-import { TTemplateLanguage } from "./telegram_template/type"
+import { Context, NarrowedContext, Telegraf } from "telegraf"
+import { TTemplateLanguage } from "./telegram_script/type"
+import { InlineKeyboardButton, Message, Update } from "telegraf/types"
 
+type TChatMember = {
+    id: number
+    is_bot: boolean
+    first_name?: string,
+    last_name?: string,
+    username?: string
+    language_code?: string
+}
 type TDataContext = {
     message: string
     messageId: number
@@ -10,12 +17,19 @@ type TDataContext = {
     userFirstName: string
     userLastName: string
     userFullName: string
+    languageCode: string
     chatId: number
     username: string
-    chatType: string
+    chatType: "group" | "supergroup" | "private" | "channel"
     timeInSec: number
     startPayload?: string
     keyCommand?: string
+    migrateToChatId?: number
+    newChatMember?: TChatMember,
+    leftChatMember?: TChatMember,
+    chatTitle?: string
+    newChatTitle?: string,
+    replyToMessageId?: number
 }
 
 type TDataContextAction = TDataContext & {
@@ -24,6 +38,7 @@ type TDataContextAction = TDataContext & {
     callbackId: string
     gameShortName?: string
     gameInfo?: object
+    inlineKeyboard?: InlineKeyboardButton[][]
 }
 
 type TDataInlineContext = {
@@ -60,6 +75,31 @@ type TDataOrderBook = {
     value: number
 }
 
+type TDataPagination<T> = {
+    page: number,
+    page_size: number,
+    new_data_wallet: T[],
+    total_data: number
+}
+
+type TTelegramError = {
+    context_id: string | number
+    args?: object
+    language?: TTemplateLanguage
+    message_id?: number
+}
+
+type TErrorKey = string
+
+type TSendMessageError = TTelegramError & {
+    use_reply_markup?: boolean
+    use_lifetime?: boolean
+    error_key: TErrorKey
+    context_id: string
+}
+
+type TTeleErrorList = string
+
 export {
-    TActionContext, TCacheDataUser, TDataContext, TDataContextAction, TDataOrderBook, TMessageContext, TCacheDataUserNotify, TAgencyData, TDataInlineContext, TBotTelegram
+    TActionContext, TCacheDataUser, TDataContext, TDataContextAction, TDataOrderBook, TMessageContext, TCacheDataUserNotify, TAgencyData, TDataInlineContext, TBotTelegram, TTelegramError, TSendMessageError, TTeleErrorList, TErrorKey, TDataPagination
 }

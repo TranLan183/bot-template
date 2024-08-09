@@ -1,45 +1,31 @@
-import { Telegraf } from "telegraf"
-import { ENABLE_TELEGRAM, TELEGRAM_BOT_NAME, TELEGRAM_BOT_TOKEN } from "../../../config"
-import { successConsoleLog } from "../../../lib/color-log"
-import { ErrorHandler } from "../../../lib/error_handler"
-import { SetCommandsByBot } from "../telegram.lib"
-import { handleBotAction } from "./telegram_action"
-import { all_commands, handleBotCommand } from "./telegram_command"
-import { handleBotInlineMode } from "./telegram_inline_query"
-import { handleBotMessage } from "./telegram_message"
-import { handleBotStart } from "./telegram_start"
+import { Telegraf } from "telegraf";
 
-const Steps = {
-    welcome: "welcome",
-    finish: "finish",
-}
 
-const tele_bot = new Telegraf(TELEGRAM_BOT_TOKEN)
+const { TG_SCAN_BOT_IS_USE_WEBHOOK, TG_SCAN_BOT_IS_USE_LOCAL_TELEGRAM, TELEGRAM_SCAN_BOT_TOKEN, TELEGRAM_SCAN_BOT_NAME, TG_SCAN_BOT_WEBHOOK_URL, TG_SCAN_BOT_WEBHOOK_PORT, TG_SCAN_BOT_LOCAL_TELEGRAM_URL } = AppEnvConfig.app.scan_bot
 
-const InitTelegramBot = async () => {
-    try {
-        if (ENABLE_TELEGRAM) {
-            SetCommandsByBot(tele_bot, all_commands())
-            handleBotStart()
-            handleBotCommand()
-            handleBotAction()
-            handleBotMessage()
-            handleBotInlineMode()
-            successConsoleLog(`🚀 Telegram bot ${TELEGRAM_BOT_NAME}: ready`)
-            await tele_bot.launch()
-        } else {
-            console.log(`Disable Telegram Bot ... To open please change env ENABLE_TELEGRAM to true`)
-        }
-    } catch (e) {
-        console.log(`InitTelegramBot error!`)
-        ErrorHandler(e, {}, InitTelegramBot.name)
-        await tele_bot.launch()
-    }
-}
+const tele_scan_bot = new TTelegramBot({
+    bot_name: TELEGRAM_SCAN_BOT_NAME,
+    bot_token: TELEGRAM_SCAN_BOT_TOKEN,
+    is_enable: AppEnvConfig.app.tg.ENABLE_TELEGRAM,
+    bot_error_list: [TeleBotScanErrorList],
+    bot_script: (tele_bot: Telegraf) => new TelegramBotScript(new TelegramConfigBotScan(tele_bot, 'scan_bot')),
+}, {
+    is_use_local_telegram: TG_SCAN_BOT_IS_USE_LOCAL_TELEGRAM,
+    is_use_webhook: TG_SCAN_BOT_IS_USE_WEBHOOK,
+    delay_bot_start: AppEnvConfig.common.isProductionRun ? 10000 : 2000,
+    webhook_url: TG_SCAN_BOT_WEBHOOK_URL,
+    webhook_port: TG_SCAN_BOT_WEBHOOK_PORT,
+    local_telegram_url: TG_SCAN_BOT_LOCAL_TELEGRAM_URL
+},
+    () => {
+        // handleBotStart()
+        // handleBotHelp()
+        // handleBotCommand()
+        // handleBotAction()
+        // handleBotMessage()
+        // handleBotInlineMode()
+    })
 
 export {
-    Steps,
-    InitTelegramBot,
-    tele_bot
+    tele_scan_bot
 }
-

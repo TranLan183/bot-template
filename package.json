@@ -23,11 +23,13 @@
     "ioredis": "^5.3.2",
     "kafkajs": "^2.2.4",
     "mongodb": "^6.3.0",
+    "numeral": "^2.0.6",
     "qrcode": "^1.5.3",
     "telegraf": "^4.15.3",
     "uuid-apikey": "^1.5.3"
   },
   "devDependencies": {
-    "@types/node": "^20.10.5"
+    "@types/node": "^20.10.5",
+    "@types/numeral": "^2.0.5"
   }
 }

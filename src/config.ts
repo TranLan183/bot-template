@@ -26,7 +26,6 @@ export const TELEGRAM_BOT_TOKEN = getEnvString("TELEGRAM_BOT_TOKEN")
 export const TELEGRAM_BOT_NAME = getEnvString("TELEGRAM_BOT_NAME")
 export const LINK_DAPP_TELEGRAM = getEnvString("LINK_DAPP_TELEGRAM")
 export const TELEGRAM_GAME_NAME = getEnvString("TELEGRAM_GAME_NAME")
-export const TELEGRAM_IMAGE_BACKGROUND = 'https://res.cloudinary.com/dfxltugeh/image/upload/v1704884542/t-dragon/tele_vscyvj.png'
 
 //Other
 export const IS_FORK = getBooleanFromEnv("IS_FORK")
