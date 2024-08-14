@@ -57,6 +57,7 @@ type TMessageContext = NarrowedContext<Context<Update>, Update.MessageUpdate<Mes
 type TCacheDataUser = {
     user_step: string
     language: TTemplateLanguage
+    message_id?: number
 }
 
 type TAgencyData = {
@@ -100,6 +101,14 @@ type TSendMessageError = TTelegramError & {
 
 type TTeleErrorList = string
 
+type TGenerateStartPayloadLink = {
+    jetton?: string
+    ref_code?: string
+    limit_order_id?: string
+    copy_limit_order_id?: string
+    snipe_order_id?: string
+}
+
 export {
-    TActionContext, TCacheDataUser, TDataContext, TDataContextAction, TDataOrderBook, TMessageContext, TCacheDataUserNotify, TAgencyData, TDataInlineContext, TBotTelegram, TTelegramError, TSendMessageError, TTeleErrorList, TErrorKey, TDataPagination
+    TActionContext, TCacheDataUser, TDataContext, TDataContextAction, TDataOrderBook, TMessageContext, TCacheDataUserNotify, TAgencyData, TDataInlineContext, TBotTelegram, TTelegramError, TSendMessageError, TTeleErrorList, TErrorKey, TDataPagination, TGenerateStartPayloadLink
 }

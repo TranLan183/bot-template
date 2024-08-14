@@ -1,7 +1,8 @@
 import crypto from 'crypto'
+import { readableNumber } from '../../lib/beauty_number'
 import { SECOND_OF_ONE_DAY, SECOND_OF_ONE_HOUR, SECOND_OF_ONE_MINUTE, SUN_PER_TRX } from '../../lib/constants'
-import { TBotTelegram, TDataContext, TDataContextAction, TDataInlineContext, TDataPagination } from "./telegram.type"
-import { TELEGRAM_BOT_NAME } from '../../config';
+import { TBotTelegram, TDataContext, TDataContextAction, TDataInlineContext, TDataPagination, TGenerateStartPayloadLink } from "./telegram.type"
+import { TELEGRAM_BOT_NAME } from '../../config'
 
 const convertMessageContext = (ctx: any, type: "noti" | "scan" = 'scan'): TDataContext => {
     const dataMessageContext: Omit<TDataContext, 'userFullName'> = {
@@ -118,7 +119,7 @@ const verifyTelegramWebAppData = async (telegramInitData: string, teleBotToken: 
 const convertTimeToMDYHM = (date: Date | string | number | undefined | null) => {
     if (!date) return "TBA"
     const new_date = new Date(date).toLocaleString('en-US', { timeZone: 'UTC' }).replace(',', '')
-    return new_date.slice(0, new_date.length - 11)
+    return new_date.slice(0, new_date.length - 12)
 }
 
 /**
@@ -158,14 +159,15 @@ const convertTimeToString = (time_sec: number) => {
     return `${dayStr}${hourStr}${minuteStr}`
 }
 
-const generateStartPayloadLink = (jetton?: string, ref_code?: string, limit_order_id?: string, copy_limit_order_id?: string, snipe_order_id?: string) => {
-    if (jetton && ref_code) return `https://t.me/${TELEGRAM_BOT_NAME}?start=b_${jetton}_r_${ref_code}`
-    if (!jetton && ref_code) return `https://t.me/${TELEGRAM_BOT_NAME}?start=r_${ref_code}`
-    if (jetton && !ref_code) return `https://t.me/${TELEGRAM_BOT_NAME}?start=b_${jetton}`
-    if (limit_order_id) return `https://t.me/${TELEGRAM_BOT_NAME}?start=l_${limit_order_id}`
-    if (copy_limit_order_id) return `https://t.me/${TELEGRAM_BOT_NAME}?start=c_${copy_limit_order_id}`
-    if (snipe_order_id) return `https://t.me/${TELEGRAM_BOT_NAME}?start=s_${snipe_order_id}`
-    return `https://t.me/${TELEGRAM_BOT_NAME}`
+const generateStartPayloadLink = (params: TGenerateStartPayloadLink, tele_bot_name: string = TELEGRAM_BOT_NAME) => {
+    const { jetton, ref_code, limit_order_id, copy_limit_order_id, snipe_order_id } = params
+    if (jetton && ref_code) return `https://t.me/${tele_bot_name}?start=b_${jetton}_r_${ref_code}`
+    if (!jetton && ref_code) return `https://t.me/${tele_bot_name}?start=r_${ref_code}`
+    if (jetton && !ref_code) return `https://t.me/${tele_bot_name}?start=b_${jetton}`
+    if (limit_order_id) return `https://t.me/${tele_bot_name}?start=l_${limit_order_id}`
+    if (copy_limit_order_id) return `https://t.me/${tele_bot_name}?start=c_${copy_limit_order_id}`
+    if (snipe_order_id) return `https://t.me/${tele_bot_name}?start=s_${snipe_order_id}`
+    return `https://t.me/${tele_bot_name}`
 }
 
 const handleDataForPagination = <T>(data: T[], current_page: number = 0) => {
@@ -196,8 +198,8 @@ const removeDuplicates = (array: string[]) => {
 }
 
 type TPayloadParams = {
-    ref_code?: string,
-    jetton?: string,
+    ref_code?: string
+    jetton?: string
     limit_order_id?: string
     snipe_order_id?: string
     copy_ref_id?: string
@@ -254,8 +256,8 @@ const getParamsFromPayload = (payload?: string): TPayloadParams => {
     }
 }
 
-const regex = new RegExp("(https:\/\/www.geckoterminal.com\/(|[a-zA-Z]{2}\/)ton\/pools\/|https:\/\/dexscreener.com\/ton\/|)((0|-1):([a-f0-9]{64}|[A-F0-9]{64})|(E|U|e|u|k|0)([^\n \/:]){47})")
 const GetAddressOrLinkFromMessage = (message: string) => {
+    const regex = new RegExp("(https:\/\/www.geckoterminal.com\/(|[a-zA-Z]{2}\/)ton\/pools\/|https:\/\/dexscreener.com\/ton\/|)((0|-1):([a-f0-9]{64}|[A-F0-9]{64})|(E|U|e|u|k|0)([^\n \/:]){47})")
     return regex.exec(message)
 }
 
@@ -264,9 +266,5 @@ export {
     calculateCurrentPage, convertActionContext, convertAddressShortCut, convertBalanceByChain,
     convertDurationToString, convertInlineContext, convertMessageContext, convertTimeToMDYHM, convertTimeToString, generateCodeVerify,
     generateRefCode, generateStartPayloadLink, GetAddressOrLinkFromMessage, getParamsFromPayload, handleDataForPagination, isUserAccessChatByBot, removeDuplicates, substr_address, verifyTelegramWebAppData
-}
-
-function readableNumber(arg0: string) {
-    throw new Error('Function not implemented.');
 }
 

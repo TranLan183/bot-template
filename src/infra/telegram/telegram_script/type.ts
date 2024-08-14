@@ -3,10 +3,16 @@ import { TelegramBotTemplate, file_template } from "./template";
 import { TBotTelegram } from "../telegram.type";
 
 type TTemplateLanguage = keyof typeof file_template
-type TTemplate = keyof typeof file_template.en | keyof typeof file_template.scan_bot_en | keyof typeof file_template.buy_noti_bot_en
+type TTemplate = keyof typeof file_template.en
 
 type TReplyMarkup = InlineKeyboardMarkup | ReplyKeyboardMarkup | ReplyKeyboardRemove | ForceReply | undefined
-type TTemplateMessageConfig = { template: TTemplate, bot_id?: string, args?: object, language?: TTemplateLanguage }
+
+type TTemplateMessageConfig = {
+    template: TTemplate
+    bot_id?: string
+    args?: object
+    language?: TTemplateLanguage
+}
 
 
 type TOptionSendMessage = TTemplateMessageConfig & {

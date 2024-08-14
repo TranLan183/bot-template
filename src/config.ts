@@ -25,7 +25,11 @@ export const ENABLE_TELEGRAM = getBooleanFromEnv("ENABLE_TELEGRAM")
 export const TELEGRAM_BOT_TOKEN = getEnvString("TELEGRAM_BOT_TOKEN")
 export const TELEGRAM_BOT_NAME = getEnvString("TELEGRAM_BOT_NAME")
 export const LINK_DAPP_TELEGRAM = getEnvString("LINK_DAPP_TELEGRAM")
-export const TELEGRAM_GAME_NAME = getEnvString("TELEGRAM_GAME_NAME")
+export const TG_BOT_IS_USE_LOCAL_TELEGRAM = getBooleanFromEnv("TG_BOT_IS_USE_LOCAL_TELEGRAM")
+export const TG_BOT_IS_USE_WEBHOOK = getBooleanFromEnv("TG_BOT_IS_USE_WEBHOOK")
+export const TG_BOT_WEBHOOK_URL = getEnvString("TG_BOT_WEBHOOK_URL")
+export const TG_BOT_WEBHOOK_PORT = getIntFromEnv("TG_BOT_WEBHOOK_PORT")
+export const TG_BOT_LOCAL_TELEGRAM_URL = getEnvString("TG_BOT_LOCAL_TELEGRAM_URL")
 
 //Other
 export const IS_FORK = getBooleanFromEnv("IS_FORK")

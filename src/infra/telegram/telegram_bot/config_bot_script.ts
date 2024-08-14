@@ -1,9 +1,9 @@
 import { BotCommand, InlineKeyboardButton } from "telegraf/typings/core/types/typegram"
 import { TBotTelegram } from "../telegram.type"
+import { BotReplyMarkup } from "./type"
 import { TelegramBotTemplate } from "../telegram_script/template"
 import { ITelegramConfig, TTemplateLanguage } from "../telegram_script/type"
 import { TelegramBotInlineKeyBoard } from "../telegram_script/inline_keyboard"
-import { BotReplyMarkup } from "./type"
 
 class TelegramConfig extends TelegramBotTemplate implements ITelegramConfig<BotReplyMarkup> {
     constructor(public bot_tele: TBotTelegram, bot_id?: string, default_language: TTemplateLanguage = 'en') {
@@ -47,5 +47,5 @@ class TelegramConfig extends TelegramBotTemplate implements ITelegramConfig<BotR
 }
 
 export {
-    TelegramConfig as TelegramConfigBotTrading
+    TelegramConfig as TeleConfigBotTemplate
 }

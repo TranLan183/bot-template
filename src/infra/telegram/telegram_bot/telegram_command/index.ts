@@ -1,57 +1,41 @@
-import { BotCommand } from "telegraf/typings/core/types/typegram"
-import { tele_bot } from ".."
+import { bot_template } from "../index"
 import { ERROR_CODE, ErrMsg, ErrorHandler } from "../../../../lib/error_handler"
-import { ConvertTeleError } from "../../telegram.error"
 import { convertMessageContext } from "../../telegram.lib"
-import { TCacheDataUser, TDataContext } from "../../telegram.type"
-import { handleInvalidCacheUserStorage } from '../helper_bot'
+import { handleInvalidCacheUserSetting, isCacheUserSettingFieldsMissing } from '../helper_bot'
 import { getDataUserCache } from "../telegram_cache/cache.data_user"
-import { TTemplateLanguage } from "../../telegram_script/type"
-
-const all_commands = (language: TTemplateLanguage = 'en'): BotCommand[] => {
-    const commands: BotCommand[] = [
-        {
-            command: "test",
-            description: "test"
-        },
-        {
-            command: 'total_members',
-            description: "total members"
-        }
-    ]
-    return commands
-}
 
 const methodCommand = {
-    test: (dataContext: TDataContext, dataCacheUser: TCacheDataUser) => {
-        return
-    },
-    total_members: async (dataContext: TDataContext, dataCacheUser: TCacheDataUser) => {
-        return
-    }
 }
 
 const handleBotCommand = () => {
-    const dataCommand = all_commands()
+    const { tele_bot, setLastMessageReceivedDate, messageInQueue, isBotReadyToStart, bot_start_at, ConvertTeleError, bot_script } = bot_template
+    const dataCommand = bot_script.all_commands()
     dataCommand.forEach(data => {
         const { command } = data
         tele_bot.command(command, async (ctx) => {
+            setLastMessageReceivedDate()
             const dataConvertContext = convertMessageContext(ctx)
-            const { chatId, userId, username } = dataConvertContext
+            const { chatId, userId, username, timeInSec } = dataConvertContext
+            if (timeInSec < (bot_start_at.getTime() / 1000)) return
+            if (!isBotReadyToStart()) {
+                messageInQueue.set(chatId, { type: "command", ctx: dataConvertContext })
+                return
+            }
             try {
-                let dataCacheUser = await getDataUserCache(userId)
-                if (!dataCacheUser) dataCacheUser = await handleInvalidCacheUserStorage(userId, username)
+                let dataUserSetting = await getDataUserCache(userId)
+                if (!dataUserSetting || isCacheUserSettingFieldsMissing(dataUserSetting)) dataUserSetting = await handleInvalidCacheUserSetting(userId)
                 if (!('keyCommand' in dataConvertContext)) throw ErrMsg(ERROR_CODE.COMMAND_INVALID_ARGUMENTS)
-                methodCommand[command](dataConvertContext, dataCacheUser)
+                methodCommand[command](dataConvertContext, dataUserSetting)
             } catch (error) {
                 ErrorHandler(error, { chatId, userId }, handleBotCommand.name)
-                ConvertTeleError(error, tele_bot, chatId)
+                ConvertTeleError(error, {
+                    context_id: chatId,
+                })
             }
         })
     })
 }
 
 export {
-    all_commands,
     handleBotCommand
 }

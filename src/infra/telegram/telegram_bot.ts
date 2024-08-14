@@ -41,7 +41,7 @@ class TTelegramBot<T> {
     public bot_start_at: Date = new Date()
     public last_bot_message_received_at: Date = new Date()
     public messageInQueue = new Map<number, { type: "start" | "command" | "action" | "message" | "inline_mode", ctx: any }>()
-    
+
     constructor(
         parameters: TTelegramBotInitParams<T>,
         options: TTelegramBotInitOptions,
@@ -80,7 +80,7 @@ class TTelegramBot<T> {
                         if (this.isBotReadyToStart()) {
                             for (let [key, value] of this.messageInQueue.entries()) {
                                 await this.bot_script.sendMessage(key, {
-                                    template: "bot_message",
+                                    template: "waiting_bot",
                                     args: {
                                         message: "🤖 Thanks for waiting, TOB Bot is available now!"
                                     }
@@ -112,8 +112,8 @@ class TTelegramBot<T> {
                         this.tele_bot.launch()
                     })
                 }
-                await this.tele_bot.telegram.setMyDescription(this.bot_script.templateMessage({ template: "full_description" }))
-                await this.tele_bot.telegram.setMyShortDescription(this.bot_script.templateMessage({ template: "short_description" }))
+                // await this.tele_bot.telegram.setMyDescription(this.bot_script.templateMessage({ template: "full_description" }))
+                // await this.tele_bot.telegram.setMyShortDescription(this.bot_script.templateMessage({ template: "short_description" }))
             } else {
                 console.log(`Disable Telegram Bot ... To open please change env ENABLE_TELEGRAM to true`)
             }

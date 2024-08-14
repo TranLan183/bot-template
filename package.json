@@ -24,7 +24,7 @@
     "mongodb": "^6.3.0",
     "numeral": "^2.0.6",
     "qrcode": "^1.5.3",
-    "telegraf": "^4.15.3",
+    "telegraf": "^4.16.3",
     "uuid-apikey": "^1.5.3"
   },
   "devDependencies": {

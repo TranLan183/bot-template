@@ -1,0 +1,7 @@
+{
+    "welcome": "Welcome to the bot",
+    "unknown_command": "❌ Unknown Command!\n\nYou have sent a Message directly into the Bot's chat or Menu structure has been modified by Admin.\nℹ️ Do not send Messages directly to the Bot or reload the Menu by pressing /start",
+    "error": "ℹ️ Something went wrong, please /start again!",
+    "server_maintain": "Server maintain. We will come back soon",
+    "waiting_bot": "🤖 Thanks for waiting, TOB Bot is available now!"
+}

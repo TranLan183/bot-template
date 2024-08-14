@@ -1,22 +1,8 @@
-import en from '../telegram_template/en.json';
-import ru from '../telegram_template/ru.json';
-import scan_bot_en from '../telegram_template/scan_bot.en.json';
-import zh from '../telegram_template/zh.json';
-import vi from '../telegram_template/vi.json';
-import fr from '../telegram_template/fr.json';
-import id from '../telegram_template/id.json';
-import buy_noti_bot_en from '../telegram_template/buy_noti_bot.en.json';
+import en from '../telegram_language/en.json';
 import { ITelegramBotTemplate, TTemplateLanguage, TTemplateMessageConfig } from './type';
 
 const file_template = {
     en,
-    scan_bot_en,
-    zh,
-    ru,
-    vi,
-    fr,
-    id,
-    buy_noti_bot_en
 }
 
 enum EFlag {

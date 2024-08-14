@@ -1,10 +1,8 @@
-import { IS_FORK, NODE_ENV } from "../config"
+import { NODE_ENV } from "../config"
 import { connectInfra } from "../infra"
 import { createMongoIndex } from "../infra/database/mongo/mongo"
+import { bot_template } from "../infra/telegram/telegram_bot/index"
 import { successConsoleLog } from "./color-log"
-
-export let PermissionIdOfFundAndTrigger: number
-
 
 const init = async () => {
 
@@ -16,8 +14,6 @@ const RunServer = async (is_main: boolean = true) => {
         console.log("========================")
         successConsoleLog("SERVER STARTING")
         await connectInfra()
-
-
         await init()
         if (!is_main) {
             successConsoleLog(`🍴Run Fork Cluster Job ...`)
@@ -28,6 +24,7 @@ const RunServer = async (is_main: boolean = true) => {
             Promise.all([
                 createMongoIndex(),
             ])
+            bot_template.init()
             if (NODE_ENV !== "local") {
                 await Promise.all([
                 ])
