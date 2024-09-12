@@ -28,7 +28,6 @@ const listenToHandleStart = async (ctx: TMessageContext) => {
         ErrorHandler(error, { userId, chatId, chatType }, handleBotStart.name)
         ConvertTeleError(error, {
             context_id: chatId,
-
             language: dataUserStorage?.language
         })
     }

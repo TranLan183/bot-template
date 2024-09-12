@@ -23,15 +23,14 @@ const bot_template = new TTelegramBot({
     webhook_url: TG_BOT_WEBHOOK_URL,
     webhook_port: TG_BOT_WEBHOOK_PORT,
     local_telegram_url: TG_BOT_LOCAL_TELEGRAM_URL
-},
-    () => {
-        handleBotStart()
-        handleBotHelp()
-        handleBotCommand()
-        handleBotAction()
-        handleBotMessage()
-        handleBotInlineMode()
-    })
+}, () => {
+    handleBotStart()
+    handleBotHelp()
+    handleBotCommand()
+    handleBotAction()
+    handleBotMessage()
+    handleBotInlineMode()
+})
 
 export {
     bot_template
