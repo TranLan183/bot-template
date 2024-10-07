@@ -1,6 +1,6 @@
 import { bot_template } from "../index";
 import { ErrorHandler } from "../../../../lib/error_handler";
-import { convertActionContext } from "../../telegram.lib";
+import { convertActionContext } from "../../telegram.utils";
 import { handleInvalidCacheUserSetting, isCacheUserSettingFieldsMissing } from "../helper_bot";
 import { getDataUserCache } from "../telegram_cache/cache.data_user";
 

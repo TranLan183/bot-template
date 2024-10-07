@@ -1,21 +1,27 @@
 import { BotCommand, ForceReply, InlineKeyboardMarkup, Message, ParseMode, ReplyKeyboardMarkup, ReplyKeyboardRemove } from "telegraf/typings/core/types/typegram";
-import { TelegramBotTemplate, file_template } from "./template";
+import { TelegramBotTemplate } from "./template";
 import { TBotTelegram } from "../telegram.type";
 
-type TTemplateLanguage = keyof typeof file_template
-type TTemplate = keyof typeof file_template.en
+type TTemplateLanguage = 'en' | 'zh' | 'ru' | 'vi' | 'fr' | 'id'
+
+type TFileTemplate = {
+    [template in TTemplateLanguage]?: {
+        [key in string]: string
+    }
+}
+
+type TDefaultTemplate = 'welcome' | 'error' | 'unknown_command' | 'waiting_bot' | 'full_description' | 'short_description'
 
 type TReplyMarkup = InlineKeyboardMarkup | ReplyKeyboardMarkup | ReplyKeyboardRemove | ForceReply | undefined
 
-type TTemplateMessageConfig = {
-    template: TTemplate
-    bot_id?: string
+type TTemplateMessageConfig<GTemplate> = {
+    template: GTemplate | TDefaultTemplate
     args?: object
     language?: TTemplateLanguage
 }
 
 
-type TOptionSendMessage = TTemplateMessageConfig & {
+type TOptionSendMessage<GTemplate> = TTemplateMessageConfig<GTemplate> & {
     reply_markup?: boolean | 'force_reply' | TReplyMarkup
     life_time?: number | "long" | "medium" | "short"
     parse_mode?: boolean | ParseMode
@@ -40,14 +46,14 @@ type TOptionSendUrlPhoto = {
     callback: (params: Message.PhotoMessage) => void
 }
 
-type TInputMultipleInlineKeyboard = Partial<TTemplateMessageConfig> & {
+type TInputMultipleInlineKeyboard<GTemplate> = Partial<TTemplateMessageConfig<GTemplate>> & {
     callback_key: string
     number_btn_row?: number
     message_data?: string
     extra_callback_key?: string
 }
 
-type TOptionSendAnswerCbQuery = TTemplateMessageConfig & {
+type TOptionSendAnswerCbQuery<GTemplate> = TTemplateMessageConfig<GTemplate> & {
     show_alert?: boolean
     url?: string
     cache_time?: number
@@ -65,22 +71,21 @@ interface IMessageEntities {
 }
 
 
-type TTemplateMessage = (parameters: TTemplateMessageConfig) => string;
+type TTemplateMessage<GTemplate> = (parameters: TTemplateMessageConfig<GTemplate>) => string;
 
-interface ITelegramBotTemplate {
-    bot_id?: string;
+interface ITelegramBotTemplate<GTemplate> {
     default_language: TTemplateLanguage;
     message_entities: IMessageEntities;
-    template_message: TTemplateMessage
+    template_message: TTemplateMessage<GTemplate>
 }
 
-interface ITelegramConfig<T> extends TelegramBotTemplate {
+interface ITelegramConfig<GReplyMarkup, GTemplate> extends TelegramBotTemplate<GTemplate> {
     bot_tele: TBotTelegram
-    reply_markup: (language?: TTemplateLanguage) => T
+    reply_markup: (language?: TTemplateLanguage) => GReplyMarkup
     all_commands: (language?: TTemplateLanguage) => BotCommand[]
 }
 
 export {
-    ITelegramBotTemplate, ITelegramConfig, TInputMultipleInlineKeyboard, TOptionSendAnswerCbQuery, TOptionSendBufferPhoto, TOptionSendMessage, TOptionSendUrlPhoto, TReplyMarkup, TTemplate,
-    TTemplateLanguage, TTemplateMessage, TTemplateMessageConfig
+    ITelegramBotTemplate, ITelegramConfig, TInputMultipleInlineKeyboard, TOptionSendAnswerCbQuery, TOptionSendBufferPhoto, TOptionSendMessage, TOptionSendUrlPhoto, TReplyMarkup,
+    TTemplateLanguage, TTemplateMessage, TTemplateMessageConfig, TFileTemplate
 };

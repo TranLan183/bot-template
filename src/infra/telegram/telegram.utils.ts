@@ -4,7 +4,7 @@ import { SECOND_OF_ONE_DAY, SECOND_OF_ONE_HOUR, SECOND_OF_ONE_MINUTE, SUN_PER_TR
 import { TBotTelegram, TDataContext, TDataContextAction, TDataInlineContext, TDataPagination, TGenerateStartPayloadLink } from "./telegram.type"
 import { TELEGRAM_BOT_NAME } from '../../config'
 
-const convertMessageContext = (ctx: any, type: "noti" | "scan" = 'scan'): TDataContext => {
+const convertMessageContext = (ctx: any): TDataContext => {
     const dataMessageContext: Omit<TDataContext, 'userFullName'> = {
         message: ctx.message['text'],
         messageId: ctx.message.message_id,
@@ -14,12 +14,13 @@ const convertMessageContext = (ctx: any, type: "noti" | "scan" = 'scan'): TDataC
         chatId: ctx.chat.id, //group or channel id
         username: ctx.from?.username || "",
         languageCode: ctx.from?.language_code,
+        isPremium: ctx.from?.is_premium || false,
+        isBot: ctx.from?.is_bot || false,
         chatType: ctx.message.chat.type,
         timeInSec: ctx.message.date,
         startPayload: ctx.startPayload,
         keyCommand: ctx.command,
         migrateToChatId: ctx.message.migrate_to_chat_id,
-        // newChatMember: ctx.message.new_chat_member || (ctx.message.group_chat_created ? { is_bot: true, username: type === 'noti' ? AppEnvConfig.app.buy_noti_bot.TELEGRAM_BUY_NOTI_BOT_NAME : AppEnvConfig.app.scan_bot.TELEGRAM_SCAN_BOT_NAME, id: type === 'noti' ? Number(AppEnvConfig.app.buy_noti_bot.TELEGRAM_BUY_NOTI_BOT_NAME.split(":")[0]) : Number(AppEnvConfig.app.scan_bot.TELEGRAM_SCAN_BOT_TOKEN.split(":")[0]) } : undefined),
         leftChatMember: ctx.message.left_chat_member,
         chatTitle: ctx.message.chat.title,
         newChatTitle: ctx.message.new_chat_title,
@@ -38,6 +39,8 @@ const convertActionContext = (ctx: any): TDataContextAction => {
         userId: ctx.from?.id.toString() || "",
         userFirstName: ctx.from?.first_name || "",
         userLastName: ctx.from?.last_name || "",
+        isPremium: ctx.from?.is_premium || false,
+        isBot: ctx.from?.is_bot || false,
         chatId: ctx.chat?.id || "",
         username: ctx.from?.username || "",
         languageCode: ctx.from?.language_code,
@@ -49,7 +52,6 @@ const convertActionContext = (ctx: any): TDataContextAction => {
         gameShortName: ctx.update.callback_query?.game_short_name,
         gameInfo: ctx.update.callback_query.message?.game,
         inlineKeyboard: ctx.update.callback_query.message?.reply_markup?.inline_keyboard
-
     }
     return {
         ...dataContextAction,

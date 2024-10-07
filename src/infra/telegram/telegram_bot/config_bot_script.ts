@@ -2,12 +2,12 @@ import { BotCommand, InlineKeyboardButton } from "telegraf/typings/core/types/ty
 import { TBotTelegram } from "../telegram.type"
 import { BotReplyMarkup } from "./type"
 import { TelegramBotTemplate } from "../telegram_script/template"
-import { ITelegramConfig, TTemplateLanguage } from "../telegram_script/type"
+import { ITelegramConfig, TFileTemplate, TTemplateLanguage } from "../telegram_script/type"
 import { TelegramBotInlineKeyBoard } from "../telegram_script/inline_keyboard"
 
-class TelegramConfig extends TelegramBotTemplate implements ITelegramConfig<BotReplyMarkup> {
-    constructor(public bot_tele: TBotTelegram, bot_id?: string, default_language: TTemplateLanguage = 'en') {
-        super(bot_id, default_language)
+class TelegramConfig<GReplyMarkup, GTemplate> extends TelegramBotTemplate<GTemplate> implements ITelegramConfig<GReplyMarkup, GTemplate> {
+    constructor(public bot_tele: TBotTelegram, file_template: TFileTemplate, default_language: TTemplateLanguage = 'en') {
+        super(file_template, default_language)
     }
     private callback_data = {
         unknown_callback: 'unknown_callback',
@@ -27,22 +27,23 @@ class TelegramConfig extends TelegramBotTemplate implements ITelegramConfig<BotR
     private handleMultipleInlineKeyBoard = this.H.handleMultipleInlineKeyBoard
     private handlePaginationInlineKeyBoard = this.H.handlePaginationInlineKeyBoard
 
-    all_commands = (language: TTemplateLanguage = this.default_language) => {
+
+    all_commands: (language?: TTemplateLanguage) => BotCommand[] = (language = this.default_language) => {
         const commands: BotCommand[] = [
 
         ]
         return commands
     }
 
-    reply_markup = (language: TTemplateLanguage = this.default_language) => {
+    reply_markup: (language?: TTemplateLanguage) => GReplyMarkup = (language = this.default_language) => {
         const dataReplyMarkup: BotReplyMarkup = {
             welcome: () => {
                 return {
-                    inline_keyboard: []
+                    force_reply: true
                 }
-            }
+            },
         }
-        return dataReplyMarkup
+        return dataReplyMarkup as unknown as GReplyMarkup
     }
 }
 

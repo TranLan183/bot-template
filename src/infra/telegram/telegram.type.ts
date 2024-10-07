@@ -19,6 +19,8 @@ type TDataContext = {
     userFullName: string
     languageCode: string
     chatId: number
+    isBot: boolean
+    isPremium: boolean
     username: string
     chatType: "group" | "supergroup" | "private" | "channel"
     timeInSec: number
@@ -60,12 +62,6 @@ type TCacheDataUser = {
     message_id?: number
 }
 
-type TAgencyData = {
-    bot_id: string
-    link_address: string,
-    agency_id: string
-}
-
 type TCacheDataUserNotify = Omit<TCacheDataUser, 'time_query_history'>
 
 type TBotTelegram = Telegraf<Context<Update>>
@@ -90,12 +86,11 @@ type TTelegramError = {
     message_id?: number
 }
 
-type TErrorKey = string
 
 type TSendMessageError = TTelegramError & {
     use_reply_markup?: boolean
     use_lifetime?: boolean
-    error_key: TErrorKey
+    error_key: string
     context_id: string
 }
 
@@ -110,5 +105,5 @@ type TGenerateStartPayloadLink = {
 }
 
 export {
-    TActionContext, TCacheDataUser, TDataContext, TDataContextAction, TDataOrderBook, TMessageContext, TCacheDataUserNotify, TAgencyData, TDataInlineContext, TBotTelegram, TTelegramError, TSendMessageError, TTeleErrorList, TErrorKey, TDataPagination, TGenerateStartPayloadLink
+    TActionContext, TCacheDataUser, TDataContext, TDataContextAction, TDataOrderBook, TMessageContext, TCacheDataUserNotify, TDataInlineContext, TBotTelegram, TTelegramError, TSendMessageError, TTeleErrorList, TDataPagination, TGenerateStartPayloadLink
 }

@@ -6,9 +6,19 @@ const getChatMember = async () => {
     }
 }
 
+import en from '../infra/telegram/telegram_bot/telegram_language/en.json'
+
+type test = {
+
+}
+
 const test = async () => {
-    const data = await getChatMember()
-    console.log(data);
+    console.log(new Date(1726475477000));
+
+    const a = {
+        en
+    }
+
 }
 
 test()

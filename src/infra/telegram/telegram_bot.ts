@@ -4,16 +4,15 @@ import { successConsoleLog } from "../../lib/color-log"
 import { MILLISECOND_PER_ONE_SEC } from "../../lib/constants"
 import { ErrorHandler } from "../../lib/error_handler"
 import { sleep } from "../../lib/utils"
-import { TErrorKey, TSendMessageError, TTeleErrorList, TTelegramError } from "./telegram.type"
+import { TSendMessageError, TTeleErrorList, TTelegramError } from "./telegram.type"
 import { TelegramBotScript } from "./telegram_script"
-import { TTemplate } from "./telegram_script/type"
 
-type TTelegramBotInitParams<T> = {
+type TTelegramBotInitParams<GReplyMarkup, GTemplate> = {
     bot_name: string
     bot_token: string
     is_enable: boolean
     bot_error_list: TTeleErrorList[]
-    bot_script: (tele_bot: Telegraf, bot_id?: string) => TelegramBotScript<T>
+    bot_script: (tele_bot: Telegraf) => TelegramBotScript<GReplyMarkup, GTemplate>
 }
 type TTelegramBotInitOptions = {
     is_use_local_telegram?: boolean
@@ -23,9 +22,9 @@ type TTelegramBotInitOptions = {
     webhook_port?: number
     delay_bot_start?: number
 }
-class TTelegramBot<T> {
+class TTelegramBot<GReplyMarkup, GTemplate> {
     //Private variables
-    private init_parameters: TTelegramBotInitParams<T>
+    private init_parameters: TTelegramBotInitParams<GReplyMarkup, GTemplate>
     private init_options: TTelegramBotInitOptions
     private startup_func: () => void
     private DEFAULT_DELAY_BOT_START = 2000
@@ -37,13 +36,13 @@ class TTelegramBot<T> {
         finish: "finish",
     }
     public tele_bot: Telegraf
-    public bot_script: TelegramBotScript<T>
+    public bot_script: TelegramBotScript<GReplyMarkup, GTemplate>
     public bot_start_at: Date = new Date()
     public last_bot_message_received_at: Date = new Date()
     public messageInQueue = new Map<number, { type: "start" | "command" | "action" | "message" | "inline_mode", ctx: any }>()
 
     constructor(
-        parameters: TTelegramBotInitParams<T>,
+        parameters: TTelegramBotInitParams<GReplyMarkup, GTemplate>,
         options: TTelegramBotInitOptions,
         startup_func: () => void
     ) {
@@ -70,28 +69,25 @@ class TTelegramBot<T> {
     }
 
     public init = async () => {
+        const { is_enable, bot_name } = this.init_parameters
+        const { is_use_webhook } = this.init_options
         try {
-            if (this.init_parameters.is_enable) {
-                this.startup_func()
+            if (is_enable) {
                 this.bot_script.setCommands(this.bot_script.all_commands())
+                this.startup_func()
                 const holdStart = async () => {
                     while (!this.isBotReadyToStart()) {
                         await sleep(1000)
                         if (this.isBotReadyToStart()) {
                             for (let [key, value] of this.messageInQueue.entries()) {
-                                await this.bot_script.sendMessage(key, {
-                                    template: "waiting_bot",
-                                    args: {
-                                        message: "🤖 Thanks for waiting, TOB Bot is available now!"
-                                    }
-                                })
+                                await this.tele_bot.telegram.sendMessage(key, this.bot_script.templateMessage({ template: 'waiting_bot' }))
                                 await sleep(100)
                             }
                         }
                     }
                 }
 
-                if (this.init_options.is_use_webhook) {
+                if (is_use_webhook) {
                     const path = `/${this.tele_bot.secretPathComponent()}`
                     console.log({ path })
                     const webhook = this.tele_bot.webhookCallback(path)
@@ -112,14 +108,14 @@ class TTelegramBot<T> {
                         this.tele_bot.launch()
                     })
                 }
-                // await this.tele_bot.telegram.setMyDescription(this.bot_script.templateMessage({ template: "full_description" }))
-                // await this.tele_bot.telegram.setMyShortDescription(this.bot_script.templateMessage({ template: "short_description" }))
+                await this.tele_bot.telegram.setMyDescription(this.bot_script.templateMessage({ template: "full_description" }))
+                await this.tele_bot.telegram.setMyShortDescription(this.bot_script.templateMessage({ template: "short_description" }))
             } else {
                 console.log(`Disable Telegram Bot ... To open please change env ENABLE_TELEGRAM to true`)
             }
         } catch (e) {
-            console.log(`Initialize ${this.init_parameters.bot_name} failed`)
-            ErrorHandler(e, {}, `Initialize ${this.init_parameters.bot_name} failed!`)
+            console.log(`Initialize ${bot_name} failed`)
+            ErrorHandler(e, {}, `Initialize ${bot_name} failed!`)
         }
     }
 
@@ -166,7 +162,7 @@ class TTelegramBot<T> {
 
     private handleSendMessageError = async (params: TSendMessageError) => {
         const { context_id, args, language, message_id, error_key, use_lifetime = false } = params
-        const convertErrKey = error_key.toLowerCase() as TTemplate
+        const convertErrKey = error_key.toLowerCase() as any
         if (context_id.length < 19 && use_lifetime) {
             return await this.bot_script.sendMessage(context_id, { ...params, template: convertErrKey, parse_mode: true, life_time: 'medium' })
         }
@@ -184,7 +180,7 @@ class TTelegramBot<T> {
                     await this.handleSendMessageError({ ...options, error_key: this.bot_error_list[1][message], context_id: options.context_id.toString(), use_lifetime: true })
                     break;
                 default:
-                    await this.handleSendMessageError({ ...options, error_key: 'error' as TErrorKey, context_id: options.context_id.toString() })
+                    await this.handleSendMessageError({ ...options, error_key: 'error', context_id: options.context_id.toString() })
                     break;
             }
         } catch (err) {

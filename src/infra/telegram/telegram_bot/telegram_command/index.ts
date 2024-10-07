@@ -1,6 +1,6 @@
 import { bot_template } from "../index"
 import { ERROR_CODE, ErrMsg, ErrorHandler } from "../../../../lib/error_handler"
-import { convertMessageContext } from "../../telegram.lib"
+import { convertMessageContext } from "../../telegram.utils"
 import { handleInvalidCacheUserSetting, isCacheUserSettingFieldsMissing } from '../helper_bot'
 import { getDataUserCache } from "../telegram_cache/cache.data_user"
 
@@ -15,7 +15,7 @@ const handleBotCommand = () => {
         tele_bot.command(command, async (ctx) => {
             setLastMessageReceivedDate()
             const dataConvertContext = convertMessageContext(ctx)
-            const { chatId, userId, username, timeInSec } = dataConvertContext
+            const { chatId, userId, timeInSec } = dataConvertContext
             if (timeInSec < (bot_start_at.getTime() / 1000)) return
             if (!isBotReadyToStart()) {
                 messageInQueue.set(chatId, { type: "command", ctx: dataConvertContext })
@@ -28,9 +28,7 @@ const handleBotCommand = () => {
                 methodCommand[command](dataConvertContext, dataUserSetting)
             } catch (error) {
                 ErrorHandler(error, { chatId, userId }, handleBotCommand.name)
-                ConvertTeleError(error, {
-                    context_id: chatId,
-                })
+                ConvertTeleError(error, { context_id: chatId, })
             }
         })
     })

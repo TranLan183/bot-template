@@ -1,9 +1,4 @@
-import en from '../telegram_language/en.json';
-import { ITelegramBotTemplate, TTemplateLanguage, TTemplateMessageConfig } from './type';
-
-const file_template = {
-    en,
-}
+import { ITelegramBotTemplate, TFileTemplate, TTemplateLanguage, TTemplateMessageConfig } from './type';
 
 enum EFlag {
     '🇬🇧' = 'en',
@@ -14,12 +9,23 @@ enum EFlag {
     '🇮🇩' = 'id'
 }
 
-class TelegramBotTemplate implements ITelegramBotTemplate {
-    public _bot_id: string | undefined
+const defaultTemplateData = {
+    "welcome": "Welcome to the bot",
+    "unknown_command": "❌ Unknown Command!\n\nYou have sent a Message directly into the Bot's chat or Menu structure has been modified by Admin.\nℹ️ Do not send Messages directly to the Bot or reload the Menu by pressing /start",
+    "error": "ℹ️ Something went wrong, please /start again!",
+    "server_maintain": "Server maintain. We will come back soon",
+    "waiting_bot": "🤖 Thanks for waiting, bot is available now!",
+    "full_description": "full_description",
+    "short_description": "short_description"
+}
+
+class TelegramBotTemplate<GTemplate> implements ITelegramBotTemplate<GTemplate> {
     public default_language: TTemplateLanguage = 'en'
-    constructor(bot_id?: string, default_language?: TTemplateLanguage) {
-        this._bot_id = bot_id
+    public _file_template: TFileTemplate | object = new Object()
+    private default_template_data = defaultTemplateData
+    constructor(file_template: TFileTemplate, default_language?: TTemplateLanguage) {
         this.default_language = default_language || this.default_language
+        this._file_template = file_template
     }
 
     message_entities = {
@@ -36,9 +42,9 @@ class TelegramBotTemplate implements ITelegramBotTemplate {
         }
     }
 
-    template_message = (parameters: TTemplateMessageConfig) => {
-        const { template, bot_id = this._bot_id, args, language = this.default_language } = parameters
-        let message: string = file_template[`${bot_id}_${language}`]?.[template] || file_template[language][template] || file_template[this.default_language][template]
+    template_message = (parameters: TTemplateMessageConfig<GTemplate>) => {
+        const { template, args, language = this.default_language } = parameters
+        let message: string = this._file_template[language][template] || this._file_template[this.default_language][template] || this.default_template_data[template as unknown as string]
         if (!args) return message
         Object.keys(args).forEach(key => {
             const replaceMessage = message.replaceAll(`{{${key}}}`, args[key])
@@ -49,5 +55,6 @@ class TelegramBotTemplate implements ITelegramBotTemplate {
 }
 
 export {
-    EFlag, TelegramBotTemplate, file_template
+    EFlag, TelegramBotTemplate
 };
+

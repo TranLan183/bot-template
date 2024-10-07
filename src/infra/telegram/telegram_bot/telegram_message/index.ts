@@ -1,5 +1,5 @@
 import { ErrorHandler } from "../../../../lib/error_handler"
-import { convertMessageContext } from "../../telegram.lib"
+import { convertMessageContext } from "../../telegram.utils"
 import { TMessageContext } from "../../telegram.type"
 import { handleInvalidCacheUserSetting, isCacheUserSettingFieldsMissing } from "../helper_bot"
 import { bot_template } from "../index"
