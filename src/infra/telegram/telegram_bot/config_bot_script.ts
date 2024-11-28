@@ -37,6 +37,7 @@ class TelegramConfig<GReplyMarkup, GTemplate> extends TelegramBotTemplate<GTempl
 
     reply_markup: (language?: TTemplateLanguage) => GReplyMarkup = (language = this.default_language) => {
         const dataReplyMarkup: BotReplyMarkup = {
+            ...this.default_reply_markup,
             welcome: () => {
                 return {
                     force_reply: true

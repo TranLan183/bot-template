@@ -15,6 +15,7 @@ type TTelegramBotInitParams<GReplyMarkup, GTemplate> = {
     bot_script: (tele_bot: Telegraf) => TelegramBotScript<GReplyMarkup, GTemplate>
 }
 type TTelegramBotInitOptions = {
+    is_set_description?: boolean
     is_use_local_telegram?: boolean
     local_telegram_url?: string
     is_use_webhook?: boolean
@@ -70,22 +71,11 @@ class TTelegramBot<GReplyMarkup, GTemplate> {
 
     public init = async () => {
         const { is_enable, bot_name } = this.init_parameters
-        const { is_use_webhook } = this.init_options
+        const { is_use_webhook, is_set_description } = this.init_options
         try {
             if (is_enable) {
                 this.bot_script.setCommands(this.bot_script.all_commands())
                 this.startup_func()
-                const holdStart = async () => {
-                    while (!this.isBotReadyToStart()) {
-                        await sleep(1000)
-                        if (this.isBotReadyToStart()) {
-                            for (let [key, value] of this.messageInQueue.entries()) {
-                                await this.tele_bot.telegram.sendMessage(key, this.bot_script.templateMessage({ template: 'waiting_bot' }))
-                                await sleep(100)
-                            }
-                        }
-                    }
-                }
 
                 if (is_use_webhook) {
                     const path = `/${this.tele_bot.secretPathComponent()}`
@@ -95,27 +85,49 @@ class TTelegramBot<GReplyMarkup, GTemplate> {
                     const response = await this.setWebhook(path)
                     console.log({ response })
                     successConsoleLog(`🚀 Telegram bot ${this.init_parameters.bot_name}: ready`)
-                    await holdStart()
+                    await this.waitingLaunchStart()
                 } else {
                     this.tele_bot.launch()
-                    await holdStart()
+                    await this.waitingLaunchStart()
                     this.setLastMessageReceivedDate()
                     successConsoleLog(`🚀 Telegram bot ${this.init_parameters.bot_name}: ready`)
                     this.checkRestartBot()
-                    this.tele_bot.catch((err, ctx) => {
-                        console.log(`Polling error!`)
-                        console.log(err, ctx)
-                        this.tele_bot.launch()
-                    })
+                    this.warningErrorBot()
                 }
-                await this.tele_bot.telegram.setMyDescription(this.bot_script.templateMessage({ template: "full_description" }))
-                await this.tele_bot.telegram.setMyShortDescription(this.bot_script.templateMessage({ template: "short_description" }))
+                if (is_set_description) await this.setDescriptionBot()
             } else {
                 console.log(`Disable Telegram Bot ... To open please change env ENABLE_TELEGRAM to true`)
             }
         } catch (e) {
             console.log(`Initialize ${bot_name} failed`)
             ErrorHandler(e, {}, `Initialize ${bot_name} failed!`)
+        }
+    }
+
+    private warningErrorBot = () => {
+        this.tele_bot.catch((err, ctx) => {
+            console.log(`Polling error!`)
+            console.log(err, ctx)
+            this.tele_bot.launch()
+        })
+    }
+
+    private setDescriptionBot = async () => {
+        await Promise.all([
+            this.bot_script.setDescription({ template: 'full_description' }),
+            this.bot_script.setShortDescription({ template: "short_description" })
+        ])
+    }
+
+    private waitingLaunchStart = async () => {
+        while (!this.isBotReadyToStart()) {
+            await sleep(1000)
+            if (this.isBotReadyToStart()) {
+                for (let [key, value] of this.messageInQueue.entries()) {
+                    await this.bot_script.sendMessage(key, { template: 'waiting_bot' })
+                    await sleep(100)
+                }
+            }
         }
     }
 

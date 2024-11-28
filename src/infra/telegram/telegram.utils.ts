@@ -263,7 +263,6 @@ const GetAddressOrLinkFromMessage = (message: string) => {
     return regex.exec(message)
 }
 
-
 export {
     calculateCurrentPage, convertActionContext, convertAddressShortCut, convertBalanceByChain,
     convertDurationToString, convertInlineContext, convertMessageContext, convertTimeToMDYHM, convertTimeToString, generateCodeVerify,

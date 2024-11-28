@@ -1,4 +1,4 @@
-import { ITelegramBotTemplate, TFileTemplate, TTemplateLanguage, TTemplateMessageConfig } from './type';
+import { ITelegramBotTemplate, TDefaultReplyMarkup, TFileTemplate, TTemplateLanguage, TTemplateMessageConfig } from './type';
 
 enum EFlag {
     '🇬🇧' = 'en',
@@ -52,6 +52,14 @@ class TelegramBotTemplate<GTemplate> implements ITelegramBotTemplate<GTemplate> 
         })
         return message
     }
+
+    default_reply_markup = {
+        force_reply: () => {
+            return {
+                force_reply: true
+            }
+        },
+    } as TDefaultReplyMarkup
 }
 
 export {

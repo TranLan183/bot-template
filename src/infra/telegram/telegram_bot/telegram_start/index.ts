@@ -7,15 +7,9 @@ import { getDataUserCache, setDataUserCache } from "../telegram_cache/cache.data
 import { MILLISECOND_PER_ONE_SEC } from "../../../../lib/constants"
 
 const listenToHandleStart = async (ctx: TMessageContext) => {
-    console.log(JSON.stringify(ctx));
-    console.log(await ctx.telegram.getMe());
-
     const { ConvertTeleError, bot_script, tele_bot } = bot_template
     const dataContext = convertMessageContext(ctx)
     const { userId, chatId, chatType, username, timeInSec } = dataContext
-    console.log(await ctx.telegram.getChatMember(chatId, Number(userId)));
-    console.log(await ctx.telegram.getChat(chatId))
-
     console.table({ userId, username, command: '/Start', timestamp: convertTimeToMDYHM(timeInSec * MILLISECOND_PER_ONE_SEC) })
     let dataUserStorage = await getDataUserCache(userId)
     try {

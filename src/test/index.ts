@@ -1,24 +1,27 @@
+import { initRedis } from "../infra/cache/redis"
+import { bot_template } from "../infra/telegram/telegram_bot/index"
 
-const getChatMember = async () => {
-    try {
-    } catch (e) {
-        console.log(e)
-    }
-}
+const tree_arr = [
 
-import en from '../infra/telegram/telegram_bot/telegram_language/en.json'
-
-type test = {
-
-}
+]
 
 const test = async () => {
-    console.log(new Date(1726475477000));
 
-    const a = {
-        en
-    }
-
+    await initRedis()
+    bot_template.init()
+    // const data = await bot_template.tele_bot.telegram.sendMessage('5196685279', 'test', {
+    //     disable_notification: false,
+    //     parse_mode: 'Markdown',
+    //     link_preview_options: {
+    //         is_disabled: true
+    //     },
+    // })
+    // console.log(data);
+    bot_template.bot_script.sendMessage('5196685279', {
+        template: 'welcome',
+        reply_markup: 'force_reply',
+        parse_mode: true
+    })
 }
 
 test()

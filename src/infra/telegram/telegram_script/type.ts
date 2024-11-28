@@ -14,33 +14,36 @@ type TDefaultTemplate = 'welcome' | 'error' | 'unknown_command' | 'waiting_bot' 
 
 type TReplyMarkup = InlineKeyboardMarkup | ReplyKeyboardMarkup | ReplyKeyboardRemove | ForceReply | undefined
 
+type TDefaultReplyMarkup = {
+    force_reply: () => TReplyMarkup
+}
+
 type TTemplateMessageConfig<GTemplate> = {
     template: GTemplate | TDefaultTemplate
     args?: object
     language?: TTemplateLanguage
 }
 
+type ELifetime = number | "long" | "medium" | "short"
 
 type TOptionSendMessage<GTemplate> = TTemplateMessageConfig<GTemplate> & {
     reply_markup?: boolean | 'force_reply' | TReplyMarkup
-    life_time?: number | "long" | "medium" | "short"
+    life_time?: ELifetime
     parse_mode?: boolean | ParseMode
     message_id?: number
 }
 
-type TOptionSendBufferPhoto = {
+type TOptionSendBufferPhoto<GTemplate> = TTemplateMessageConfig<GTemplate> & {
     parse_mode?: ParseMode,
     life_time?: number,
-    caption: string,
     source: Buffer,
     reply_markup?: TReplyMarkup
     callback: (params: Message.PhotoMessage) => void
 }
 
-type TOptionSendUrlPhoto = {
+type TOptionSendUrlPhoto<GTemplate> = TTemplateMessageConfig<GTemplate> & {
     parse_mode?: ParseMode,
     life_time?: number,
-    caption: string,
     url: string,
     reply_markup?: TReplyMarkup
     callback: (params: Message.PhotoMessage) => void
@@ -77,6 +80,7 @@ interface ITelegramBotTemplate<GTemplate> {
     default_language: TTemplateLanguage;
     message_entities: IMessageEntities;
     template_message: TTemplateMessage<GTemplate>
+    default_reply_markup: TDefaultReplyMarkup
 }
 
 interface ITelegramConfig<GReplyMarkup, GTemplate> extends TelegramBotTemplate<GTemplate> {
@@ -87,5 +91,5 @@ interface ITelegramConfig<GReplyMarkup, GTemplate> extends TelegramBotTemplate<G
 
 export {
     ITelegramBotTemplate, ITelegramConfig, TInputMultipleInlineKeyboard, TOptionSendAnswerCbQuery, TOptionSendBufferPhoto, TOptionSendMessage, TOptionSendUrlPhoto, TReplyMarkup,
-    TTemplateLanguage, TTemplateMessage, TTemplateMessageConfig, TFileTemplate
+    TTemplateLanguage, TTemplateMessage, TTemplateMessageConfig, TFileTemplate, ELifetime, TDefaultReplyMarkup
 };
