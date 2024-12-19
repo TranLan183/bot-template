@@ -1,7 +1,6 @@
 import { bot_template } from "../../index";
 import { ErrorHandler } from "../../../../../lib/error_handler";
-import { TDataContext } from "../../../telegram.type"
-import { TTemplateLanguage } from "../../../telegram_script/type";
+import { TDataContext, TTemplateLanguage } from "../../../telegrot/type";
 import { TUserSetting } from "../../telegram_cache/cache.data_user";
 
 export const BotTradingSteps = {

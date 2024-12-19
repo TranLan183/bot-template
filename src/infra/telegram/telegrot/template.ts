@@ -19,16 +19,17 @@ const defaultTemplateData = {
     "short_description": "short_description"
 }
 
-class TelegramBotTemplate<GTemplate> implements ITelegramBotTemplate<GTemplate> {
+class TelegramBotTemplate<GReplyMarkup, GTemplate> implements ITelegramBotTemplate<GReplyMarkup, GTemplate> {
     public default_language: TTemplateLanguage = 'en'
-    public _file_template: TFileTemplate | object = new Object()
+    public file_template: TFileTemplate | object = new Object()
+
     private default_template_data = defaultTemplateData
-    constructor(file_template: TFileTemplate, default_language?: TTemplateLanguage) {
+    constructor(_file_template: TFileTemplate, default_language?: TTemplateLanguage) {
         this.default_language = default_language || this.default_language
-        this._file_template = file_template
+        this.file_template = _file_template
     }
 
-    message_entities = {
+    entities_message = {
         setBoldMessage: (message: string) => '*' + message + '*',
         setItalicMessage: (message: string) => '_' + message + '_',
         setCodeMessage: (message: string) => '`' + message + '`', // text blue
@@ -42,9 +43,9 @@ class TelegramBotTemplate<GTemplate> implements ITelegramBotTemplate<GTemplate> 
         }
     }
 
-    template_message = (parameters: TTemplateMessageConfig<GTemplate>) => {
+    template_message: (parameters: TTemplateMessageConfig<GTemplate>) => string = (parameters) => {
         const { template, args, language = this.default_language } = parameters
-        let message: string = this._file_template[language][template] || this._file_template[this.default_language][template] || this.default_template_data[template as unknown as string]
+        let message: string = this.file_template[language][template] || this.file_template[this.default_language][template] || this.default_template_data[template as unknown as string]
         if (!args) return message
         Object.keys(args).forEach(key => {
             const replaceMessage = message.replaceAll(`{{${key}}}`, args[key])
@@ -52,14 +53,16 @@ class TelegramBotTemplate<GTemplate> implements ITelegramBotTemplate<GTemplate> 
         })
         return message
     }
-
-    default_reply_markup = {
-        force_reply: () => {
-            return {
-                force_reply: true
-            }
-        },
-    } as TDefaultReplyMarkup
+    reply_markup(): GReplyMarkup {
+        const dataReplyMarkup: TDefaultReplyMarkup = {
+            force_reply: () => {
+                return {
+                    force_reply: true
+                }
+            },
+        }
+        return dataReplyMarkup as unknown as GReplyMarkup
+    }
 }
 
 export {

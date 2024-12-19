@@ -1,7 +1,7 @@
-import { TReplyMarkup } from "../telegram_script/type"
+import { TDefaultReplyMarkup, TReplyMarkup } from "../telegrot/type"
 
 
-type BotReplyMarkup = {
+type BotReplyMarkup = TDefaultReplyMarkup & {
     welcome: () => TReplyMarkup
 }
 

@@ -1,8 +1,8 @@
 import crypto from 'crypto'
-import { readableNumber } from '../../lib/beauty_number'
-import { SECOND_OF_ONE_DAY, SECOND_OF_ONE_HOUR, SECOND_OF_ONE_MINUTE, SUN_PER_TRX } from '../../lib/constants'
-import { TBotTelegram, TDataContext, TDataContextAction, TDataInlineContext, TDataPagination, TGenerateStartPayloadLink } from "./telegram.type"
-import { TELEGRAM_BOT_NAME } from '../../config'
+import { readableNumber } from '../../../lib/beauty_number'
+import { SECOND_OF_ONE_DAY, SECOND_OF_ONE_HOUR, SECOND_OF_ONE_MINUTE, SUN_PER_TRX } from '../../../lib/constants'
+import { TELEGRAM_BOT_NAME } from '../../../config'
+import { TBotTelegram, TDataContext, TDataContextAction, TDataInlineContext, TDataPagination, TGenerateStartPayloadLink } from './type'
 
 const convertMessageContext = (ctx: any): TDataContext => {
     const dataMessageContext: Omit<TDataContext, 'userFullName'> = {
@@ -121,7 +121,7 @@ const verifyTelegramWebAppData = async (telegramInitData: string, teleBotToken: 
 const convertTimeToMDYHM = (date: Date | string | number | undefined | null) => {
     if (!date) return "TBA"
     const new_date = new Date(date).toLocaleString('en-US', { timeZone: 'UTC' }).replace(',', '')
-    return new_date.slice(0, new_date.length - 12)
+    return new_date.slice(0, new_date.length - 11)
 }
 
 /**

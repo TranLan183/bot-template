@@ -1,5 +1,5 @@
 import { ErrorHandler } from "../../../../../lib/error_handler"
-import { TCacheDataUser, TDataContext } from "../../../telegram.type"
+import { TCacheDataUser, TDataContext } from "../../../telegrot/type"
 
 export const handlePublicChat = async (dataMessageContext: TDataContext, user_storage: TCacheDataUser) => {
     const { message, userId, username } = dataMessageContext

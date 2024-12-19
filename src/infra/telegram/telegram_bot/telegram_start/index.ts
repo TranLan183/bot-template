@@ -1,10 +1,10 @@
 import { ErrorHandler } from "../../../../lib/error_handler"
-import { convertMessageContext, convertTimeToMDYHM } from "../../telegram.utils"
-import { TMessageContext } from "../../telegram.type"
+import { convertMessageContext, convertTimeToMDYHM } from "../../telegrot/utils"
 import { handleInvalidCacheUserSetting } from "../helper_bot"
 import { bot_template } from "../index"
 import { getDataUserCache, setDataUserCache } from "../telegram_cache/cache.data_user"
 import { MILLISECOND_PER_ONE_SEC } from "../../../../lib/constants"
+import { TMessageContext } from "../../telegrot/type"
 
 const listenToHandleStart = async (ctx: TMessageContext) => {
     const { ConvertTeleError, bot_script, tele_bot } = bot_template

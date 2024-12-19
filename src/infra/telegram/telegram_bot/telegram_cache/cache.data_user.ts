@@ -1,6 +1,6 @@
 import { create_key_with_prefix } from "../../../cache"
 import { ioredis } from "../../../cache/redis"
-import { TCacheDataUser } from "../../telegram.type"
+import { TCacheDataUser } from "../../telegrot/type"
 
 const DEFAULT_KEY_BUY_ENERGY = "DATA_USER_CACHE"
 

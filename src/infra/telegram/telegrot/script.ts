@@ -1,14 +1,28 @@
 import { BotCommand, BotCommandScope, InlineKeyboardMarkup } from 'telegraf/typings/core/types/typegram';
-import { ELifetime, ITelegramConfig, TOptionSendAnswerCbQuery, TOptionSendBufferPhoto, TOptionSendMessage, TOptionSendUrlPhoto, TTemplateMessageConfig } from './type';
+import { ELifetime, IEntitiesMessage, ITelegramConfig, TBotTelegram, TDefaultReplyMarkup, TFileTemplate, TOptionSendAnswerCbQuery, TOptionSendBufferPhoto, TOptionSendMessage, TOptionSendUrlPhoto, TTemplateLanguage, TTemplateMessageConfig } from './type';
 import { MILLISECOND_PER_ONE_SEC } from '../../../lib/constants';
+import { Telegraf } from 'telegraf';
 
-class TelegramBotScript<GReplyMarkup, GTemplate> {
-    constructor(private configBot: ITelegramConfig<GReplyMarkup, GTemplate>) { }
-    private _bot_tele = this.configBot.bot_tele
-    public templateMessage = this.configBot.template_message
-    public entities_message = this.configBot.message_entities
-    public replyMarkup = this.configBot.reply_markup
-    public all_commands = this.configBot.all_commands
+class TelegramBotScript<GReplyMarkup, GTemplate> implements ITelegramConfig<GReplyMarkup, GTemplate> {
+
+    public bot_tele: TBotTelegram
+    public default_language: TTemplateLanguage;
+    public file_template: TFileTemplate
+    public entities_message: IEntitiesMessage
+    public template_message: (parameters: TTemplateMessageConfig<GTemplate>) => string
+    public reply_markup: (language?: TTemplateLanguage) => GReplyMarkup
+    public all_commands: (language?: TTemplateLanguage) => BotCommand[]
+
+    constructor(bot_tele: Telegraf, configBot: ITelegramConfig<GReplyMarkup, GTemplate>) {
+        this.bot_tele = bot_tele
+        this.template_message = configBot.template_message
+        this.entities_message = configBot.entities_message
+        this.reply_markup = configBot.reply_markup
+        this.all_commands = configBot.all_commands
+        this.default_language = configBot.default_language
+        this.file_template = configBot.file_template
+    }
+
 
     private setLifeTime = (chat_id: string | number, message_id: number, life_time: ELifetime) => {
         let result_lifetime_num: number = 0
@@ -31,12 +45,12 @@ class TelegramBotScript<GReplyMarkup, GTemplate> {
 
     sendMessage = async (chat_id: string | number, options: TOptionSendMessage<GTemplate>) => {
         const { template, language, parse_mode, reply_markup, args, message_id, life_time } = options
-        const resultMessage = await this._bot_tele.telegram.sendMessage(chat_id, this.templateMessage(options), {
+        const resultMessage = await this.bot_tele.telegram.sendMessage(chat_id, this.template_message(options), {
             link_preview_options: {
                 is_disabled: true
             },
             parse_mode: parse_mode ? typeof parse_mode === 'boolean' ? 'Markdown' : parse_mode : undefined,
-            reply_markup: reply_markup ? typeof reply_markup === 'boolean' ? this.configBot.reply_markup(language)[template as unknown as string](args) : reply_markup === 'force_reply' ? this.configBot.reply_markup(language)['force_reply']() : reply_markup : undefined,
+            reply_markup: reply_markup ? typeof reply_markup === 'boolean' ? this.reply_markup(language)[template as unknown as string](args) : reply_markup === 'force_reply' ? this.reply_markup(language)['force_reply']() : reply_markup : undefined,
             reply_parameters: message_id ? { message_id } : undefined,
         });
         if (life_time) this.setLifeTime(chat_id, resultMessage.message_id, life_time)
@@ -44,35 +58,35 @@ class TelegramBotScript<GReplyMarkup, GTemplate> {
     }
 
     sendAnswerCbQuery = (callbackQueryId: string, options: TOptionSendAnswerCbQuery<GTemplate>) => {
-        return this._bot_tele.telegram.answerCbQuery(callbackQueryId, this.templateMessage(options), options)
+        return this.bot_tele.telegram.answerCbQuery(callbackQueryId, this.template_message(options), options)
     }
 
     sendBufferPhoto = async (chat_id: string | number, options: TOptionSendBufferPhoto<GTemplate>) => {
         const { life_time, source, reply_markup, callback } = options
-        const img_msg_data = await this._bot_tele.telegram.sendPhoto(chat_id,
+        const img_msg_data = await this.bot_tele.telegram.sendPhoto(chat_id,
             {
                 source,
             },
             {
-                caption: this.templateMessage(options) + (life_time ? `\n\n_Note: This message will disappear after ${life_time} seconds_` : ""),
+                caption: this.template_message(options) + (life_time ? `\n\n_Note: This message will disappear after ${life_time} seconds_` : ""),
                 parse_mode: "Markdown",
                 reply_markup,
             }
         );
         if (life_time) {
-            setTimeout(() => this._bot_tele.telegram.deleteMessage(chat_id, img_msg_data.message_id), life_time * MILLISECOND_PER_ONE_SEC);
+            setTimeout(() => this.bot_tele.telegram.deleteMessage(chat_id, img_msg_data.message_id), life_time * MILLISECOND_PER_ONE_SEC);
         }
         callback(img_msg_data);
     }
 
     sendUrlPhoto = async (chat_id: string | number, options: TOptionSendUrlPhoto<GTemplate>) => {
         const { life_time, url, reply_markup, callback } = options
-        const img_msg_data = await this._bot_tele.telegram.sendPhoto(chat_id,
+        const img_msg_data = await this.bot_tele.telegram.sendPhoto(chat_id,
             {
                 url,
             },
             {
-                caption: this.templateMessage(options) + (life_time ? `\n\n_Note: This message will disappear after ${life_time} seconds_` : ""),
+                caption: this.template_message(options) + (life_time ? `\n\n_Note: This message will disappear after ${life_time} seconds_` : ""),
                 parse_mode: "Markdown",
                 reply_markup
             }
@@ -85,40 +99,40 @@ class TelegramBotScript<GReplyMarkup, GTemplate> {
 
     editMessage = (chat_id: string | number, message_id: number, options: TOptionSendMessage<GTemplate>) => {
         const { template, language, parse_mode, reply_markup, args, life_time } = options
-        const resultEditMessage = this._bot_tele.telegram.editMessageText(chat_id, message_id, undefined, this.templateMessage(options), {
+        const resultEditMessage = this.bot_tele.telegram.editMessageText(chat_id, message_id, undefined, this.template_message(options), {
             link_preview_options: {
                 is_disabled: true
             },
             parse_mode: parse_mode ? typeof parse_mode === 'boolean' ? 'Markdown' : parse_mode : undefined,
-            reply_markup: reply_markup ? typeof reply_markup === 'boolean' ? this.replyMarkup(language)[template as unknown as string](args) : reply_markup === 'force_reply' ? this.configBot.reply_markup(language)['force_reply']() : reply_markup : undefined
+            reply_markup: reply_markup ? typeof reply_markup === 'boolean' ? this.reply_markup(language)[template as unknown as string](args) : reply_markup === 'force_reply' ? this.reply_markup(language)['force_reply']() : reply_markup : undefined
         })
         if (life_time) this.setLifeTime(chat_id, message_id, life_time)
         return resultEditMessage
     }
 
     editMessageReplyMarkup = (chat_id: string | number, message_id: number, markup: InlineKeyboardMarkup) => {
-        return this._bot_tele.telegram.editMessageReplyMarkup(chat_id, message_id, undefined, markup).catch((err) => console.log(err))
+        return this.bot_tele.telegram.editMessageReplyMarkup(chat_id, message_id, undefined, markup).catch((err) => console.log(err))
     }
 
     editMessageCaption = (chat_id: string | number, message_id: number, message: string) => {
-        return this._bot_tele.telegram.editMessageCaption(chat_id, message_id, undefined, message).catch((err) => console.log(err))
+        return this.bot_tele.telegram.editMessageCaption(chat_id, message_id, undefined, message).catch((err) => console.log(err))
     }
 
     deleteMessage = (chat_id: string | number, message_id: number) => {
-        return this._bot_tele.telegram.deleteMessage(chat_id, message_id).catch(err => console.log(err))
+        return this.bot_tele.telegram.deleteMessage(chat_id, message_id).catch(err => console.log(err))
     }
 
     setCommands = (data_command: BotCommand[], scope?: BotCommandScope) => {
         const commandScope = scope ? { scope } : undefined
-        this._bot_tele.telegram.setMyCommands(data_command, commandScope)
+        this.bot_tele.telegram.setMyCommands(data_command, commandScope)
     }
 
     setDescription = (params: TTemplateMessageConfig<GTemplate>) => {
-        return this._bot_tele.telegram.setMyDescription(this.templateMessage(params))
+        return this.bot_tele.telegram.setMyDescription(this.template_message(params))
     }
 
     setShortDescription = (params: TTemplateMessageConfig<GTemplate>) => {
-        return this._bot_tele.telegram.setMyShortDescription(this.templateMessage(params))
+        return this.bot_tele.telegram.setMyShortDescription(this.template_message(params))
     }
 }
 

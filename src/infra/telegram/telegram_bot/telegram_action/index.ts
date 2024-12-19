@@ -1,6 +1,6 @@
 import { bot_template } from "../index";
 import { ErrorHandler } from "../../../../lib/error_handler";
-import { convertActionContext } from "../../telegram.utils";
+import { convertActionContext } from "../../telegrot/utils";
 import { handleInvalidCacheUserSetting, isCacheUserSettingFieldsMissing } from "../helper_bot";
 import { getDataUserCache } from "../telegram_cache/cache.data_user";
 
@@ -13,7 +13,7 @@ export const handleBotAction = () => {
     const { tele_bot, setLastMessageReceivedDate, isBotReadyToStart, ConvertTeleError, bot_script } = bot_template
     tele_bot.on('callback_query', async (ctx) => {
         setLastMessageReceivedDate()
-        const { callbackData, userId, callbackId, username, timeInSec } = convertActionContext(ctx);
+        const { callbackData, userId, callbackId, username, timeInSec, chatId } = convertActionContext(ctx);
         if (!isBotReadyToStart()) {
             return
         }
@@ -23,6 +23,9 @@ export const handleBotAction = () => {
             const [keyCallback] = callbackData.split('&')
             if (methodAction[keyCallback]) await methodAction[keyCallback](ctx, dataUserSetting)
             try {
+                bot_script.sendMessage(chatId, {
+                    template: 'test'
+                })
                 await ctx.telegram.answerCbQuery(callbackId)
             } catch (err) {
                 bot_script.sendMessage(userId, { template: "error" })

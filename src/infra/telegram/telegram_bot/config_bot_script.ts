@@ -1,19 +1,19 @@
 import { BotCommand, InlineKeyboardButton } from "telegraf/typings/core/types/typegram"
-import { TBotTelegram } from "../telegram.type"
+import { TelegramBotInlineKeyBoard } from "../telegrot/inline_keyboard"
+import { TelegramBotTemplate } from "../telegrot/template"
+import { ITelegramConfig, TCustomInlineKeyboardParams, TFileTemplate, TTemplateLanguage } from "../telegrot/type"
+import { TTemplate } from "./index"
 import { BotReplyMarkup } from "./type"
-import { TelegramBotTemplate } from "../telegram_script/template"
-import { ITelegramConfig, TFileTemplate, TTemplateLanguage } from "../telegram_script/type"
-import { TelegramBotInlineKeyBoard } from "../telegram_script/inline_keyboard"
 
-class TelegramConfig<GReplyMarkup, GTemplate> extends TelegramBotTemplate<GTemplate> implements ITelegramConfig<GReplyMarkup, GTemplate> {
-    constructor(public bot_tele: TBotTelegram, file_template: TFileTemplate, default_language: TTemplateLanguage = 'en') {
+class TelegramConfig extends TelegramBotTemplate<BotReplyMarkup, TTemplate> implements ITelegramConfig<BotReplyMarkup, TTemplate> {
+    constructor(file_template: TFileTemplate, default_language: TTemplateLanguage = 'en') {
         super(file_template, default_language)
     }
     private callback_data = {
         unknown_callback: 'unknown_callback',
     }
 
-    private customInlineKeyboard = (params: any) => {
+    private customInlineKeyboard = (params: TCustomInlineKeyboardParams) => {
         const { arr_message, callback_key, current_value, current_index, extra_callback_key } = params
         let keyboardDefault: InlineKeyboardButton = { text: current_value, callback_data: `${callback_key}&${current_value}` }
         switch (callback_key) {
@@ -35,16 +35,20 @@ class TelegramConfig<GReplyMarkup, GTemplate> extends TelegramBotTemplate<GTempl
         return commands
     }
 
-    reply_markup: (language?: TTemplateLanguage) => GReplyMarkup = (language = this.default_language) => {
+    reply_markup(language?: TTemplateLanguage): BotReplyMarkup {
         const dataReplyMarkup: BotReplyMarkup = {
-            ...this.default_reply_markup,
+            ...super.reply_markup(),
             welcome: () => {
                 return {
-                    force_reply: true
+                    inline_keyboard: [
+                        [
+                            { text: this.template_message({ template: 'test' }), callback_data: 'test' }
+                        ]
+                    ]
                 }
             },
         }
-        return dataReplyMarkup as unknown as GReplyMarkup
+        return dataReplyMarkup
     }
 }
 

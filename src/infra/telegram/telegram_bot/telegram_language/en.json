@@ -5,5 +5,8 @@
     "server_maintain": "Server maintain. We will come back soon",
     "waiting_bot": "🤖 Thanks for waiting, TOB Bot is available now!",
     "full_description": "full_description",
-    "short_description": "short_description"
+    "short_description": "short_description",
+
+    "test":"test"
+
 }

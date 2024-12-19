@@ -1,19 +1,20 @@
 import { createServer } from "http"
 import { Telegraf } from "telegraf"
-import { successConsoleLog } from "../../lib/color-log"
-import { MILLISECOND_PER_ONE_SEC } from "../../lib/constants"
-import { ErrorHandler } from "../../lib/error_handler"
-import { sleep } from "../../lib/utils"
-import { TSendMessageError, TTeleErrorList, TTelegramError } from "./telegram.type"
-import { TelegramBotScript } from "./telegram_script"
+import { successConsoleLog } from "../../../lib/color-log"
+import { MILLISECOND_PER_ONE_SEC } from "../../../lib/constants"
+import { ErrorHandler } from "../../../lib/error_handler"
+import { sleep } from "../../../lib/utils"
+import { TelegramBotScript } from "./script"
+import { ITelegramConfig, TSendMessageError, TTeleErrorList, TTelegramError } from "./type"
 
 type TTelegramBotInitParams<GReplyMarkup, GTemplate> = {
     bot_name: string
     bot_token: string
     is_enable: boolean
     bot_error_list: TTeleErrorList[]
-    bot_script: (tele_bot: Telegraf) => TelegramBotScript<GReplyMarkup, GTemplate>
+    bot_config: ITelegramConfig<GReplyMarkup, GTemplate>
 }
+
 type TTelegramBotInitOptions = {
     is_set_description?: boolean
     is_use_local_telegram?: boolean
@@ -65,7 +66,7 @@ class TTelegramBot<GReplyMarkup, GTemplate> {
                 webhookReply: is_use_webhook
             }
         })
-        this.bot_script = parameters.bot_script(this.tele_bot)
+        this.bot_script = new TelegramBotScript(this.tele_bot, parameters.bot_config)
         this.bot_error_list = parameters.bot_error_list
     }
 
