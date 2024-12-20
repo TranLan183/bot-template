@@ -31,9 +31,9 @@ const messageActionKeyBoard = async (dataMessageContext: TDataContext, language?
     }
 }
 
-const messageVerifyStep = async (dataMessageContext: TDataContext, user_storage: TUserSetting) => {
+const messageVerifyStep = async (dataMessageContext: TDataContext, dataUserSetting: TUserSetting) => {
     const { message, userId, chatId } = dataMessageContext
-    const { user_step, language } = user_storage
+    const { user_step, language } = dataUserSetting
     const { ConvertTeleError, bot_script } = bot_template
     try {
         switch (user_step) {
@@ -47,15 +47,15 @@ const messageVerifyStep = async (dataMessageContext: TDataContext, user_storage:
     }
 }
 
-export const handlePrivateChat = async (dataMessageContext: TDataContext, user_storage: TUserSetting) => {
+export const handlePrivateChat = async (dataMessageContext: TDataContext, dataUserSetting: TUserSetting) => {
     const { userId, chatId, message } = dataMessageContext
-    const { language } = user_storage
+    const { language } = dataUserSetting
     const { ConvertTeleError } = bot_template
     try {
         if (isButtonMessage(message, language)) {
             await messageActionKeyBoard(dataMessageContext, language)
         } else {
-            await messageVerifyStep(dataMessageContext, user_storage)
+            await messageVerifyStep(dataMessageContext, dataUserSetting)
         }
     } catch (error) {
         ErrorHandler(error, { chatId, userId }, handlePrivateChat.name)

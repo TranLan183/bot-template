@@ -208,7 +208,9 @@ type TSendMessageError = TTelegramError & {
     context_id: string
 }
 
-type TTeleErrorList = string
+type TTeleErrorList = {
+    [key in string]: string
+}
 
 type TGenerateStartPayloadLink = {
     jetton?: string
