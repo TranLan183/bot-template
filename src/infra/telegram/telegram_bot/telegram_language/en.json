@@ -7,6 +7,6 @@
     "full_description": "full_description",
     "short_description": "short_description",
 
-    "test":"test"
-
+    "test":"test",
+    "btn_switch_language": "🇬🇧 English@🇨🇳 中文@🇮🇩 Indonesia"
 }

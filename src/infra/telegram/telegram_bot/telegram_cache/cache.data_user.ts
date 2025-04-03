@@ -2,9 +2,9 @@ import { create_key_with_prefix } from "../../../cache"
 import { ioredis } from "../../../cache/redis"
 import { TCacheDataUser } from "../../telegrot/type"
 
-const DEFAULT_KEY_BUY_ENERGY = "DATA_USER_CACHE"
+const DEFAULT_KEY_DATA_USER_CACHE = "DATA_USER_CACHE"
 
-const createCacheKey = (value: string) => create_key_with_prefix(`telegram.${DEFAULT_KEY_BUY_ENERGY}_${value}`)
+const createCacheKey = (value: string) => create_key_with_prefix(`telegram.${DEFAULT_KEY_DATA_USER_CACHE}_${value}`)
 
 export type TUserSetting = TCacheDataUser
 

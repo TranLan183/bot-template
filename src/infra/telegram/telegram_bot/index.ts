@@ -1,5 +1,5 @@
 import { ENABLE_TELEGRAM, isProductionRun, TELEGRAM_BOT_NAME, TELEGRAM_BOT_TOKEN, TG_BOT_IS_USE_LOCAL_TELEGRAM, TG_BOT_IS_USE_WEBHOOK, TG_BOT_LOCAL_TELEGRAM_URL, TG_BOT_WEBHOOK_PORT, TG_BOT_WEBHOOK_URL } from "../../../config";
-import { TTelegramBot } from "../telegrot";
+import { TelegramBotService } from "../telegrot";
 import { TeleConfigBotTemplate } from "./config_bot_script";
 import { TeleBotErrorList, TeleBotErrorListLifeTime } from "./error_list";
 import { handleBotAction } from "./telegram_action";
@@ -16,7 +16,7 @@ const file_template = {
 
 type TTemplate = keyof typeof file_template.en
 
-const bot_template = new TTelegramBot({
+const bot_template = new TelegramBotService({
     bot_name: TELEGRAM_BOT_NAME,
     bot_token: TELEGRAM_BOT_TOKEN,
     is_enable: ENABLE_TELEGRAM,

@@ -18,13 +18,15 @@ const listenToHandleStart = async (ctx: TMessageContext) => {
         }
         if (!dataUserStorage) dataUserStorage = await handleInvalidCacheUserSetting(userId)
         const { language } = dataUserStorage
-        bot_script.sendMessage(chatId, {
-            template: 'welcome',
-            reply_markup: true,
-            parse_mode: true,
-            language
-        })
-        await setDataUserCache(userId, { user_step: 'finish' })
+        console.log(bot_script.reply_markup().welcome());
+
+        // bot_script.sendMessage(chatId, {
+        //     template: 'welcome',
+        //     reply_markup: true,
+        //     parse_mode: true,
+        //     language
+        // })
+        // await setDataUserCache(userId, { user_step: 'finish' })
     } catch (error) {
         ErrorHandler(error, { userId, chatId, chatType }, handleBotStart.name)
         ConvertTeleError(error, {

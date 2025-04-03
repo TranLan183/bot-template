@@ -3,14 +3,14 @@ import { ErrorHandler } from "../../../../lib/error_handler";
 import { convertActionContext } from "../../telegrot/utils";
 import { handleInvalidCacheUserSetting, isCacheUserSettingFieldsMissing } from "../helper_bot";
 import { getDataUserCache } from "../telegram_cache/cache.data_user";
-import { TActionContext } from "../../telegrot/type";
+import { Context } from "telegraf";
 
 
 const methodAction = {
 
 }
 
-const listenCallbackQueryToHandleAction = async (ctx: TActionContext) => {
+const listenCallbackQueryToHandleAction = async (ctx: Context) => {
     const { tele_bot, setLastMessageReceivedDate, isBotReadyToStart, ConvertTeleError, bot_script } = bot_template
     setLastMessageReceivedDate()
     const { callbackData, userId, callbackId, username, timeInSec, chatId } = convertActionContext(ctx);

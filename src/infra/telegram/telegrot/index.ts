@@ -5,27 +5,10 @@ import { MILLISECOND_PER_ONE_SEC } from "../../../lib/constants"
 import { ErrorHandler } from "../../../lib/error_handler"
 import { sleep } from "../../../lib/utils"
 import { TelegramBotScript } from "./script"
-import { ITelegramConfig, TSendMessageError, TTeleErrorList, TTelegramError } from "./type"
+import { TSendMessageError, TTeleErrorList, TTelegramBotInitOptions, TTelegramBotInitParams, TTelegramError } from "./type"
 
-type TTelegramBotInitParams<GReplyMarkup, GTemplate> = {
-    bot_name: string
-    bot_token: string
-    is_enable: boolean
-    bot_error_list: TTeleErrorList[]
-    bot_config: ITelegramConfig<GReplyMarkup, GTemplate>
-}
-
-type TTelegramBotInitOptions = {
-    is_set_description?: boolean
-    is_use_local_telegram?: boolean
-    local_telegram_url?: string
-    is_use_webhook?: boolean
-    webhook_url?: string
-    webhook_port?: number
-    delay_bot_start?: number
-}
-class TTelegramBot<GReplyMarkup, GTemplate> {
-    //Private variables
+class TelegramBotService<GReplyMarkup, GTemplate> {
+    //Private variab
     private init_parameters: TTelegramBotInitParams<GReplyMarkup, GTemplate>
     private init_options: TTelegramBotInitOptions
     private startup_func: () => void
@@ -204,6 +187,6 @@ class TTelegramBot<GReplyMarkup, GTemplate> {
 }
 
 export {
-    TTelegramBot
+    TelegramBotService
 }
 

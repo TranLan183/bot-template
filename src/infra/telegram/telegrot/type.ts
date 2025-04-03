@@ -1,5 +1,6 @@
 import { BotCommand, ForceReply, InlineKeyboardButton, InlineKeyboardMarkup, Message, ParseMode, ReplyKeyboardMarkup, ReplyKeyboardRemove, Update } from "telegraf/typings/core/types/typegram";
-import { Context, NarrowedContext, Telegraf } from "telegraf"
+import { Context, Telegraf } from "telegraf"
+
 type TTemplateLanguage = 'en' | 'zh' | 'ru' | 'vi' | 'fr' | 'id'
 
 type TFileTemplate = {
@@ -24,6 +25,7 @@ type TReplyMarkup = InlineKeyboardMarkup | ReplyKeyboardMarkup | ReplyKeyboardRe
 
 type TDefaultReplyMarkup = {
     force_reply: () => TReplyMarkup
+    error: () => TReplyMarkup
 }
 
 type TTemplateMessageConfig<GTemplate> = {
@@ -45,7 +47,7 @@ type TOptionSendBufferPhoto<GTemplate> = TTemplateMessageConfig<GTemplate> & {
     parse_mode?: ParseMode,
     life_time?: number,
     source: Buffer,
-    reply_markup?: TReplyMarkup
+    reply_markup?: boolean | 'force_reply' | TReplyMarkup
     callback: (params: Message.PhotoMessage) => void
 }
 
@@ -53,7 +55,7 @@ type TOptionSendUrlPhoto<GTemplate> = TTemplateMessageConfig<GTemplate> & {
     parse_mode?: ParseMode,
     life_time?: number,
     url: string,
-    reply_markup?: TReplyMarkup
+    reply_markup?: boolean | 'force_reply' | TReplyMarkup
     callback: (params: Message.PhotoMessage) => void
 }
 
@@ -167,9 +169,6 @@ type TDataInlineContext = {
     query: string
 }
 
-type TActionContext = NarrowedContext<Context, Update.CallbackQueryUpdate>
-type TMessageContext = NarrowedContext<Context<Update>, Update.MessageUpdate<Message>>
-
 type TCacheDataUser = {
     user_step: string
     language: TTemplateLanguage
@@ -179,12 +178,6 @@ type TCacheDataUser = {
 type TCacheDataUserNotify = Omit<TCacheDataUser, 'time_query_history'>
 
 type TBotTelegram = Telegraf<Context<Update>>
-
-type TDataOrderBook = {
-    min: number,
-    max: number,
-    value: number
-}
 
 type TDataPagination<T> = {
     page: number,
@@ -220,8 +213,24 @@ type TGenerateStartPayloadLink = {
     snipe_order_id?: string
 }
 
-export {
-    ELifetime, IEntitiesMessage, ITelegramBotInlineKeyword, ITelegramBotTemplate, ITelegramConfig, TCallbackData, TCustomInlineKeyboardFunction, TCustomInlineKeyboardParams, TDefaultReplyMarkup, TFileTemplate, TInputMultipleInlineKeyboard, TOptionSendAnswerCbQuery, TOptionSendBufferPhoto, TOptionSendMessage, TOptionSendUrlPhoto, TPaginationInlineKeyboardParams, TReplyMarkup,
-    TTemplateLanguage, TTemplateMessage, TTemplateMessageConfig, TActionContext, TCacheDataUser, TDataContext, TDataContextAction, TDataOrderBook, TMessageContext, TCacheDataUserNotify, TDataInlineContext, TBotTelegram, TTelegramError, TSendMessageError, TTeleErrorList, TDataPagination, TGenerateStartPayloadLink
-};
+type TTelegramBotInitParams<GReplyMarkup, GTemplate> = {
+    bot_name: string
+    bot_token: string
+    is_enable: boolean
+    bot_error_list: TTeleErrorList[]
+    bot_config: ITelegramConfig<GReplyMarkup, GTemplate>
+}
 
+type TTelegramBotInitOptions = {
+    is_set_description?: boolean
+    is_use_local_telegram?: boolean
+    local_telegram_url?: string
+    is_use_webhook?: boolean
+    webhook_url?: string
+    webhook_port?: number
+    delay_bot_start?: number
+}
+
+export {
+    ELifetime, IEntitiesMessage, ITelegramBotInlineKeyword, ITelegramBotTemplate, ITelegramConfig, TBotTelegram, TCacheDataUser, TCacheDataUserNotify, TCallbackData, TCustomInlineKeyboardFunction, TCustomInlineKeyboardParams, TDataContext, TDataContextAction, TDataInlineContext, TDataPagination, TDefaultReplyMarkup, TFileTemplate, TGenerateStartPayloadLink, TInputMultipleInlineKeyboard, TOptionSendAnswerCbQuery, TOptionSendBufferPhoto, TOptionSendMessage, TOptionSendUrlPhoto, TPaginationInlineKeyboardParams, TReplyMarkup, TSendMessageError, TTeleErrorList, TTelegramBotInitOptions, TTelegramBotInitParams, TTelegramError, TTemplateLanguage, TTemplateMessage, TTemplateMessageConfig
+};
