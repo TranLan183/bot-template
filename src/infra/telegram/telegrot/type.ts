@@ -1,5 +1,6 @@
 import { BotCommand, ForceReply, InlineKeyboardButton, InlineKeyboardMarkup, Message, ParseMode, ReplyKeyboardMarkup, ReplyKeyboardRemove, Update } from "telegraf/typings/core/types/typegram";
 import { Context, Telegraf } from "telegraf"
+import { DefaultTemplateData } from "./template";
 
 type TTemplateLanguage = 'en' | 'zh' | 'ru' | 'vi' | 'fr' | 'id'
 
@@ -19,7 +20,7 @@ type TCustomInlineKeyboardParams = {
 
 type TCustomInlineKeyboardFunction = (params: TCustomInlineKeyboardParams) => InlineKeyboardButton
 
-type TDefaultTemplate = 'welcome' | 'error' | 'unknown_command' | 'waiting_bot' | 'full_description' | 'short_description'
+type TDefaultTemplate = keyof typeof DefaultTemplateData
 
 type TReplyMarkup = InlineKeyboardMarkup | ReplyKeyboardMarkup | ReplyKeyboardRemove | ForceReply | undefined
 

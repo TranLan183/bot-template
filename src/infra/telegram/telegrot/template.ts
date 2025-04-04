@@ -9,21 +9,22 @@ enum EFlag {
     '🇮🇩' = 'id'
 }
 
-const defaultTemplateData = {
+const DefaultTemplateData = {
     "welcome": "Welcome to the bot",
     "unknown_command": "❌ Unknown Command!\n\nYou have sent a Message directly into the Bot's chat or Menu structure has been modified by Admin.\nℹ️ Do not send Messages directly to the Bot or reload the Menu by pressing /start",
     "error": "ℹ️ Something went wrong, please /start again!",
     "server_maintain": "Server maintain. We will come back soon",
     "waiting_bot": "🤖 Thanks for waiting, bot is available now!",
     "full_description": "full_description",
-    "short_description": "short_description"
+    "short_description": "short_description",
+    "btn_switch_language": "🇬🇧 English@🇨🇳 中文@🇮🇩 Indonesia"
 }
 
 class TelegramBotTemplate<GReplyMarkup, GTemplate> implements ITelegramBotTemplate<GReplyMarkup, GTemplate> {
     public default_language: TTemplateLanguage = 'en'
     public file_template: TFileTemplate | object = new Object()
 
-    private default_template_data = defaultTemplateData
+    private default_template_data = DefaultTemplateData
     constructor(_file_template: TFileTemplate, default_language?: TTemplateLanguage) {
         this.default_language = default_language || this.default_language
         this.file_template = _file_template
@@ -60,12 +61,19 @@ class TelegramBotTemplate<GReplyMarkup, GTemplate> implements ITelegramBotTempla
                     force_reply: true
                 }
             },
+            error: () => {
+                return {
+                    remove_keyboard: true
+                }
+            }
         }
         return dataReplyMarkup as unknown as GReplyMarkup
     }
 }
 
 export {
-    EFlag, TelegramBotTemplate
+    EFlag,
+    TelegramBotTemplate,
+    DefaultTemplateData
 };
 
