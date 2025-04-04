@@ -2,13 +2,13 @@ import { Context } from "telegraf"
 import { ErrorHandler } from "../../../../lib/error_handler"
 import { convertMessageContext } from "../../telegrot/utils"
 import { handleInvalidCacheUserSetting, isCacheUserSettingFieldsMissing } from "../helper_bot"
-import { bot_template } from "../index"
 import { getDataUserCache } from "../telegram_cache/cache.data_user"
+import { BotServiceType } from "../type"
 import { handlePrivateChat } from "./private_message"
 import { handlePublicChat } from "./public_message"
 
-const listenMessageToHandleChatType = async (ctx: Context) => {
-    const { bot_start_at, ConvertTeleError, } = bot_template
+const listenMessageToHandleChatType = async (ctx: Context, bot_method: BotServiceType) => {
+    const { bot_start_at, ConvertTeleError, } = bot_method
     const dataMessageContext = convertMessageContext(ctx)
     const { chatType, chatId, message, userId, timeInSec } = dataMessageContext
     if (timeInSec < (bot_start_at.getTime() / 1000)) return
@@ -19,13 +19,12 @@ const listenMessageToHandleChatType = async (ctx: Context) => {
         switch (chatType) {
             case "group":
             case "supergroup":
-                await handlePublicChat(dataMessageContext, dataUserSetting)
+                await handlePublicChat(dataMessageContext, bot_method, dataUserSetting)
                 break;
             case "channel":
                 break;
-            default: {
-                await handlePrivateChat(dataMessageContext, dataUserSetting)
-            }
+            default:
+                await handlePrivateChat(dataMessageContext, bot_method, dataUserSetting)
                 break;
         }
         return
@@ -35,4 +34,4 @@ const listenMessageToHandleChatType = async (ctx: Context) => {
     }
 }
 
-export const handleBotMessage = () => bot_template.tele_bot.on("message", listenMessageToHandleChatType)
+export const handleBotMessage = (bot_method: BotServiceType) => bot_method.tele_bot.on("message", (ctx) => listenMessageToHandleChatType(ctx, bot_method))

@@ -1,19 +1,19 @@
-import { bot_template } from "../index";
+import { Context } from "telegraf";
 import { ErrorHandler } from "../../../../lib/error_handler";
 import { convertActionContext } from "../../telegrot/utils";
 import { handleInvalidCacheUserSetting, isCacheUserSettingFieldsMissing } from "../helper_bot";
 import { getDataUserCache } from "../telegram_cache/cache.data_user";
-import { Context } from "telegraf";
-
+import { BotServiceType } from "../type";
+import { handleInlineKeyboard } from "./inline_keyboard";
 
 const methodAction = {
-
+    btn_inline_keyboard: handleInlineKeyboard
 }
 
-const listenCallbackQueryToHandleAction = async (ctx: Context) => {
-    const { tele_bot, setLastMessageReceivedDate, isBotReadyToStart, ConvertTeleError, bot_script } = bot_template
+const handleToListenAction = async (ctx: Context, bot_method: BotServiceType) => {
+    const { bot_script, setLastMessageReceivedDate, isBotReadyToStart, ConvertTeleError } = bot_method
     setLastMessageReceivedDate()
-    const { callbackData, userId, callbackId, username, timeInSec, chatId } = convertActionContext(ctx);
+    const { callbackData, userId, callbackId, chatId } = convertActionContext(ctx);
     if (!isBotReadyToStart()) {
         return
     }
@@ -21,7 +21,7 @@ const listenCallbackQueryToHandleAction = async (ctx: Context) => {
         let dataUserSetting = await getDataUserCache(userId)
         if (!dataUserSetting || isCacheUserSettingFieldsMissing(dataUserSetting)) dataUserSetting = await handleInvalidCacheUserSetting(userId)
         const [keyCallback] = callbackData.split('&')
-        if (methodAction[keyCallback]) await methodAction[keyCallback](ctx, dataUserSetting)
+        if (methodAction[keyCallback]) await methodAction[keyCallback](ctx, bot_method, dataUserSetting)
         try {
             await ctx.telegram.answerCbQuery(callbackId)
         } catch (err) {
@@ -33,4 +33,5 @@ const listenCallbackQueryToHandleAction = async (ctx: Context) => {
     }
 }
 
-export const handleBotAction = () => bot_template.tele_bot.on('callback_query', listenCallbackQueryToHandleAction);
+
+export const handleBotAction = (bot_method: BotServiceType) => bot_method.tele_bot.on('callback_query', (ctx) => handleToListenAction(ctx, bot_method));

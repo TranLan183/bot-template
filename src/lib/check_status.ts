@@ -1,7 +1,7 @@
 import { NODE_ENV } from "../config"
 import { connectInfra } from "../infra"
 import { createMongoIndex } from "../infra/database/mongo/mongo"
-import { bot_template } from "../infra/telegram/telegram_bot/index"
+import { bot_example } from "../infra/telegram/telegram_bot/index"
 import { successConsoleLog } from "./color-log"
 
 const init = async () => {
@@ -24,7 +24,7 @@ const RunServer = async (is_main: boolean = true) => {
             Promise.all([
                 createMongoIndex(),
             ])
-            bot_template.init()
+            bot_example.init()
             if (NODE_ENV !== "local") {
                 await Promise.all([
                 ])

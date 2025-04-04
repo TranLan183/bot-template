@@ -14,9 +14,8 @@ const file_template = {
     en
 }
 
-type TTemplate = keyof typeof file_template.en
 
-const bot_template = new TelegramBotService({
+const bot_example = new TelegramBotService({
     bot_name: TELEGRAM_BOT_NAME,
     bot_token: TELEGRAM_BOT_TOKEN,
     is_enable: ENABLE_TELEGRAM,
@@ -29,16 +28,16 @@ const bot_template = new TelegramBotService({
     webhook_url: TG_BOT_WEBHOOK_URL,
     webhook_port: TG_BOT_WEBHOOK_PORT,
     local_telegram_url: TG_BOT_LOCAL_TELEGRAM_URL
-}, () => {
-    handleBotStart()
-    handleBotHelp()
-    handleBotCommand()
-    handleBotAction()
-    handleBotMessage()
-    handleBotInlineMode()
+}, (bot_method) => {
+    handleBotStart(bot_method)
+    handleBotHelp(bot_method)
+    handleBotCommand(bot_method)
+    handleBotAction(bot_method)
+    handleBotMessage(bot_method)
+    handleBotInlineMode(bot_method)
 })
 
 export {
-    bot_template,
-    TTemplate
+    bot_example,
+    file_template
 };

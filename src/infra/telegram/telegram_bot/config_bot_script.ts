@@ -2,15 +2,15 @@ import { BotCommand, InlineKeyboardButton } from "telegraf/typings/core/types/ty
 import { TelegramBotInlineKeyBoard } from "../telegrot/inline_keyboard"
 import { EFlag, TelegramBotTemplate } from "../telegrot/template"
 import { ITelegramConfig, TCustomInlineKeyboardParams, TFileTemplate, TTemplateLanguage } from "../telegrot/type"
-import { TTemplate } from "./index"
-import { BotReplyMarkup } from "./type"
+import { BotReplyMarkup, BotTemplate } from "./type"
 
-class TelegramConfig extends TelegramBotTemplate<BotReplyMarkup, TTemplate> implements ITelegramConfig<BotReplyMarkup, TTemplate> {
+class TelegramConfig extends TelegramBotTemplate<BotReplyMarkup, BotTemplate> implements ITelegramConfig<BotReplyMarkup, BotTemplate> {
 
     private callback_data = {
         unknown_callback: 'unknown_callback',
         test: 'test',
-        btn_switch_language: 'btn_switch_language'
+        btn_switch_language: 'btn_switch_language',
+        btn_inline_keyboard: 'btn_inline_keyboard'
     }
 
     private customInlineKeyboard = (params: TCustomInlineKeyboardParams) => {
@@ -44,23 +44,28 @@ class TelegramConfig extends TelegramBotTemplate<BotReplyMarkup, TTemplate> impl
         return commands
     }
 
-    reply_markup(language?: TTemplateLanguage): BotReplyMarkup {
+    reply_markup = (language?: TTemplateLanguage): BotReplyMarkup => {
         const dataReplyMarkup: BotReplyMarkup = {
             ...super.reply_markup(),
             welcome: () => {
                 return {
-                    inline_keyboard: [
-                        ...this.handleMultipleInlineKeyBoard({
-                            template: 'btn_switch_language',
-                            callback_key: this.callback_data.btn_switch_language,
-                            language
-                        }),
+                    keyboard: [
                         [
-                            { text: this.template_message({ template: 'test' }), callback_data: 'test' }
+                            { text: this.template_message({ template: 'btn_kb_keyboard', language }) },
+                            { text: this.template_message({ template: 'btn_kb_inline_keyboard', language }) }
                         ]
                     ]
                 }
             },
+            reply_btn_kb_inline_keyboard: () => {
+                return {
+                    inline_keyboard: [
+                        [
+                            { text: this.template_message({ template: 'btn_inline_keyboard', language }), callback_data: this.callback_data.btn_inline_keyboard }
+                        ]
+                    ]
+                }
+            }
         }
         return dataReplyMarkup
     }

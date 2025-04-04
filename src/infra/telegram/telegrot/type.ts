@@ -1,6 +1,7 @@
 import { BotCommand, ForceReply, InlineKeyboardButton, InlineKeyboardMarkup, Message, ParseMode, ReplyKeyboardMarkup, ReplyKeyboardRemove, Update } from "telegraf/typings/core/types/typegram";
 import { Context, Telegraf } from "telegraf"
 import { DefaultTemplateData } from "./template";
+import { TelegramBotService } from ".";
 
 type TTemplateLanguage = 'en' | 'zh' | 'ru' | 'vi' | 'fr' | 'id'
 
@@ -37,27 +38,24 @@ type TTemplateMessageConfig<GTemplate> = {
 
 type ELifetime = number | "long" | "medium" | "short"
 
-type TOptionSendMessage<GTemplate> = TTemplateMessageConfig<GTemplate> & {
+type TMessageConfigOptions<GTemplate> = TTemplateMessageConfig<GTemplate> & {
     reply_markup?: boolean | 'force_reply' | TReplyMarkup
     life_time?: ELifetime
     parse_mode?: boolean | ParseMode
     message_id?: number
+    callback?: <GCallback> (params: GCallback) => void
 }
 
-type TOptionSendBufferPhoto<GTemplate> = TTemplateMessageConfig<GTemplate> & {
-    parse_mode?: ParseMode,
-    life_time?: number,
+type TOptionSendMessage<GTemplate> = TMessageConfigOptions<GTemplate>
+
+type TOptionEditMessage<GTemplate> = TMessageConfigOptions<GTemplate>
+
+type TOptionSendBufferPhoto<GTemplate> = TMessageConfigOptions<GTemplate> & {
     source: Buffer,
-    reply_markup?: boolean | 'force_reply' | TReplyMarkup
-    callback: (params: Message.PhotoMessage) => void
 }
 
-type TOptionSendUrlPhoto<GTemplate> = TTemplateMessageConfig<GTemplate> & {
-    parse_mode?: ParseMode,
-    life_time?: number,
+type TOptionSendUrlPhoto<GTemplate> = TMessageConfigOptions<GTemplate> & {
     url: string,
-    reply_markup?: boolean | 'force_reply' | TReplyMarkup
-    callback: (params: Message.PhotoMessage) => void
 }
 
 type TInputMultipleInlineKeyboard<GTemplate> = Partial<TTemplateMessageConfig<GTemplate>> & {
@@ -233,5 +231,5 @@ type TTelegramBotInitOptions = {
 }
 
 export {
-    ELifetime, IEntitiesMessage, ITelegramBotInlineKeyword, ITelegramBotTemplate, ITelegramConfig, TBotTelegram, TCacheDataUser, TCacheDataUserNotify, TCallbackData, TCustomInlineKeyboardFunction, TCustomInlineKeyboardParams, TDataContext, TDataContextAction, TDataInlineContext, TDataPagination, TDefaultReplyMarkup, TFileTemplate, TGenerateStartPayloadLink, TInputMultipleInlineKeyboard, TOptionSendAnswerCbQuery, TOptionSendBufferPhoto, TOptionSendMessage, TOptionSendUrlPhoto, TPaginationInlineKeyboardParams, TReplyMarkup, TSendMessageError, TTeleErrorList, TTelegramBotInitOptions, TTelegramBotInitParams, TTelegramError, TTemplateLanguage, TTemplateMessage, TTemplateMessageConfig
+    ELifetime, IEntitiesMessage, ITelegramBotInlineKeyword, ITelegramBotTemplate, ITelegramConfig, TBotTelegram, TCacheDataUser, TCacheDataUserNotify, TCallbackData, TCustomInlineKeyboardFunction, TCustomInlineKeyboardParams, TDataContext, TDataContextAction, TDataInlineContext, TDataPagination, TDefaultReplyMarkup, TFileTemplate, TGenerateStartPayloadLink, TInputMultipleInlineKeyboard, TOptionSendAnswerCbQuery, TOptionSendBufferPhoto, TOptionSendMessage, TOptionSendUrlPhoto, TPaginationInlineKeyboardParams, TReplyMarkup, TSendMessageError, TTeleErrorList, TTelegramBotInitOptions, TTelegramBotInitParams, TTelegramError, TTemplateLanguage, TTemplateMessage, TTemplateMessageConfig, TOptionEditMessage
 };

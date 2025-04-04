@@ -1,19 +1,19 @@
-import { bot_template } from "../index";
+import { Context } from "telegraf";
+import { bot_example } from "../index";
+import { BotServiceType } from "../type";
+import { ErrorHandler } from "../../../../lib/error_handler";
+import { convertInlineContext } from "../../telegrot/utils";
 
+const handleToListenInlineQuery = async (ctx: Context, bot_method: BotServiceType) => {
+    const { ConvertTeleError, tele_bot } = bot_method
+    const dataContext = convertInlineContext(ctx)
+    // const { chatId, userId } = dataContext
+    try {
 
-export const handleBotInlineMode = () => {
-    const { ConvertTeleError, tele_bot } = bot_template
-    tele_bot.on('inline_query', async (ctx) => {
-        // SetLastMessageReceivedDate()
-        // // console.log(JSON.stringify(ctx));
-        // const { userId, query } = convertInlineContext(ctx)
-        // const images = await LocalCache.image_cache_by_tg.get(userId)
-        // const result: InlineQueryResult[] = images.data.map(photo_file_id => ({
-        //     type: 'photo',
-        //     id: `image-${photo_file_id}`,
-        //     photo_file_id
-        // }))
-        // console.log(result)
-        // await ctx.answerInlineQuery(result)
-    });
+    } catch (error) {
+        // ErrorHandler(error, { chatId, userId }, handleBotInlineMode.name)
+        // ConvertTeleError(error, { context_id: chatId })
+    }
 }
+
+export const handleBotInlineMode = (bot_method: BotServiceType) => bot_method.tele_bot.on('inline_query', (ctx) => handleToListenInlineQuery(ctx, bot_method));

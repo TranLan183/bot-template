@@ -7,5 +7,13 @@
     "full_description": "full_description",
     "short_description": "short_description",
 
-    "test":"test"
+    "reply_btn_inline_keyboard": "This is a  Button Inline Keyboard",
+
+    "reply_btn_kb_keyboard": "This is a Keyboard Button Keyboard",
+    "reply_btn_kb_inline_keyboard": "This is a Keyboard Button Inline Keyboard",
+
+    "btn_inline_keyboard": "Button Inline Keyboard",
+
+    "btn_kb_keyboard": "Button Keyboard",
+    "btn_kb_inline_keyboard": "Button Keyboard Inline Keyboard"
 }
