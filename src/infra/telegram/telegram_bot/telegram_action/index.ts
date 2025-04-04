@@ -1,8 +1,6 @@
 import { Context } from "telegraf";
 import { ErrorHandler } from "../../../../lib/error_handler";
 import { convertActionContext } from "../../telegrot/utils";
-import { handleInvalidCacheUserSetting, isCacheUserSettingFieldsMissing } from "../helper_bot";
-import { getDataUserCache } from "../telegram_cache/cache.data_user";
 import { BotServiceType } from "../type";
 import { handleInlineKeyboard } from "./inline_keyboard";
 
@@ -11,15 +9,15 @@ const methodAction = {
 }
 
 const handleToListenAction = async (ctx: Context, bot_method: BotServiceType) => {
-    const { bot_script, setLastMessageReceivedDate, isBotReadyToStart, ConvertTeleError } = bot_method
+    const { bot_script, setLastMessageReceivedDate, isBotReadyToStart, ConvertTeleError, bot_cache } = bot_method
     setLastMessageReceivedDate()
     const { callbackData, userId, callbackId, chatId } = convertActionContext(ctx);
     if (!isBotReadyToStart()) {
         return
     }
     try {
-        let dataUserSetting = await getDataUserCache(userId)
-        if (!dataUserSetting || isCacheUserSettingFieldsMissing(dataUserSetting)) dataUserSetting = await handleInvalidCacheUserSetting(userId)
+        let dataUserSetting = await bot_cache.getDataUserCache(userId)
+        if (!dataUserSetting || bot_cache.isCacheUserSettingFieldsMissing(dataUserSetting)) dataUserSetting = await bot_cache.handleInvalidCacheUserSetting(userId)
         const [keyCallback] = callbackData.split('&')
         if (methodAction[keyCallback]) await methodAction[keyCallback](ctx, bot_method, dataUserSetting)
         try {

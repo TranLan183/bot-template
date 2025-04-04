@@ -6,12 +6,13 @@ import { ErrorHandler } from "../../../lib/error_handler"
 import { sleep } from "../../../lib/utils"
 import { TelegramBotScript } from "./script"
 import { TSendMessageError, TTeleErrorList, TTelegramBotInitOptions, TTelegramBotInitParams, TTelegramError } from "./type"
+import { TelegramCacheService } from "./cache"
 
-class TelegramBotService<GReplyMarkup, GTemplate> {
+class TelegramBotService<GReplyMarkup, GTemplate, GCache> {
     //Private variab
     private init_parameters: TTelegramBotInitParams<GReplyMarkup, GTemplate>
     private init_options: TTelegramBotInitOptions
-    private startup_func: (bot_method: TelegramBotService<GReplyMarkup, GTemplate>) => void
+    private startup_func: (bot_method: TelegramBotService<GReplyMarkup, GTemplate, GCache>) => void
     private DEFAULT_DELAY_BOT_START = 2000
     private RATE_LIMIT_RESPONSE = 4 * MILLISECOND_PER_ONE_SEC
     private bot_error_list: TTeleErrorList[]
@@ -29,7 +30,7 @@ class TelegramBotService<GReplyMarkup, GTemplate> {
     constructor(
         parameters: TTelegramBotInitParams<GReplyMarkup, GTemplate>,
         options: TTelegramBotInitOptions,
-        startup_func: (bot_method: TelegramBotService<GReplyMarkup, GTemplate>) => void
+        startup_func: (bot_method: TelegramBotService<GReplyMarkup, GTemplate, GCache>) => void,
     ) {
         this.startup_func = startup_func
         this.init_parameters = parameters
