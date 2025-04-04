@@ -8,6 +8,7 @@ import { handleBotInlineMode } from "./telegram_inline_query";
 import en from "./telegram_language/en.json";
 import { handleBotMessage } from "./telegram_message";
 import { handleBotStart } from "./telegram_start";
+import { BotServiceType } from "./type";
 
 const file_template = {
     en
@@ -28,13 +29,13 @@ const bot_template = new TTelegramBot({
     webhook_url: TG_BOT_WEBHOOK_URL,
     webhook_port: TG_BOT_WEBHOOK_PORT,
     local_telegram_url: TG_BOT_LOCAL_TELEGRAM_URL
-}, () => {
-    handleBotStart()
-    handleBotHelp()
-    handleBotCommand()
-    handleBotAction()
-    handleBotMessage()
-    handleBotInlineMode()
+}, (bot_method: BotServiceType) => {
+    handleBotStart(bot_method)
+    handleBotHelp(bot_method)
+    handleBotCommand(bot_method)
+    handleBotAction(bot_method)
+    handleBotMessage(bot_method)
+    handleBotInlineMode(bot_method)
 })
 
 export {

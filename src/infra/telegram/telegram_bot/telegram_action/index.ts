@@ -1,38 +1,40 @@
-import { bot_template } from "../index";
+import { Context } from "telegraf";
 import { ErrorHandler } from "../../../../lib/error_handler";
 import { convertActionContext } from "../../telegrot/utils";
 import { handleInvalidCacheUserSetting, isCacheUserSettingFieldsMissing } from "../helper_bot";
 import { getDataUserCache } from "../telegram_cache/cache.data_user";
+import { BotServiceType } from "../type";
 
 
 const methodAction = {
 
 }
 
-export const handleBotAction = () => {
-    const { tele_bot, setLastMessageReceivedDate, isBotReadyToStart, ConvertTeleError, bot_script } = bot_template
-    tele_bot.on('callback_query', async (ctx) => {
-        setLastMessageReceivedDate()
-        const { callbackData, userId, callbackId, username, timeInSec, chatId } = convertActionContext(ctx);
-        if (!isBotReadyToStart()) {
-            return
-        }
+const handleToListenAction = async (ctx: Context, bot_method: BotServiceType) => {
+    const { bot_script, setLastMessageReceivedDate, isBotReadyToStart, ConvertTeleError } = bot_method
+    setLastMessageReceivedDate()
+    const { callbackData, userId, callbackId, chatId } = convertActionContext(ctx);
+    if (!isBotReadyToStart()) {
+        return
+    }
+    try {
+        let dataUserSetting = await getDataUserCache(userId)
+        if (!dataUserSetting || isCacheUserSettingFieldsMissing(dataUserSetting)) dataUserSetting = await handleInvalidCacheUserSetting(userId)
+        const [keyCallback] = callbackData.split('&')
+        if (methodAction[keyCallback]) await methodAction[keyCallback](ctx, dataUserSetting)
         try {
-            let dataUserSetting = await getDataUserCache(userId)
-            if (!dataUserSetting || isCacheUserSettingFieldsMissing(dataUserSetting)) dataUserSetting = await handleInvalidCacheUserSetting(userId)
-            const [keyCallback] = callbackData.split('&')
-            if (methodAction[keyCallback]) await methodAction[keyCallback](ctx, dataUserSetting)
-            try {
-                bot_script.sendMessage(chatId, {
-                    template: 'test'
-                })
-                await ctx.telegram.answerCbQuery(callbackId)
-            } catch (err) {
-                bot_script.sendMessage(userId, { template: "error" })
-            }
-        } catch (error) {
-            ErrorHandler(error, { callbackData, userId }, handleBotAction.name)
-            ConvertTeleError(error, { context_id: callbackId })
+            bot_script.sendMessage(chatId, {
+                template: 'test'
+            })
+            await ctx.telegram.answerCbQuery(callbackId)
+        } catch (err) {
+            bot_script.sendMessage(userId, { template: "error" })
         }
-    });
+    } catch (error) {
+        ErrorHandler(error, { callbackData, userId }, handleBotAction.name)
+        ConvertTeleError(error, { context_id: callbackId })
+    }
 }
+
+
+export const handleBotAction = (bot_method: BotServiceType) => bot_method.tele_bot.on('callback_query', (ctx) => handleToListenAction(ctx, bot_method));

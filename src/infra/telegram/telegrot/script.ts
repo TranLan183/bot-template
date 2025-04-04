@@ -1,7 +1,7 @@
-import { BotCommand, BotCommandScope, InlineKeyboardMarkup } from 'telegraf/typings/core/types/typegram';
-import { ELifetime, IEntitiesMessage, ITelegramConfig, TBotTelegram, TDefaultReplyMarkup, TFileTemplate, TOptionSendAnswerCbQuery, TOptionSendBufferPhoto, TOptionSendMessage, TOptionSendUrlPhoto, TTemplateLanguage, TTemplateMessageConfig } from './type';
-import { MILLISECOND_PER_ONE_SEC } from '../../../lib/constants';
 import { Telegraf } from 'telegraf';
+import { BotCommand, BotCommandScope, InlineKeyboardMarkup } from 'telegraf/types';
+import { MILLISECOND_PER_ONE_SEC } from '../../../lib/constants';
+import { ELifetime, IEntitiesMessage, ITelegramConfig, TBotTelegram, TFileTemplate, TOptionSendAnswerCbQuery, TOptionSendBufferPhoto, TOptionSendMessage, TOptionSendUrlPhoto, TTemplateLanguage, TTemplateMessageConfig } from './type';
 
 class TelegramBotScript<GReplyMarkup, GTemplate> implements ITelegramConfig<GReplyMarkup, GTemplate> {
 

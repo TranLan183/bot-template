@@ -1,11 +1,11 @@
 import { BotCommand, InlineKeyboardButton } from 'telegraf/types'
-import { TelegramBotInlineKeyBoard } from "../telegrot/inline_keyboard"
-import { TelegramBotTemplate } from "../telegrot/template"
-import { ITelegramConfig, TCustomInlineKeyboardParams, TFileTemplate, TTemplateLanguage } from "../telegrot/type"
-import { TTemplate } from "./index"
-import { BotReplyMarkup } from "./type"
+import { TelegramBotInlineKeyBoard } from "../../telegrot/inline_keyboard"
+import { TelegramBotTemplate } from "../../telegrot/template"
+import { ITelegramConfig, TCustomInlineKeyboardParams, TFileTemplate, TTemplateLanguage } from "../../telegrot/type"
+import { TTemplateAgency } from "."
+import { AgencyReplyMarkup } from "./type"
 
-class TelegramConfig extends TelegramBotTemplate<BotReplyMarkup, TTemplate> implements ITelegramConfig<BotReplyMarkup, TTemplate> {
+class TelegramConfig extends TelegramBotTemplate<AgencyReplyMarkup, TTemplateAgency> implements ITelegramConfig<AgencyReplyMarkup, TTemplateAgency> {
 
     constructor(file_template: TFileTemplate, default_language?: TTemplateLanguage) {
         super(file_template, default_language)
@@ -36,8 +36,8 @@ class TelegramConfig extends TelegramBotTemplate<BotReplyMarkup, TTemplate> impl
         return commands
     }
 
-    reply_markup(language?: TTemplateLanguage): BotReplyMarkup {
-        const dataReplyMarkup: BotReplyMarkup = {
+    reply_markup = (language?: TTemplateLanguage): AgencyReplyMarkup => {
+        const dataReplyMarkup: AgencyReplyMarkup = {
             ...super.reply_markup(),
             welcome: () => {
                 return {
@@ -54,5 +54,5 @@ class TelegramConfig extends TelegramBotTemplate<BotReplyMarkup, TTemplate> impl
 }
 
 export {
-    TelegramConfig as TeleConfigBotTemplate
+    TelegramConfig as TeleConfigBotAgency
 }

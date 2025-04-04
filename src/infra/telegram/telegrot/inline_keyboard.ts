@@ -1,4 +1,4 @@
-import { InlineKeyboardButton } from "telegraf/typings/core/types/typegram"
+import { InlineKeyboardButton } from "telegraf/types"
 import { ITelegramBotInlineKeyword, TCallbackData, TCustomInlineKeyboardFunction, TCustomInlineKeyboardParams, TInputMultipleInlineKeyboard, TPaginationInlineKeyboardParams, TTemplateMessage, TTemplateMessageConfig } from "./type"
 
 class TelegramBotInlineKeyBoard<GTemplate> implements ITelegramBotInlineKeyword<GTemplate> {
@@ -11,7 +11,7 @@ class TelegramBotInlineKeyBoard<GTemplate> implements ITelegramBotInlineKeyword<
         this.custom_inline_keyboard = custom_inline_keyboard
         this.callback_data = callback_data
     }
-    
+
     public handleMultipleInlineKeyBoard = (parameters: TInputMultipleInlineKeyboard<GTemplate>) => {
         const { callback_key, number_btn_row = 3, message_data, } = parameters
         const message = message_data ? message_data : this.template_message(parameters as TTemplateMessageConfig<GTemplate>)

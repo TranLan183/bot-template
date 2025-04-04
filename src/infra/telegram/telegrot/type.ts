@@ -1,4 +1,4 @@
-import { BotCommand, ForceReply, InlineKeyboardButton, InlineKeyboardMarkup, Message, ParseMode, ReplyKeyboardMarkup, ReplyKeyboardRemove, Update } from "telegraf/typings/core/types/typegram";
+import { BotCommand, ForceReply, InlineKeyboardButton, InlineKeyboardMarkup, Message, ParseMode, ReplyKeyboardMarkup, ReplyKeyboardRemove, Update } from 'telegraf/types'
 import { Context, NarrowedContext, Telegraf } from "telegraf"
 type TTemplateLanguage = 'en' | 'zh' | 'ru' | 'vi' | 'fr' | 'id'
 
