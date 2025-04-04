@@ -6,7 +6,6 @@
   "scripts": {
     "scripts": "node script.mjs",
     "test": "ts-node src/test/index.ts",
-    "test:api": "ts-node src/test/api.test.ts",
     "test:tele": "ts-node src/test/telegram.test.ts",
     "build": "rm -rf dist && tsc",
     "start": "node --no-warnings dist/index.js",
