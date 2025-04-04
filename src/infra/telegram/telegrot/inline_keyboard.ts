@@ -1,5 +1,5 @@
 import { InlineKeyboardButton } from "telegraf/typings/core/types/typegram"
-import { ITelegramBotInlineKeyword, TCallbackData, TCustomInlineKeyboardFunction, TCustomInlineKeyboardParams, TInputMultipleInlineKeyboard, TPaginationInlineKeyboardParams, TTemplateMessage, TTemplateMessageConfig } from "./type"
+import { ITelegramBotInlineKeyword, TCallbackData, TCustomInlineKeyboardFunction, TInputMultipleInlineKeyboard, TPaginationInlineKeyboardParams, TTemplateMessage, TTemplateMessageConfig } from "./type"
 
 class TelegramBotInlineKeyBoard<GTemplate> implements ITelegramBotInlineKeyword<GTemplate> {
     private template_message: TTemplateMessage<GTemplate>

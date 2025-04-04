@@ -1,5 +1,5 @@
+import { Context } from "telegraf"
 import { ErrorHandler } from "../../../../lib/error_handler"
-import { TMessageContext } from "../../telegrot/type"
 import { convertMessageContext } from "../../telegrot/utils"
 import { handleInvalidCacheUserSetting, isCacheUserSettingFieldsMissing } from "../helper_bot"
 import { bot_template } from "../index"
@@ -7,7 +7,7 @@ import { getDataUserCache } from "../telegram_cache/cache.data_user"
 import { handlePrivateChat } from "./private_message"
 import { handlePublicChat } from "./public_message"
 
-const listenMessageToHandleChatType = async (ctx: TMessageContext) => {
+const listenMessageToHandleChatType = async (ctx: Context) => {
     const { bot_start_at, ConvertTeleError, } = bot_template
     const dataMessageContext = convertMessageContext(ctx)
     const { chatType, chatId, message, userId, timeInSec } = dataMessageContext
