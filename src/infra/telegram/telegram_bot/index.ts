@@ -1,4 +1,4 @@
-import { ENABLE_TELEGRAM, isProductionRun, TELEGRAM_BOT_NAME, TELEGRAM_BOT_TOKEN, TG_BOT_IS_USE_LOCAL_TELEGRAM, TG_BOT_IS_USE_WEBHOOK, TG_BOT_LOCAL_TELEGRAM_URL, TG_BOT_WEBHOOK_PORT, TG_BOT_WEBHOOK_URL } from "../../../config";
+import { ENABLE_TELEGRAM,TELEGRAM_BOT_NAME, TELEGRAM_BOT_TOKEN, REDIS_URI, REDIS_DB_NUMBER } from "../../../config";
 import { TelegramBotService } from "../telegrot";
 import { TelegramBotConfigTemplate } from "./template";
 import { TeleBotErrorList, TeleBotErrorListLifeTime } from "./error_list";
@@ -10,7 +10,6 @@ import en from "./telegram_language/en.json";
 import { handleBotMessage } from "./telegram_message";
 import { handleBotStart } from "./telegram_start";
 import { TelegramBotConfigCache } from './cache/cache.user_setting'
-import { ioredis } from "../../cache/redis";
 
 const file_template = {
     en
@@ -23,16 +22,11 @@ const bot_example = new TelegramBotService({
     is_enable: ENABLE_TELEGRAM,
     bot_config: {
         template: new TelegramBotConfigTemplate(file_template),
-        cache: new TelegramBotConfigCache(TELEGRAM_BOT_NAME, ioredis)
+        cache: new TelegramBotConfigCache(TELEGRAM_BOT_NAME, REDIS_URI, REDIS_DB_NUMBER)
     },
     bot_error_list: [TeleBotErrorList, TeleBotErrorListLifeTime],
 }, {
-    is_use_local_telegram: TG_BOT_IS_USE_LOCAL_TELEGRAM,
-    is_use_webhook: TG_BOT_IS_USE_WEBHOOK,
-    delay_bot_start: isProductionRun ? 10000 : 2000,
-    webhook_url: TG_BOT_WEBHOOK_URL,
-    webhook_port: TG_BOT_WEBHOOK_PORT,
-    local_telegram_url: TG_BOT_LOCAL_TELEGRAM_URL
+    
 }, (bot_method) => {
     handleBotStart(bot_method)
     handleBotHelp(bot_method)

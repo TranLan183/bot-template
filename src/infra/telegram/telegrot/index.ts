@@ -6,7 +6,6 @@ import { ErrorHandler } from "../../../lib/error_handler"
 import { sleep } from "../../../lib/utils"
 import { TelegramBotScript } from "./script"
 import { TSendMessageError, TTeleErrorList, TTelegramBotInitOptions, TTelegramBotInitParams, TTelegramError } from "./type"
-import { TelegramCacheService } from "./cache"
 
 class TelegramBotService<GReplyMarkup, GTemplate, GCache> {
     //Private variab
