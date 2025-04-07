@@ -1,7 +1,6 @@
 import { ErrorHandler } from "../../../../../lib/error_handler";
 import { TDataContext, TTemplateLanguage } from "../../../telegrot/type";
-import { TUserSetting } from "../../telegram_cache/cache.data_user";
-import { BotServiceType } from "../../type";
+import { BotServiceType, TUserSetting } from "../../type";
 
 export const BotTradingSteps = {
     welcome: "welcome",

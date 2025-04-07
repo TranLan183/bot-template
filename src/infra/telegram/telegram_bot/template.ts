@@ -1,16 +1,20 @@
-import { BotCommand, InlineKeyboardButton } from "telegraf/typings/core/types/typegram"
-import { TelegramBotInlineKeyBoard } from "../telegrot/inline_keyboard"
-import { EFlag, TelegramBotTemplate } from "../telegrot/template"
-import { ITelegramConfig, TCustomInlineKeyboardParams, TFileTemplate, TTemplateLanguage } from "../telegrot/type"
-import { BotReplyMarkup, BotTemplate } from "./type"
+import { BotCommand, InlineKeyboardButton } from 'telegraf/types';
+import { TelegramBotInlineKeyBoard } from "../telegrot/inline_keyboard";
+import { EFlag, TelegramBotTemplate } from "../telegrot/template";
+import { TCustomInlineKeyboardParams, TFileTemplate, TTemplateLanguage } from "../telegrot/type";
+import { BotReplyMarkup, BotTemplate } from "./type";
 
-class TelegramConfig extends TelegramBotTemplate<BotReplyMarkup, BotTemplate> implements ITelegramConfig<BotReplyMarkup, BotTemplate> {
+class TelegramBotConfigTemplate extends TelegramBotTemplate<BotReplyMarkup, BotTemplate> {
 
     private callback_data = {
         unknown_callback: 'unknown_callback',
         test: 'test',
         btn_switch_language: 'btn_switch_language',
         btn_inline_keyboard: 'btn_inline_keyboard'
+    }
+
+    constructor(file_template: TFileTemplate, default_language: TTemplateLanguage = 'en') {
+        super(file_template, default_language)
     }
 
     private customInlineKeyboard = (params: TCustomInlineKeyboardParams) => {
@@ -26,10 +30,6 @@ class TelegramConfig extends TelegramBotTemplate<BotReplyMarkup, BotTemplate> im
                 break
         }
         return keyboardDefault
-    }
-
-    constructor(file_template: TFileTemplate, default_language: TTemplateLanguage = 'en') {
-        super(file_template, default_language)
     }
 
     private CustomTelegramKeyboard = new TelegramBotInlineKeyBoard(this.template_message, this.customInlineKeyboard, this.callback_data)
@@ -72,5 +72,6 @@ class TelegramConfig extends TelegramBotTemplate<BotReplyMarkup, BotTemplate> im
 }
 
 export {
-    TelegramConfig as TeleConfigBotTemplate
-}
+    TelegramBotConfigTemplate
+};
+

@@ -2,7 +2,6 @@ import { Context } from "telegraf"
 import { ERROR_CODE, ErrMsg, ErrorHandler } from "../../../../lib/error_handler"
 import { convertMessageContext } from "../../telegrot/utils"
 import { handleInvalidCacheUserSetting, isCacheUserSettingFieldsMissing } from '../helper_bot'
-import { getDataUserCache } from "../telegram_cache/cache.data_user"
 import { BotServiceType } from "../type"
 
 const methodCommand = {
@@ -10,7 +9,7 @@ const methodCommand = {
 }
 
 const handleToListenCommand = async (ctx: Context, bot_method: BotServiceType, command: string) => {
-    const { setLastMessageReceivedDate, messageInQueue, isBotReadyToStart, bot_start_at, ConvertTeleError } = bot_method
+    const { setLastMessageReceivedDate, messageInQueue, isBotReadyToStart, bot_start_at, ConvertTeleError, bot_script } = bot_method
     setLastMessageReceivedDate()
     const dataConvertContext = convertMessageContext(ctx)
     const { chatId, userId, timeInSec } = dataConvertContext
@@ -20,8 +19,8 @@ const handleToListenCommand = async (ctx: Context, bot_method: BotServiceType, c
         return
     }
     try {
-        let dataUserSetting = await getDataUserCache(userId)
-        if (!dataUserSetting || isCacheUserSettingFieldsMissing(dataUserSetting)) dataUserSetting = await handleInvalidCacheUserSetting(userId)
+        let dataUserSetting = await bot_script.user_setting.getDataUserCache(userId)
+        if (!dataUserSetting || isCacheUserSettingFieldsMissing(dataUserSetting)) dataUserSetting = await handleInvalidCacheUserSetting(bot_method,userId)
         if (!('keyCommand' in dataConvertContext)) throw ErrMsg(ERROR_CODE.COMMAND_INVALID_ARGUMENTS)
         methodCommand[command](dataConvertContext, bot_method, dataUserSetting)
     } catch (error) {

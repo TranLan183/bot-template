@@ -1,8 +1,7 @@
 import { Context } from "telegraf";
 import { ErrorHandler } from "../../../../lib/error_handler";
 import { convertActionContext } from "../../telegrot/utils";
-import { TUserSetting } from "../telegram_cache/cache.data_user";
-import { BotServiceType } from "../type";
+import { BotServiceType,TUserSetting } from "../type";
 
 export const handleInlineKeyboard = async (ctx: Context, bot_method: BotServiceType, dataUserSetting: TUserSetting) => {
     const { bot_script, ConvertTeleError } = bot_method

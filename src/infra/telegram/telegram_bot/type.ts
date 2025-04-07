@@ -1,7 +1,6 @@
 import { file_template } from "."
 import { TelegramBotService } from "../telegrot"
-import { TDefaultReplyMarkup, TReplyMarkup } from "../telegrot/type"
-
+import { TDefaultReplyMarkup, TReplyMarkup ,TCacheDataUser} from "../telegrot/type"
 
 type BotReplyMarkup = TDefaultReplyMarkup & {
     welcome: () => TReplyMarkup
@@ -10,10 +9,15 @@ type BotReplyMarkup = TDefaultReplyMarkup & {
 
 type BotTemplate = keyof typeof file_template.en
 
-type BotServiceType = TelegramBotService<BotReplyMarkup, BotTemplate>
+type TUserSetting = TCacheDataUser & {
+    createAt?: number
+}
+
+type BotServiceType = TelegramBotService<BotReplyMarkup, BotTemplate, TUserSetting>
 
 export {
     BotReplyMarkup,
     BotServiceType,
-    BotTemplate
+    BotTemplate,
+    TUserSetting
 }

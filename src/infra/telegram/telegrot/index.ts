@@ -10,7 +10,7 @@ import { TelegramCacheService } from "./cache"
 
 class TelegramBotService<GReplyMarkup, GTemplate, GCache> {
     //Private variab
-    private init_parameters: TTelegramBotInitParams<GReplyMarkup, GTemplate>
+    private init_parameters: TTelegramBotInitParams<GReplyMarkup, GTemplate, GCache>
     private init_options: TTelegramBotInitOptions
     private startup_func: (bot_method: TelegramBotService<GReplyMarkup, GTemplate, GCache>) => void
     private DEFAULT_DELAY_BOT_START = 2000
@@ -22,13 +22,13 @@ class TelegramBotService<GReplyMarkup, GTemplate, GCache> {
         finish: "finish",
     }
     public tele_bot: Telegraf
-    public bot_script: TelegramBotScript<GReplyMarkup, GTemplate>
+    public bot_script: TelegramBotScript<GReplyMarkup, GTemplate, GCache>
     public bot_start_at: Date = new Date()
     public last_bot_message_received_at: Date = new Date()
     public messageInQueue = new Map<number, { type: "start" | "command" | "action" | "message" | "inline_mode", ctx: any }>()
 
     constructor(
-        parameters: TTelegramBotInitParams<GReplyMarkup, GTemplate>,
+        parameters: TTelegramBotInitParams<GReplyMarkup, GTemplate, GCache>,
         options: TTelegramBotInitOptions,
         startup_func: (bot_method: TelegramBotService<GReplyMarkup, GTemplate, GCache>) => void,
     ) {

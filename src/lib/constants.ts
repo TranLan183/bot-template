@@ -4,4 +4,5 @@ export const MILLISECOND_PER_ONE_DAY = 86400000
 export const SECOND_OF_ONE_DAY = 86400
 export const SECOND_OF_ONE_HOUR = 3600
 export const SECOND_OF_ONE_MINUTE = 60
+export const SUN_PER_TRX = 100000
 export const PERCENT = 100

@@ -1,4 +1,5 @@
 import { ITelegramBotTemplate, TDefaultReplyMarkup, TFileTemplate, TTemplateLanguage, TTemplateMessageConfig } from './type';
+import { BotCommand } from 'telegraf/types';
 
 enum EFlag {
     '🇬🇧' = 'en',
@@ -68,6 +69,10 @@ class TelegramBotTemplate<GReplyMarkup, GTemplate> implements ITelegramBotTempla
             }
         }
         return dataReplyMarkup as unknown as GReplyMarkup
+    }
+
+    all_commands(language?: TTemplateLanguage): BotCommand[] {
+        return []
     }
 }
 

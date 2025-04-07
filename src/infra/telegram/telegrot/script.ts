@@ -1,9 +1,9 @@
 import { Telegraf } from 'telegraf';
-import { ELifetime, IEntitiesMessage, ITelegramConfig, TBotTelegram, TFileTemplate, TOptionEditMessage, TOptionSendAnswerCbQuery, TOptionSendBufferPhoto, TOptionSendMessage, TOptionSendUrlPhoto, TTemplateLanguage, TTemplateMessageConfig } from './type';
+import { ELifetime, IEntitiesMessage, ITelegramConfig, TBotTelegram, TFileTemplate, TOptionEditMessage, TOptionSendAnswerCbQuery, TOptionSendBufferPhoto, TOptionSendMessage, TOptionSendUrlPhoto, TTemplateLanguage, TTemplateMessageConfig, ITelegramCache} from './type';
 import { BotCommand, BotCommandScope, InlineKeyboardMarkup } from 'telegraf/types';
 import { MILLISECOND_PER_ONE_SEC } from '../../../lib/constants';
 
-class TelegramBotScript<GReplyMarkup, GTemplate> implements ITelegramConfig<GReplyMarkup, GTemplate> {
+class TelegramBotScript<GReplyMarkup, GTemplate, GCache>  {
 
     public bot_tele: TBotTelegram
     public default_language: TTemplateLanguage;
@@ -12,15 +12,17 @@ class TelegramBotScript<GReplyMarkup, GTemplate> implements ITelegramConfig<GRep
     public template_message: (parameters: TTemplateMessageConfig<GTemplate>) => string
     public reply_markup: (language?: TTemplateLanguage) => GReplyMarkup
     public all_commands: (language?: TTemplateLanguage) => BotCommand[]
+    public user_setting: ITelegramCache<GCache>
 
-    constructor(bot_tele: Telegraf, configBot: ITelegramConfig<GReplyMarkup, GTemplate>) {
+    constructor(bot_tele: Telegraf, configBot: ITelegramConfig<GReplyMarkup, GTemplate, GCache>) {
         this.bot_tele = bot_tele
-        this.template_message = configBot.template_message
-        this.entities_message = configBot.entities_message
-        this.reply_markup = configBot.reply_markup
-        this.all_commands = configBot.all_commands
-        this.default_language = configBot.default_language
-        this.file_template = configBot.file_template
+        this.template_message = configBot.template.template_message
+        this.entities_message = configBot.template.entities_message
+        this.reply_markup = configBot.template.reply_markup
+        this.all_commands = configBot.template.all_commands
+        this.default_language = configBot.template.default_language
+        this.file_template = configBot.template.file_template
+        this.user_setting = configBot.cache
     }
 
 

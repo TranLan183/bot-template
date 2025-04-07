@@ -2,18 +2,17 @@ import { Context } from "telegraf"
 import { ErrorHandler } from "../../../../lib/error_handler"
 import { convertMessageContext } from "../../telegrot/utils"
 import { handleInvalidCacheUserSetting, isCacheUserSettingFieldsMissing } from "../helper_bot"
-import { getDataUserCache } from "../telegram_cache/cache.data_user"
 import { BotServiceType } from "../type"
 import { handlePrivateChat } from "./private_message"
 import { handlePublicChat } from "./public_message"
 
 const listenMessageToHandleChatType = async (ctx: Context, bot_method: BotServiceType) => {
-    const { bot_start_at, ConvertTeleError, } = bot_method
+    const { bot_start_at, ConvertTeleError, bot_script } = bot_method
     const dataMessageContext = convertMessageContext(ctx)
     const { chatType, chatId, message, userId, timeInSec } = dataMessageContext
     if (timeInSec < (bot_start_at.getTime() / 1000)) return
-    let dataUserSetting = await getDataUserCache(userId)
-    if (!dataUserSetting || isCacheUserSettingFieldsMissing(dataUserSetting)) dataUserSetting = await handleInvalidCacheUserSetting(userId)
+    let dataUserSetting = await bot_script.user_setting.getDataUserCache(userId)
+    if (!dataUserSetting || isCacheUserSettingFieldsMissing(dataUserSetting)) dataUserSetting = await handleInvalidCacheUserSetting(bot_method,userId)
     const { language } = dataUserSetting
     try {
         switch (chatType) {

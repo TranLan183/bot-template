@@ -1,57 +1,64 @@
+import { ITelegramCache } from './type'
 
-class TelegramCacheService<GCache> {
+class TelegramCacheService<GCache> implements ITelegramCache<GCache> {
     private localCache: Map<string, GCache>;
     private DEFAULT_KEY_DATA_USER_CACHE = "DATA_USER_CACHE"
     private bot_name: string
 
-    private constructor(bot_name: string) {
+    constructor(bot_name: string) {
         this.bot_name = bot_name
         this.localCache = new Map<string, GCache>();
     }
 
-    private createCacheKey = (userId: string): string => {
+    createCacheKey = (userId: string): string => {
         return `${this.bot_name}.${this.DEFAULT_KEY_DATA_USER_CACHE}_${userId}`;
     }
 
-    public getDataUserCache = (userId: string): GCache | null => {
-        const key = this.createCacheKey(userId);
-        return this.localCache.get(key) || null;
+    getDataUserCache(userId: string): Promise<GCache | null>  {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+              resolve(this.localCache.get(userId) || null);
+            }, 0);
+        });
     }
 
-    public setDataUserCache = (userId: string, data: Partial<GCache>): void => {
-        const key = this.createCacheKey(userId);
-        const existingData = this.localCache.get(key) || data;
-        const updatedData = { ...existingData, ...data };
-        this.localCache.set(key, updatedData as GCache);
+    setDataUserCache(userId: string, data: Partial<GCache>): Promise<void> {
+        return new Promise((resolve, reject)=> {
+            setTimeout(() => {
+                try {
+                    const key = this.createCacheKey(userId);
+                    const existingData = this.localCache.get(key) || data;
+                    const updatedData = { ...existingData, ...data };
+                    this.localCache.set(key, updatedData as GCache)
+                    resolve()
+                } catch (error) {
+                    reject(error);
+                }
+            }, 0)
+        })
     }
 
-    public delDataUserCache = (userId: string, fields?: (keyof GCache)[]): void => {
-        const key = this.createCacheKey(userId);
-        if (fields) {
-            const existingData = this.localCache.get(key);
-            if (existingData) {
-                fields.forEach(field => delete existingData[field]);
-                this.localCache.set(userId, existingData);
-            }
-        } else {
-            this.localCache.delete(key);
-        }
+    delDataUserCache(userId: string, fields?: (keyof GCache)[]): Promise<void> {
+        return new Promise((resolve,reject) => {
+            setTimeout(()=> {
+                try {
+                    const key = this.createCacheKey(userId);
+                    const existingData = this.localCache.get(key);
+                    if (existingData) {
+                        if (fields) {
+                            fields.forEach(field => delete existingData[field]);
+                            this.localCache.set(userId, existingData);
+                        } else {
+                            this.localCache.delete(key);
+                        }
+                    }
+                    resolve();
+                } catch (error) {
+                    reject(error);
+                }
+            }) 
+        })
     }
-
-    // public handldDefaultCacheUserSetting = async (userId: string) => {
-    //     const dataUserSetting: TCacheDataUser = {
-    //         user_step: 'finish', language: 'en',
-    //     }
-    //     await this.setDataUserCache(userId, dataUserSetting)
-    //     return dataUserSetting
-    // }
-
-    // public isCacheUserSettingFieldsMissing = (dataUserSetting: GCache) => {
-    //     const arrFieldUserSetting: (keyof GCache)[] = [
-    //         "user_step", "language"
-    //     ]
-    //     return arrFieldUserSetting.some(key => dataUserSetting[key] === undefined)
-    // }
 }
 
 export {
