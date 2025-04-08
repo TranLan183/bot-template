@@ -21,14 +21,14 @@ const bot_example_1 = new TelegramBotService({
     },
     bot_error_list: [TeleBotErrorList, TeleBotErrorListLifeTime],
 }, {
-    
+
 }, (bot_method) => {
-    handleBotStart(bot_method)
-    handleBotHelp(bot_method)
-    handleBotCommand(bot_method)
-    handleBotAction(bot_method)
-    handleBotMessage(bot_method)
-    handleBotInlineMode(bot_method)
+    // handleBotStart(bot_method)
+    // handleBotHelp(bot_method)
+    // handleBotCommand(bot_method)
+    // handleBotAction(bot_method)
+    // handleBotMessage(bot_method)
+    // handleBotInlineMode(bot_method)
 })
 
 export {

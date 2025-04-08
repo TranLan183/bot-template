@@ -1,9 +1,11 @@
 import { Telegraf } from 'telegraf';
-import { ELifetime, IEntitiesMessage, ITelegramConfig, TBotTelegram, TFileTemplate, TOptionEditMessage, TOptionSendAnswerCbQuery, TOptionSendBufferPhoto, TOptionSendMessage, TOptionSendUrlPhoto, TTemplateLanguage, TTemplateMessageConfig, ITelegramCache} from './type';
+import { ELifetime, IEntitiesMessage, ITelegramConfig, TBotTelegram, TFileTemplate, TOptionEditMessage, TOptionSendAnswerCbQuery, TOptionSendBufferPhoto, TOptionSendMessage, TOptionSendUrlPhoto, TTemplateLanguage, TTemplateMessageConfig, ITelegramCache } from './type';
 import { BotCommand, BotCommandScope, InlineKeyboardMarkup } from 'telegraf/types';
 import { MILLISECOND_PER_ONE_SEC } from '../../../lib/constants';
 
-class TelegramBotScript<GReplyMarkup, GTemplate, GCache>  {
+let index_1 = 0
+
+class TelegramBotScript<GReplyMarkup, GTemplate, GCache> {
 
     public bot_tele: TBotTelegram
     public default_language: TTemplateLanguage;
@@ -15,6 +17,8 @@ class TelegramBotScript<GReplyMarkup, GTemplate, GCache>  {
     public user_setting: ITelegramCache<GCache>
 
     constructor(bot_tele: Telegraf, configBot: ITelegramConfig<GReplyMarkup, GTemplate, GCache>) {
+        index_1++
+        console.log({ index_1 })
         this.bot_tele = bot_tele
         this.template_message = configBot.template.template_message
         this.entities_message = configBot.template.entities_message

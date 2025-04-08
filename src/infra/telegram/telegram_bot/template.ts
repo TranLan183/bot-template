@@ -4,6 +4,7 @@ import { EFlag, TelegramBotTemplate } from "../telegrot/template";
 import { TCustomInlineKeyboardParams, TFileTemplate, TTemplateLanguage } from "../telegrot/type";
 import { BotReplyMarkup, BotTemplate } from "./type";
 
+let index_3 = 0
 class TelegramBotConfigTemplate extends TelegramBotTemplate<BotReplyMarkup, BotTemplate> {
 
     private callback_data = {
@@ -15,6 +16,8 @@ class TelegramBotConfigTemplate extends TelegramBotTemplate<BotReplyMarkup, BotT
 
     constructor(file_template: TFileTemplate, default_language: TTemplateLanguage = 'en') {
         super(file_template, default_language)
+        index_3++
+        console.log({ index_3 })
     }
 
     private customInlineKeyboard = (params: TCustomInlineKeyboardParams) => {
