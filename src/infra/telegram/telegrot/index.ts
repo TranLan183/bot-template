@@ -7,8 +7,6 @@ import { sleep } from "../../../lib/utils"
 import { TelegramBotScript } from "./script"
 import { TSendMessageError, TTeleErrorList, TTelegramBotInitOptions, TTelegramBotInitParams, TTelegramError } from "./type"
 
-let index_2 = 0
-
 class TelegramBotService<GReplyMarkup, GTemplate, GCache> {
     //Private variab
     private init_parameters: TTelegramBotInitParams<GReplyMarkup, GTemplate, GCache>
@@ -33,8 +31,6 @@ class TelegramBotService<GReplyMarkup, GTemplate, GCache> {
         options: TTelegramBotInitOptions,
         startup_func: (bot_method: TelegramBotService<GReplyMarkup, GTemplate, GCache>) => void,
     ) {
-        index_2++
-        console.log({ index_2 })
         this.startup_func = startup_func
         this.init_parameters = parameters
         this.init_options = options

@@ -3,15 +3,12 @@ import { TelegramCacheService } from "../../telegrot/cache";
 import { TUserSetting } from "../type";
 import Redis from 'ioredis'
 
-let index_0 = 0
 class TelegramBotConfigCache extends TelegramCacheService<TUserSetting> {
 
     private redis: Redis
 
     constructor(bot_name: string, redis_uri: string, db_number: number) {
         super(bot_name)
-        index_0++
-        console.log({ index_0 })
         this.redis = this.connectRedis(redis_uri, db_number)
     }
 
