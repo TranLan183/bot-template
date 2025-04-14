@@ -31,6 +31,8 @@ class TelegramBotService<GReplyMarkup, GTemplate, GCache> {
         options: TTelegramBotInitOptions,
         startup_func: (bot_method: TelegramBotService<GReplyMarkup, GTemplate, GCache>) => void,
     ) {
+        console.log(parameters);
+        
         this.startup_func = startup_func
         this.init_parameters = parameters
         this.init_options = options

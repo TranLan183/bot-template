@@ -17,8 +17,8 @@ const handleToListenAction = async (ctx: Context, bot_method: BotServiceType) =>
         return
     }
     try {
-        let dataUserSetting = await bot_script.user_setting.getDataUserCache(userId)
-        if (!dataUserSetting || isCacheUserSettingFieldsMissing(dataUserSetting)) dataUserSetting = await handleInvalidCacheUserSetting(bot_method,userId)
+        let dataUserSetting = await bot_script.cache.user_setting.getDataUserCache(userId)
+        if (!dataUserSetting || isCacheUserSettingFieldsMissing(dataUserSetting)) dataUserSetting = await handleInvalidCacheUserSetting(bot_method, userId)
         const [keyCallback] = callbackData.split('&')
         if (methodAction[keyCallback]) await methodAction[keyCallback](ctx, bot_method, dataUserSetting)
         try {
@@ -27,7 +27,7 @@ const handleToListenAction = async (ctx: Context, bot_method: BotServiceType) =>
             bot_script.sendMessage(userId, { template: "error" })
         }
     } catch (error) {
-        ErrorHandler(error, { callbackData, userId, chatId}, handleBotAction.name)
+        ErrorHandler(error, { callbackData, userId, chatId }, handleBotAction.name)
         ConvertTeleError(error, { context_id: callbackId })
     }
 }

@@ -5,7 +5,7 @@ export const handleInvalidCacheUserSetting = async (bot_method: BotServiceType,u
     const dataUserSetting: TUserSetting = {
         user_step: 'finish', language: 'en'
     }
-    await bot_script.user_setting.setDataUserCache(userId, dataUserSetting)
+    await bot_script.cache.user_setting.setDataUserCache(userId, dataUserSetting)
     return dataUserSetting
 }
 

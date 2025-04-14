@@ -18,14 +18,14 @@ const handleToListenCommand = async (ctx: Context, bot_method: BotServiceType, c
         messageInQueue.set(chatId, { type: "command", ctx: dataConvertContext })
         return
     }
+    let dataUserSetting = await bot_script.cache.user_setting.getUserSetting(userId)
     try {
-        let dataUserSetting = await bot_script.user_setting.getDataUserCache(userId)
-        if (!dataUserSetting || isCacheUserSettingFieldsMissing(dataUserSetting)) dataUserSetting = await handleInvalidCacheUserSetting(bot_method,userId)
+        if (!dataUserSetting || isCacheUserSettingFieldsMissing(dataUserSetting)) dataUserSetting = await handleInvalidCacheUserSetting(bot_method, userId)
         if (!('keyCommand' in dataConvertContext)) throw ErrMsg(ERROR_CODE.COMMAND_INVALID_ARGUMENTS)
         methodCommand[command](dataConvertContext, bot_method, dataUserSetting)
     } catch (error) {
         ErrorHandler(error, { chatId, userId }, handleBotCommand.name)
-        ConvertTeleError(error, { context_id: chatId, })
+        ConvertTeleError(error, { context_id: chatId, language: dataUserSetting?.language })
     }
 }
 

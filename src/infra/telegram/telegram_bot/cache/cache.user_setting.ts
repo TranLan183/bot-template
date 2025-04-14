@@ -2,31 +2,19 @@ import { successConsoleLog } from "../../../../lib/color-log";
 import { TelegramCacheService } from "../../telegrot/cache";
 import { TUserSetting } from "../type";
 import Redis from 'ioredis'
+import { ITelegramCache } from "../../telegrot/type";
 
-class TelegramBotConfigCache extends TelegramCacheService<TUserSetting> {
+class TelegramBotConfigCache extends TelegramCacheService<TUserSetting> implements ITelegramCache<TUserSetting> {
 
     private redis: Redis
 
-    constructor(bot_name: string, redis_uri: string, db_number: number) {
+    constructor(bot_name: string, redis_instance: Redis) {
         super(bot_name)
-        this.redis = this.connectRedis(redis_uri, db_number)
+        this.redis = redis_instance
     }
 
-    private connectRedis = (redis_uri: string, db_number: number) => {
-        const redis = new Redis(redis_uri, {
-            retryStrategy: (times) => {
-                const delay = Math.min(times * 50, 2000);
-                return delay;
-            },
-            db: db_number
-        })
-        if (redis["connector"]["connecting"]) {
-            successConsoleLog(`🚀 redis: connected`)
-        }
-        return redis
-    }
 
-    getDataUserCache = async (userId: string) => {
+    getDataUserCache = async (userId: string): Promise<TUserSetting | null> => {
         try {
             const key = this.createCacheKey(userId)
             const result = await this.redis.get(key)
@@ -59,6 +47,11 @@ class TelegramBotConfigCache extends TelegramCacheService<TUserSetting> {
             await this.redis.del(key)
         }
         return
+    }
+
+    getUserSetting = async (userId: string) => {
+        const data = await this.getDataUserCache(userId)
+        return data
     }
 }
 

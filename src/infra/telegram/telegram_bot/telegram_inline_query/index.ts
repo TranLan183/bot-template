@@ -1,5 +1,4 @@
 import { Context } from "telegraf";
-import { bot_example } from "../index";
 import { BotServiceType } from "../type";
 import { ErrorHandler } from "../../../../lib/error_handler";
 import { convertInlineContext } from "../../telegrot/utils";

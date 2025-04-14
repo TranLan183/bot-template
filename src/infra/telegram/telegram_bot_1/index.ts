@@ -1,4 +1,4 @@
-import { REDIS_DB_NUMBER, REDIS_URI } from "../../../config"
+import { ioredis } from "../../cache/redis"
 import { file_template } from "../telegram_bot"
 import { TelegramBotConfigCache } from "../telegram_bot/cache/cache.user_setting"
 import { TeleBotErrorList, TeleBotErrorListLifeTime } from "../telegram_bot/error_list"
@@ -11,7 +11,7 @@ const bot_example_1 = new TelegramBotService({
     is_enable: true,
     bot_config: {
         template: new TelegramBotConfigTemplate(file_template),
-        cache: new TelegramBotConfigCache("test_bot_1", REDIS_URI, REDIS_DB_NUMBER)
+        cache: new TelegramBotConfigCache("test_bot_1", ioredis)
     },
     bot_error_list: [TeleBotErrorList, TeleBotErrorListLifeTime],
 }, {

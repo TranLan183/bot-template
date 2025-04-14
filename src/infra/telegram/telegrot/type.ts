@@ -119,8 +119,8 @@ interface ITelegramBotInlineKeyword<GTemplate> {
 }
 
 interface ITelegramConfig<GReplyMarkup, GTemplate, GCache> {
-    template: ITelegramBotTemplate<GReplyMarkup,GTemplate>
-    cache: ITelegramCache<GCache>
+    template: ITelegramBotTemplate<GReplyMarkup, GTemplate>
+    cache: GCache
 }
 
 type TChatMember = {
@@ -181,7 +181,6 @@ type TCacheDataUser = {
     message_id?: number
 }
 
-type TBotTelegram = Telegraf<Context<Update>>
 
 type TDataPagination<T> = {
     page: number,
@@ -236,5 +235,5 @@ type TTelegramBotInitOptions = {
 }
 
 export {
-    ELifetime, IEntitiesMessage, ITelegramBotInlineKeyword, ITelegramBotTemplate, ITelegramConfig, TBotTelegram, TCacheDataUser, TCallbackData, TCustomInlineKeyboardFunction, TCustomInlineKeyboardParams, TDataContext, TDataContextAction, TDataInlineContext, TDataPagination, TDefaultReplyMarkup, TFileTemplate, TGenerateStartPayloadLink, TInputMultipleInlineKeyboard, TOptionSendAnswerCbQuery, TOptionSendBufferPhoto, TOptionSendMessage, TOptionSendUrlPhoto, TPaginationInlineKeyboardParams, TReplyMarkup, TSendMessageError, TTeleErrorList, TTelegramBotInitOptions, TTelegramBotInitParams, TTelegramError, TTemplateLanguage, TTemplateMessage, TTemplateMessageConfig, TOptionEditMessage, ITelegramCache
+    ELifetime, IEntitiesMessage, ITelegramBotInlineKeyword, ITelegramBotTemplate, ITelegramConfig, TCacheDataUser, TCallbackData, TCustomInlineKeyboardFunction, TCustomInlineKeyboardParams, TDataContext, TDataContextAction, TDataInlineContext, TDataPagination, TDefaultReplyMarkup, TFileTemplate, TGenerateStartPayloadLink, TInputMultipleInlineKeyboard, TOptionSendAnswerCbQuery, TOptionSendBufferPhoto, TOptionSendMessage, TOptionSendUrlPhoto, TPaginationInlineKeyboardParams, TReplyMarkup, TSendMessageError, TTeleErrorList, TTelegramBotInitOptions, TTelegramBotInitParams, TTelegramError, TTemplateLanguage, TTemplateMessage, TTemplateMessageConfig, TOptionEditMessage, ITelegramCache
 };

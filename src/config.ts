@@ -12,8 +12,8 @@ export const SENTRY_DNS = getEnvString("SENTRY_DNS")
 export const SERVER_CODE = getEnvString("SERVER_CODE")
 
 //Mongo
-// export const MONGO_URI = getEnvString("MONGO_URI")
-// export const MONGO_DB_NAME = getEnvString("MONGO_DB_NAME")
+export const MONGO_URI = getEnvString("MONGO_URI")
+export const MONGO_DB_NAME = getEnvString("MONGO_DB_NAME")
 
 //Redis
 export const REDIS_URI = getEnvString("REDIS_URI")

@@ -1,24 +1,20 @@
 import { Telegraf } from 'telegraf';
-import { ELifetime, IEntitiesMessage, ITelegramConfig, TBotTelegram, TFileTemplate, TOptionEditMessage, TOptionSendAnswerCbQuery, TOptionSendBufferPhoto, TOptionSendMessage, TOptionSendUrlPhoto, TTemplateLanguage, TTemplateMessageConfig, ITelegramCache } from './type';
 import { BotCommand, BotCommandScope, InlineKeyboardMarkup } from 'telegraf/types';
 import { MILLISECOND_PER_ONE_SEC } from '../../../lib/constants';
-
-let index_1 = 0
+import { ELifetime, IEntitiesMessage, ITelegramConfig, TFileTemplate, TOptionEditMessage, TOptionSendAnswerCbQuery, TOptionSendBufferPhoto, TOptionSendMessage, TOptionSendUrlPhoto, TTemplateLanguage, TTemplateMessageConfig } from './type';
 
 class TelegramBotScript<GReplyMarkup, GTemplate, GCache> {
 
-    public bot_tele: TBotTelegram
+    public bot_tele: Telegraf
     public default_language: TTemplateLanguage;
     public file_template: TFileTemplate
     public entities_message: IEntitiesMessage
     public template_message: (parameters: TTemplateMessageConfig<GTemplate>) => string
     public reply_markup: (language?: TTemplateLanguage) => GReplyMarkup
     public all_commands: (language?: TTemplateLanguage) => BotCommand[]
-    public user_setting: ITelegramCache<GCache>
+    public cache: GCache
 
     constructor(bot_tele: Telegraf, configBot: ITelegramConfig<GReplyMarkup, GTemplate, GCache>) {
-        index_1++
-        console.log({ index_1 })
         this.bot_tele = bot_tele
         this.template_message = configBot.template.template_message
         this.entities_message = configBot.template.entities_message
@@ -26,7 +22,7 @@ class TelegramBotScript<GReplyMarkup, GTemplate, GCache> {
         this.all_commands = configBot.template.all_commands
         this.default_language = configBot.template.default_language
         this.file_template = configBot.template.file_template
-        this.user_setting = configBot.cache
+        this.cache = configBot.cache
     }
 
 

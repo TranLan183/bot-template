@@ -2,7 +2,7 @@ import crypto from 'crypto'
 import { readableNumber } from '../../../lib/beauty_number'
 import { SECOND_OF_ONE_DAY, SECOND_OF_ONE_HOUR, SECOND_OF_ONE_MINUTE, SUN_PER_TRX } from '../../../lib/constants'
 import { TELEGRAM_BOT_NAME } from '../../../config'
-import { TBotTelegram, TDataContext, TDataContextAction, TDataInlineContext, TDataPagination, TGenerateStartPayloadLink } from './type'
+import { TDataContext, TDataContextAction, TDataInlineContext, TDataPagination, TGenerateStartPayloadLink } from './type'
 
 const convertMessageContext = (ctx: any): TDataContext => {
     const dataMessageContext: Omit<TDataContext, 'userFullName'> = {
@@ -122,22 +122,6 @@ const convertTimeToMDYHM = (date: Date | string | number | undefined | null) => 
     if (!date) return "TBA"
     const new_date = new Date(date).toLocaleString('en-US', { timeZone: 'UTC' }).replace(',', '')
     return new_date.slice(0, new_date.length - 11)
-}
-
-/**
- * @param bot_tele bot telegram
- * @param chat_id Unique identifier for the target chat or username of the target supergroup or channel (in the format `@channelusername`)
- * @param user_id Unique identifier of the target user
- * @returns boolean
- */
-
-const isUserAccessChatByBot = async (bot_tele: TBotTelegram, chat_id: string, user_id: number) => {
-    try {
-        const { status } = await bot_tele.telegram.getChatMember(chat_id, user_id)
-        return ["creator", "administrator", "member"].includes(status)
-    } catch (error) {
-        return false
-    }
 }
 
 const generateCodeVerify = (userId: string) => {
@@ -266,6 +250,6 @@ const GetAddressOrLinkFromMessage = (message: string) => {
 export {
     calculateCurrentPage, convertActionContext, convertAddressShortCut, convertBalanceByChain,
     convertDurationToString, convertInlineContext, convertMessageContext, convertTimeToMDYHM, convertTimeToString, generateCodeVerify,
-    generateRefCode, generateStartPayloadLink, GetAddressOrLinkFromMessage, getParamsFromPayload, handleDataForPagination, isUserAccessChatByBot, removeDuplicates, substr_address, verifyTelegramWebAppData
+    generateRefCode, generateStartPayloadLink, GetAddressOrLinkFromMessage, getParamsFromPayload, handleDataForPagination, removeDuplicates, substr_address, verifyTelegramWebAppData
 }
 

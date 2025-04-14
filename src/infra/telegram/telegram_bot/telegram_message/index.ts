@@ -11,7 +11,7 @@ const listenMessageToHandleChatType = async (ctx: Context, bot_method: BotServic
     const dataMessageContext = convertMessageContext(ctx)
     const { chatType, chatId, message, userId, timeInSec } = dataMessageContext
     if (timeInSec < (bot_start_at.getTime() / 1000)) return
-    let dataUserSetting = await bot_script.user_setting.getDataUserCache(userId)
+    let dataUserSetting = await bot_script.cache.user_setting.getDataUserCache(userId)
     if (!dataUserSetting || isCacheUserSettingFieldsMissing(dataUserSetting)) dataUserSetting = await handleInvalidCacheUserSetting(bot_method,userId)
     const { language } = dataUserSetting
     try {

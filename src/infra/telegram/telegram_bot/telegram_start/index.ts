@@ -10,7 +10,7 @@ const listenToHandleStart = async (ctx: Context, bot_method: BotServiceType) => 
     const dataContext = convertMessageContext(ctx)
     const { userId, chatId, chatType, username, timeInSec } = dataContext
     console.table({ userId, username, command: '/Start', timestamp: convertTimeToMDYHM(timeInSec * MILLISECOND_PER_ONE_SEC) })
-    let dataUserStorage = await bot_script.user_setting.getDataUserCache(userId)
+    let dataUserStorage = await bot_script.cache.user_setting.getDataUserCache(userId)
     try {
         if (chatType === "group" || chatType === "supergroup") {
             return
@@ -23,7 +23,7 @@ const listenToHandleStart = async (ctx: Context, bot_method: BotServiceType) => 
             parse_mode: true,
             language
         })
-        await bot_script.user_setting.setDataUserCache(userId, { user_step: 'finish' })
+        await bot_script.cache.user_setting.setDataUserCache(userId, { user_step: 'finish' })
     } catch (error) {
         ErrorHandler(error, { userId, chatId, chatType }, handleBotStart.name)
         ConvertTeleError(error, {

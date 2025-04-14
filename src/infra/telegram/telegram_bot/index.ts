@@ -10,26 +10,30 @@ import en from "./telegram_language/en.json";
 import { handleBotMessage } from "./telegram_message";
 import { handleBotStart } from "./telegram_start";
 import { TelegramBotConfigCache } from './cache/cache.user_setting'
-
-let bot_example: TelegramBotService<any, any, any>
+import { ioredis } from "../../cache/redis";
+import { BotServiceType } from "./type";
+import { TelegramBotConfigCacheDate } from "./cache/cache.date";
 
 const file_template = {
     en
 }
 
 const initBotExample = () => {
-    bot_example = new TelegramBotService({
+    const bot_example = new TelegramBotService({
         bot_name: TELEGRAM_BOT_NAME,
         bot_token: TELEGRAM_BOT_TOKEN,
         is_enable: ENABLE_TELEGRAM,
         bot_config: {
             template: new TelegramBotConfigTemplate(file_template),
-            cache: new TelegramBotConfigCache(TELEGRAM_BOT_NAME, REDIS_URI, REDIS_DB_NUMBER)
+            cache: {
+                user_setting: new TelegramBotConfigCache(TELEGRAM_BOT_NAME, ioredis),
+                date: new TelegramBotConfigCacheDate(TELEGRAM_BOT_NAME, ioredis)
+            }
         },
         bot_error_list: [TeleBotErrorList, TeleBotErrorListLifeTime],
     }, {
 
-    }, (bot_method) => {
+    }, (bot_method: BotServiceType) => {
         handleBotStart(bot_method)
         handleBotHelp(bot_method)
         handleBotCommand(bot_method)
@@ -37,10 +41,10 @@ const initBotExample = () => {
         handleBotMessage(bot_method)
         handleBotInlineMode(bot_method)
     })
+    return bot_example
 }
 
 export {
-    bot_example,
     file_template,
     initBotExample
 };

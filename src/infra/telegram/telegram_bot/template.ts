@@ -69,6 +69,10 @@ class TelegramBotConfigTemplate extends TelegramBotTemplate<BotReplyMarkup, BotT
         }
         return dataReplyMarkup
     }
+
+    getTextMessage = (language?: TTemplateLanguage) => {
+        return this.template_message({ template: 'btn_inline_keyboard', language })
+    }
 }
 
 export {
