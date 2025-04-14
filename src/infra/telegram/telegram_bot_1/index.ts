@@ -1,3 +1,4 @@
+import { REDIS_DB_NUMBER, REDIS_URI } from "../../../config"
 import { ioredis } from "../../cache/redis"
 import { file_template } from "../telegram_bot"
 import { TelegramBotConfigCache } from "../telegram_bot/cache/cache.user_setting"
@@ -5,26 +6,29 @@ import { TeleBotErrorList, TeleBotErrorListLifeTime } from "../telegram_bot/erro
 import { TelegramBotConfigTemplate } from "../telegram_bot/template"
 import { TelegramBotService } from "../telegrot"
 
-const bot_example_1 = new TelegramBotService({
-    bot_name: "test_bot_1",
-    bot_token: '5917559991:AAH4SfG-QGeMKI0OscyikKMSj0c3LU8kHHM',
-    is_enable: true,
-    bot_config: {
-        template: new TelegramBotConfigTemplate(file_template),
-        cache: new TelegramBotConfigCache("test_bot_1", ioredis)
-    },
-    bot_error_list: [TeleBotErrorList, TeleBotErrorListLifeTime],
-}, {
-
-}, (bot_method) => {
-    // handleBotStart(bot_method)
-    // handleBotHelp(bot_method)
-    // handleBotCommand(bot_method)
-    // handleBotAction(bot_method)
-    // handleBotMessage(bot_method)
-    // handleBotInlineMode(bot_method)
-})
+const initBotExample_1 = () => {
+    const bot_example_1 = new TelegramBotService({
+        bot_name: "test_bot_1",
+        bot_token: '5917559991:AAH4SfG-QGeMKI0OscyikKMSj0c3LU8kHHM',
+        is_enable: true,
+        bot_config: {
+            template: new TelegramBotConfigTemplate(file_template),
+            cache: new TelegramBotConfigCache("test_bot_1", ioredis)
+        },
+        bot_error_list: [TeleBotErrorList, TeleBotErrorListLifeTime],
+    }, {
+    
+    }, (bot_method) => {
+        // handleBotStart(bot_method)
+        // handleBotHelp(bot_method)
+        // handleBotCommand(bot_method)
+        // handleBotAction(bot_method)
+        // handleBotMessage(bot_method)
+        // handleBotInlineMode(bot_method)
+    })
+    return bot_example_1
+}
 
 export {
-    bot_example_1
+    initBotExample_1
 }

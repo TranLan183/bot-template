@@ -1,8 +1,7 @@
-import { successConsoleLog } from "../../../../lib/color-log";
+import Redis from 'ioredis';
 import { TelegramCacheService } from "../../telegrot/cache";
 import { TUserSetting } from "../type";
-import Redis from 'ioredis'
-import { ITelegramCache } from "../../telegrot/type";
+import { ITelegramCache } from '../../telegrot/type';
 
 class TelegramBotConfigCache extends TelegramCacheService<TUserSetting> implements ITelegramCache<TUserSetting> {
 
@@ -12,7 +11,6 @@ class TelegramBotConfigCache extends TelegramCacheService<TUserSetting> implemen
         super(bot_name)
         this.redis = redis_instance
     }
-
 
     getDataUserCache = async (userId: string): Promise<TUserSetting | null> => {
         try {
@@ -57,4 +55,4 @@ class TelegramBotConfigCache extends TelegramCacheService<TUserSetting> implemen
 
 export {
     TelegramBotConfigCache
-}
+};
