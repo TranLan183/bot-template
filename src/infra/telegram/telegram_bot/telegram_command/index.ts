@@ -9,7 +9,7 @@ const methodCommand = {
 }
 
 const handleToListenCommand = async (ctx: Context, bot_method: BotServiceType, command: string) => {
-    const { setLastMessageReceivedDate, messageInQueue, isBotReadyToStart, bot_start_at, ConvertTeleError, bot_script } = bot_method
+    const { setLastMessageReceivedDate, messageInQueue, isBotReadyToStart, bot_start_at, ConvertTeleError, bot_script, isStopListeningFromChatId } = bot_method
     setLastMessageReceivedDate()
     const dataConvertContext = convertMessageContext(ctx)
     const { chatId, userId, timeInSec } = dataConvertContext
@@ -18,6 +18,7 @@ const handleToListenCommand = async (ctx: Context, bot_method: BotServiceType, c
         messageInQueue.set(chatId, { type: "command", ctx: dataConvertContext })
         return
     }
+    if (isStopListeningFromChatId(chatId.toString())) return
     let dataUserSetting = await bot_script.cache.user_setting.getUserSetting(userId)
     try {
         if (!dataUserSetting || isCacheUserSettingFieldsMissing(dataUserSetting)) dataUserSetting = await handleInvalidCacheUserSetting(bot_method, userId)

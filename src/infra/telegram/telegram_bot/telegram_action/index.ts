@@ -10,12 +10,10 @@ const methodAction = {
 }
 
 const handleToListenAction = async (ctx: Context, bot_method: BotServiceType) => {
-    const { bot_script, setLastMessageReceivedDate, isBotReadyToStart, ConvertTeleError } = bot_method
+    const { bot_script, setLastMessageReceivedDate, isBotReadyToStart, ConvertTeleError, isStopListeningFromChatId } = bot_method
     setLastMessageReceivedDate()
     const { callbackData, userId, callbackId, chatId } = convertActionContext(ctx);
-    if (!isBotReadyToStart()) {
-        return
-    }
+    if (!isBotReadyToStart() || isStopListeningFromChatId(chatId.toString())) return
     try {
         let dataUserSetting = await bot_script.cache.user_setting.getDataUserCache(userId)
         if (!dataUserSetting || isCacheUserSettingFieldsMissing(dataUserSetting)) dataUserSetting = await handleInvalidCacheUserSetting(bot_method, userId)

@@ -9,7 +9,6 @@ export const handleInlineKeyboard = async (ctx: Context, bot_method: BotServiceT
     const { language } = dataUserSetting
     try {
         bot_script.sendMessage(chatId, { template: 'reply_btn_inline_keyboard', language })
-        const textMessage = bot_script.getTextMessage(language)
     } catch (error) {
         ErrorHandler(error, { callbackData, userId }, handleInlineKeyboard.name)
         ConvertTeleError(error, { context_id: chatId, language })

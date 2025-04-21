@@ -6,33 +6,30 @@ import { ErrorHandler } from "../../../lib/error_handler"
 import { sleep } from "../../../lib/utils"
 import { TelegramBotScript } from "./script"
 import { TSendMessageError, TTeleErrorList, TTelegramBotInitOptions, TTelegramBotInitParams, TTelegramError } from "./type"
+import { BLOCK_DURATION, DEFAULT_DELAY_BOT_START, MESSAGE_RATE_LIMIT, MESSAGE_RATE_WINDOW } from "./constant"
 
 class TelegramBotService<GReplyMarkup, GTemplate, GCache> {
     //Private variab
     private init_parameters: TTelegramBotInitParams<GReplyMarkup, GTemplate, GCache>
     private init_options: TTelegramBotInitOptions
     private startup_func: (bot_method: TelegramBotService<GReplyMarkup, GTemplate, GCache>) => void
-    private DEFAULT_DELAY_BOT_START = 2000
-    private RATE_LIMIT_RESPONSE = 4 * MILLISECOND_PER_ONE_SEC
     private bot_error_list: TTeleErrorList[]
-    //Public variables
-    public bot_steps = {
-        welcome: "welcome",
-        finish: "finish",
-    }
+
     public tele_bot: Telegraf
     public bot_script: TelegramBotScript<GReplyMarkup, GTemplate, GCache>
+
     public bot_start_at: Date = new Date()
     public last_bot_message_received_at: Date = new Date()
+
     public messageInQueue = new Map<number, { type: "start" | "command" | "action" | "message" | "inline_mode", ctx: any }>()
+    private stopListeningFromChatCache = new Map<string, number>()
+    private messageRateLimitCache = new Map<string, { count: number, timestamp: number }>()
 
     constructor(
         parameters: TTelegramBotInitParams<GReplyMarkup, GTemplate, GCache>,
         options: TTelegramBotInitOptions,
         startup_func: (bot_method: TelegramBotService<GReplyMarkup, GTemplate, GCache>) => void,
     ) {
-        console.log(parameters);
-        
         this.startup_func = startup_func
         this.init_parameters = parameters
         this.init_options = options
@@ -141,21 +138,57 @@ class TelegramBotService<GReplyMarkup, GTemplate, GCache> {
         }
     }
 
-    public isBotReadyToStart = () => (+new Date() - +this.bot_start_at) > (this.init_options.delay_bot_start || this.DEFAULT_DELAY_BOT_START)
+    public isBotReadyToStart = () => (+new Date() - +this.bot_start_at) > (this.init_options.delay_bot_start || DEFAULT_DELAY_BOT_START)
     public setLastMessageReceivedDate = () => this.last_bot_message_received_at = new Date()
 
-    private stopListeningFromChatIdCache = new Map<string, number>()
     public isStopListeningFromChatId = (chat_id: string) => {
-        const stop_listen_to = this.stopListeningFromChatIdCache.get(chat_id)
+        const stop_listen_to = this.stopListeningFromChatCache.get(chat_id)
         if (!stop_listen_to) return false
         if (new Date().getTime() > stop_listen_to) {
-            this.stopListeningFromChatIdCache.delete(chat_id)
+            this.stopListeningFromChatCache.delete(chat_id)
             return false
         }
         return true
     }
+
     public setStopListeningFromChatId = (chat_id: string, stop_time_ms: number) => {
-        this.stopListeningFromChatIdCache.set(chat_id, new Date().getTime() + stop_time_ms)
+        this.stopListeningFromChatCache.set(chat_id, new Date().getTime() + stop_time_ms)
+    }
+
+    public handleSpamProtection = (userId: string, options?: {
+        rate_window: number
+        rate_limit: number
+        block_duration: number
+    }) => {
+        const now = Date.now()
+        const userData = this.messageRateLimitCache.get(userId)
+
+        if (!userData) {
+            this.messageRateLimitCache.set(userId, { count: 1, timestamp: now })
+            return
+        }
+
+        // Reset counter nếu đã qua khoảng thời gian quy định
+        if (now - userData.timestamp > (options?.rate_window || MESSAGE_RATE_WINDOW)) {
+            this.messageRateLimitCache.set(userId, { count: 1, timestamp: now })
+            return
+        }
+
+        // Tăng counter và kiểm tra giới hạn
+        userData.count++
+        if (userData.count >= (options?.rate_limit || MESSAGE_RATE_LIMIT)) {
+            // Chặn người dùng
+            const blockDuration = options?.block_duration || BLOCK_DURATION
+            this.setStopListeningFromChatId(userId, blockDuration)
+            this.bot_script.sendMessage(userId, {
+                template: 'spam_protection',
+                parse_mode: true,
+                args: {
+                    blockDuration
+                }
+            })
+            return
+        }
     }
 
     private handleSendMessageError = async (params: TSendMessageError) => {
@@ -183,6 +216,8 @@ class TelegramBotService<GReplyMarkup, GTemplate, GCache> {
             }
         } catch (err) {
             console.log(err)
+        } finally {
+            this.setStopListeningFromChatId(options.context_id as string, NaN)
         }
         return
     }

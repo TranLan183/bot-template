@@ -7,14 +7,16 @@ import { handlePrivateChat } from "./private_message"
 import { handlePublicChat } from "./public_message"
 
 const listenMessageToHandleChatType = async (ctx: Context, bot_method: BotServiceType) => {
-    const { bot_start_at, ConvertTeleError, bot_script } = bot_method
+    const { bot_start_at, ConvertTeleError, bot_script, handleSpamProtection, isStopListeningFromChatId } = bot_method
     const dataMessageContext = convertMessageContext(ctx)
     const { chatType, chatId, message, userId, timeInSec } = dataMessageContext
     if (timeInSec < (bot_start_at.getTime() / 1000)) return
     let dataUserSetting = await bot_script.cache.user_setting.getDataUserCache(userId)
-    if (!dataUserSetting || isCacheUserSettingFieldsMissing(dataUserSetting)) dataUserSetting = await handleInvalidCacheUserSetting(bot_method,userId)
+    if (!dataUserSetting || isCacheUserSettingFieldsMissing(dataUserSetting)) dataUserSetting = await handleInvalidCacheUserSetting(bot_method, userId)
     const { language } = dataUserSetting
     try {
+        handleSpamProtection(userId)
+        if (isStopListeningFromChatId(chatId.toString())) return
         switch (chatType) {
             case "group":
             case "supergroup":

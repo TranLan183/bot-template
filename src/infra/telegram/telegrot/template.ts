@@ -13,12 +13,13 @@ enum EFlag {
 const DefaultTemplateData = {
     "welcome": "Welcome to the bot",
     "unknown_command": "❌ Unknown Command!\n\nYou have sent a Message directly into the Bot's chat or Menu structure has been modified by Admin.\nℹ️ Do not send Messages directly to the Bot or reload the Menu by pressing /start",
-    "error": "ℹ️ Something went wrong, please /start again!",
+    "error": "⚠️ Oops! Something went wrong with the bot.\n\nTo continue using the bot, please press /start to restart the bot.\n\nThis will help reset your session and get you back on track!",
     "server_maintain": "Server maintain. We will come back soon",
     "waiting_bot": "🤖 Thanks for waiting, bot is available now!",
     "full_description": "full_description",
     "short_description": "short_description",
-    "btn_switch_language": "🇬🇧 English@🇨🇳 中文@🇮🇩 Indonesia"
+    "btn_switch_language": "🇬🇧 English@🇨🇳 中文@🇮🇩 Indonesia",
+    "spam_protection": "🚫 Anti-spam protection activated!\n\n⚠️ You have sent too many messages in a short time.\n\n⏳ Your cooldown period will end in {{blockDuration}} seconds.\n\nThank you for your understanding and cooperation!"
 }
 
 class TelegramBotTemplate<GReplyMarkup, GTemplate> implements ITelegramBotTemplate<GReplyMarkup, GTemplate> {
