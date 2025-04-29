@@ -1,6 +1,6 @@
+import { TDataContext } from "../../../../../lib/telegram/type";
+import { TTemplateLanguage } from "../../../../../lib/telegram/type";
 import { bot_template } from "../../index";
-import { ErrorHandler } from "../../../../../lib/error_handler";
-import { TDataContext, TTemplateLanguage } from "../../../telegrot/type";
 import { TUserSetting } from "../../telegram_cache/cache.data_user";
 
 export const BotTradingSteps = {
@@ -23,11 +23,7 @@ const messageActionKeyBoard = async (dataMessageContext: TDataContext, language?
                 break
         }
     } catch (error) {
-        ErrorHandler(error, { message, userId, chatId }, messageVerifyStep.name)
-        ConvertTeleError(error, {
-            context_id: chatId,
-            language
-        })
+        ConvertTeleError(error, { context_id: chatId, language }, messageActionKeyBoard.name)
     }
 }
 
@@ -42,8 +38,7 @@ const messageVerifyStep = async (dataMessageContext: TDataContext, dataUserSetti
                 break
         }
     } catch (error) {
-        ErrorHandler(error, { message, userId, chatId }, messageVerifyStep.name)
-        ConvertTeleError(error, { context_id: chatId, language })
+        ConvertTeleError(error, { context_id: chatId, language }, messageVerifyStep.name)
     }
 }
 
@@ -58,7 +53,6 @@ export const handlePrivateChat = async (dataMessageContext: TDataContext, dataUs
             await messageVerifyStep(dataMessageContext, dataUserSetting)
         }
     } catch (error) {
-        ErrorHandler(error, { chatId, userId }, handlePrivateChat.name)
-        ConvertTeleError(error, { context_id: chatId, language })
+        ConvertTeleError(error, { context_id: chatId, language }, handlePrivateChat.name)
     }
 }

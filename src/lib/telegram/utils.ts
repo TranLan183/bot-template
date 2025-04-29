@@ -1,8 +1,7 @@
 import crypto from 'crypto'
-import { readableNumber } from '../../../lib/beauty_number'
-import { SECOND_OF_ONE_DAY, SECOND_OF_ONE_HOUR, SECOND_OF_ONE_MINUTE, SUN_PER_TRX } from '../../../lib/constants'
-import { TELEGRAM_BOT_NAME } from '../../../config'
 import { TBotTelegram, TDataContext, TDataContextAction, TDataInlineContext, TDataPagination, TGenerateStartPayloadLink } from './type'
+import { readableNumber } from '../beauty_number'
+import { SECOND_OF_ONE_DAY, SECOND_OF_ONE_HOUR, SECOND_OF_ONE_MINUTE, SUN_PER_TRX } from '../constants'
 
 const convertMessageContext = (ctx: any): TDataContext => {
     const dataMessageContext: Omit<TDataContext, 'userFullName'> = {
@@ -161,7 +160,7 @@ const convertTimeToString = (time_sec: number) => {
     return `${dayStr}${hourStr}${minuteStr}`
 }
 
-const generateStartPayloadLink = (params: TGenerateStartPayloadLink, tele_bot_name: string = TELEGRAM_BOT_NAME) => {
+const generateStartPayloadLink = (params: TGenerateStartPayloadLink, tele_bot_name: string) => {
     const { jetton, ref_code, limit_order_id, copy_limit_order_id, snipe_order_id } = params
     if (jetton && ref_code) return `https://t.me/${tele_bot_name}?start=b_${jetton}_r_${ref_code}`
     if (!jetton && ref_code) return `https://t.me/${tele_bot_name}?start=r_${ref_code}`

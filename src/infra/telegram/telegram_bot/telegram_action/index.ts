@@ -1,9 +1,8 @@
-import { bot_template } from "../index";
-import { ErrorHandler } from "../../../../lib/error_handler";
-import { convertActionContext } from "../../telegrot/utils";
-import { handleInvalidCacheUserSetting, isCacheUserSettingFieldsMissing } from "../helper_bot";
-import { getDataUserCache } from "../telegram_cache/cache.data_user";
 import { Context } from "telegraf";
+import { convertActionContext } from "../../../../lib/telegram/utils";
+import { handleInvalidCacheUserSetting, isCacheUserSettingFieldsMissing } from "../helper_bot";
+import { bot_template } from "../index";
+import { getDataUserCache } from "../telegram_cache/cache.data_user";
 
 
 const methodAction = {
@@ -28,8 +27,7 @@ const listenCallbackQueryToHandleAction = async (ctx: Context) => {
             bot_script.sendMessage(userId, { template: "error" })
         }
     } catch (error) {
-        ErrorHandler(error, { callbackData, userId }, handleBotAction.name)
-        ConvertTeleError(error, { context_id: callbackId })
+        ConvertTeleError(error, { context_id: callbackId }, listenCallbackQueryToHandleAction.name)
     }
 }
 

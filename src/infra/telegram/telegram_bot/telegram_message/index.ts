@@ -1,6 +1,5 @@
 import { Context } from "telegraf"
-import { ErrorHandler } from "../../../../lib/error_handler"
-import { convertMessageContext } from "../../telegrot/utils"
+import { convertMessageContext } from "../../../../lib/telegram/utils"
 import { handleInvalidCacheUserSetting, isCacheUserSettingFieldsMissing } from "../helper_bot"
 import { bot_template } from "../index"
 import { getDataUserCache } from "../telegram_cache/cache.data_user"
@@ -30,8 +29,7 @@ const listenMessageToHandleChatType = async (ctx: Context) => {
         }
         return
     } catch (error) {
-        ErrorHandler(error, { chatId, userId, message }, listenMessageToHandleChatType.name)
-        ConvertTeleError(error, { context_id: chatId, language })
+        ConvertTeleError(error, { context_id: chatId, language }, listenMessageToHandleChatType.name)
     }
 }
 

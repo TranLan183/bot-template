@@ -1,7 +1,6 @@
 import { Context } from "telegraf"
 import { MILLISECOND_PER_ONE_SEC } from "../../../../lib/constants"
-import { ErrorHandler } from "../../../../lib/error_handler"
-import { convertMessageContext, convertTimeToMDYHM } from "../../telegrot/utils"
+import { convertMessageContext, convertTimeToMDYHM } from "../../../../lib/telegram/utils"
 import { handleInvalidCacheUserSetting } from "../helper_bot"
 import { bot_template } from "../index"
 import { getDataUserCache } from "../telegram_cache/cache.data_user"
@@ -20,11 +19,10 @@ const listenToHandleStart = async (ctx: Context) => {
         const { language } = dataUserSetting
 
     } catch (error) {
-        ErrorHandler(error, { userId, chatId, chatType }, handleBotStart.name)
         ConvertTeleError(error, {
             context_id: chatId,
             language: dataUserSetting?.language
-        })
+        }, listenToHandleStart.name)
     }
 }
 

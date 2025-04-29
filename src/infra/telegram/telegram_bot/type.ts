@@ -1,4 +1,4 @@
-import { TDefaultReplyMarkup, TReplyMarkup } from "../telegrot/type"
+import { TDefaultReplyMarkup, TReplyMarkup } from "../../../lib/telegram/type"
 
 
 type BotReplyMarkup = TDefaultReplyMarkup & {

@@ -54,6 +54,7 @@ class TelegramBotTemplate<GReplyMarkup, GTemplate> implements ITelegramBotTempla
         })
         return message
     }
+    
     reply_markup(): GReplyMarkup {
         const dataReplyMarkup: TDefaultReplyMarkup = {
             force_reply: () => {

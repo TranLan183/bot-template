@@ -1,6 +1,6 @@
 import { bot_template } from "../index"
 import { ERROR_CODE, ErrMsg, ErrorHandler } from "../../../../lib/error_handler"
-import { convertMessageContext } from "../../telegrot/utils"
+import { convertMessageContext } from "../../../../lib/telegram/utils"
 import { handleInvalidCacheUserSetting, isCacheUserSettingFieldsMissing } from '../helper_bot'
 import { getDataUserCache } from "../telegram_cache/cache.data_user"
 
@@ -27,8 +27,7 @@ const handleBotCommand = () => {
                 if (!('keyCommand' in dataConvertContext)) throw ErrMsg(ERROR_CODE.COMMAND_INVALID_ARGUMENTS)
                 methodCommand[command](dataConvertContext, dataUserSetting)
             } catch (error) {
-                ErrorHandler(error, { chatId, userId }, handleBotCommand.name)
-                ConvertTeleError(error, { context_id: chatId, })
+                ConvertTeleError(error, { context_id: chatId, }, handleBotCommand.name)
             }
         })
     })

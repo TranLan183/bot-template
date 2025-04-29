@@ -1,6 +1,5 @@
 import { bot_template } from "../index";
-import { ErrorHandler } from "../../../../lib/error_handler";
-import { convertMessageContext } from "../../telegrot/utils";
+import { convertMessageContext } from "../../../../lib/telegram/utils";
 
 export const handleBotHelp = () => {
     const { ConvertTeleError, tele_bot } = bot_template
@@ -11,8 +10,7 @@ export const handleBotHelp = () => {
             // const message = bot_script.template_message({ template: 'detail_all_commands' })
             // ctx.reply(message)
         } catch (error) {
-            ErrorHandler(error, { userId, chatId }, handleBotHelp.name)
-            ConvertTeleError(error, { context_id: chatId })
+            ConvertTeleError(error, { context_id: chatId }, handleBotHelp.name)
         }
     })
 }

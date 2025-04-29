@@ -1,5 +1,5 @@
 import { ENABLE_TELEGRAM, isProductionRun, TELEGRAM_BOT_NAME, TELEGRAM_BOT_TOKEN, TG_BOT_IS_USE_LOCAL_TELEGRAM, TG_BOT_IS_USE_WEBHOOK, TG_BOT_LOCAL_TELEGRAM_URL, TG_BOT_WEBHOOK_PORT, TG_BOT_WEBHOOK_URL } from "../../../config";
-import { TelegramBotService } from "../telegrot";
+import { TelegramBotService } from "../../../lib/telegram";
 import { TeleConfigBotTemplate } from "./config_bot_script";
 import { TeleBotErrorList, TeleBotErrorListLifeTime } from "./error_list";
 import { handleBotAction } from "./telegram_action";
