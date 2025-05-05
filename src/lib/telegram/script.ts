@@ -5,7 +5,7 @@ import { MILLISECOND_PER_ONE_SEC } from '../constants';
 
 class TelegramBotScript<GReplyMarkup, GTemplate> implements ITelegramConfig<GReplyMarkup, GTemplate> {
 
-    public bot_tele: TBotTelegram
+    public bot_tele: Telegraf
     public default_language: TTemplateLanguage;
     public file_template: TFileTemplate
     public entities_message: IEntitiesMessage
@@ -44,7 +44,7 @@ class TelegramBotScript<GReplyMarkup, GTemplate> implements ITelegramConfig<GRep
     }
 
     sendMessage = async (chat_id: string | number, options: TOptionSendMessage<GTemplate>) => {
-        const { template, language, parse_mode, reply_markup, args, message_id, life_time, callback} = options
+        const { template, language, parse_mode, reply_markup, args, message_id, life_time, callback } = options
         const resultMessage = await this.bot_tele.telegram.sendMessage(chat_id, this.template_message(options), {
             link_preview_options: {
                 is_disabled: true

@@ -12,7 +12,7 @@ class TelegramBotService<GReplyMarkup, GTemplate> {
     //Private variab
     private init_parameters: TTelegramBotInitParams<GReplyMarkup, GTemplate>
     private init_options: TTelegramBotInitOptions
-    private startup_func: () => void
+    private startup_func: (bot_method: TelegramBotService<GReplyMarkup, GTemplate>) => void
     private bot_error_list: TTeleErrorList[]
     private stopListeningFromChatIdCache = new Map<string, number>()
     //Public variables
@@ -25,7 +25,7 @@ class TelegramBotService<GReplyMarkup, GTemplate> {
     constructor(
         parameters: TTelegramBotInitParams<GReplyMarkup, GTemplate>,
         options: TTelegramBotInitOptions,
-        startup_func: () => void
+        startup_func: (bot_method: TelegramBotService<GReplyMarkup, GTemplate>) => void
     ) {
         this.startup_func = startup_func
         this.init_parameters = parameters
@@ -55,7 +55,7 @@ class TelegramBotService<GReplyMarkup, GTemplate> {
         try {
             if (is_enable) {
                 this.bot_script.setCommands(this.bot_script.all_commands())
-                this.startup_func()
+                this.startup_func(this)
 
                 if (is_use_webhook) {
                     const path = `/${this.tele_bot.secretPathComponent()}`

@@ -1,16 +1,15 @@
 import { Context } from "telegraf";
 import { convertActionContext } from "../../../../lib/telegram/utils";
 import { handleInvalidCacheUserSetting, isCacheUserSettingFieldsMissing } from "../helper_bot";
-import { bot_template } from "../index";
 import { getDataUserCache } from "../telegram_cache/cache.data_user";
-
+import { BotTemplateServiceType } from "../type";
 
 const methodAction = {
 
 }
 
-const listenCallbackQueryToHandleAction = async (ctx: Context) => {
-    const { tele_bot, setLastMessageReceivedDate, isBotReadyToStart, ConvertTeleError, bot_script } = bot_template
+const listenCallbackQueryToHandleAction = async (ctx: Context, bot_method: BotTemplateServiceType) => {
+    const { setLastMessageReceivedDate, isBotReadyToStart, ConvertTeleError, bot_script } = bot_method
     setLastMessageReceivedDate()
     const { callbackData, userId, callbackId, username, timeInSec, chatId } = convertActionContext(ctx);
     if (!isBotReadyToStart()) {
@@ -31,4 +30,4 @@ const listenCallbackQueryToHandleAction = async (ctx: Context) => {
     }
 }
 
-export const handleBotAction = () => bot_template.tele_bot.on('callback_query', listenCallbackQueryToHandleAction);
+export const handleBotAction = (bot_method: BotTemplateServiceType) => bot_method.tele_bot.on('callback_query', (ctx) => listenCallbackQueryToHandleAction(ctx, bot_method));

@@ -1,8 +1,7 @@
-import { bot_template } from "../index";
+import { BotTemplateServiceType } from "../type";
 
-
-export const handleBotInlineMode = () => {
-    const { ConvertTeleError, tele_bot } = bot_template
+export const handleBotInlineMode = (bot_method: BotTemplateServiceType) => {
+    const { ConvertTeleError, tele_bot } = bot_method
     tele_bot.on('inline_query', async (ctx) => {
         // SetLastMessageReceivedDate()
         // // console.log(JSON.stringify(ctx));

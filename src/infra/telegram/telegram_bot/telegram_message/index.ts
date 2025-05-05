@@ -1,15 +1,15 @@
 import { Context } from "telegraf"
 import { convertMessageContext } from "../../../../lib/telegram/utils"
 import { handleInvalidCacheUserSetting, isCacheUserSettingFieldsMissing } from "../helper_bot"
-import { bot_template } from "../index"
 import { getDataUserCache } from "../telegram_cache/cache.data_user"
 import { handlePrivateChat } from "./private_message"
 import { handlePublicChat } from "./public_message"
+import { BotTemplateServiceType } from "../type"
 
-const listenMessageToHandleChatType = async (ctx: Context) => {
-    const { bot_start_at, ConvertTeleError, } = bot_template
+const listenMessageToHandleChatType = async (ctx: Context, bot_method: BotTemplateServiceType) => {
+    const { bot_start_at, ConvertTeleError, } = bot_method
     const dataMessageContext = convertMessageContext(ctx)
-    const { chatType, chatId, message, userId, timeInSec } = dataMessageContext
+    const { chatType, chatId, userId, timeInSec } = dataMessageContext
     if (timeInSec < (bot_start_at.getTime() / 1000)) return
     let dataUserSetting = await getDataUserCache(userId)
     if (!dataUserSetting || isCacheUserSettingFieldsMissing(dataUserSetting)) dataUserSetting = await handleInvalidCacheUserSetting(userId)
@@ -18,12 +18,12 @@ const listenMessageToHandleChatType = async (ctx: Context) => {
         switch (chatType) {
             case "group":
             case "supergroup":
-                await handlePublicChat(dataMessageContext, dataUserSetting)
+                await handlePublicChat(ctx, bot_method, dataUserSetting)
                 break;
             case "channel":
                 break;
             default: {
-                await handlePrivateChat(dataMessageContext, dataUserSetting)
+                await handlePrivateChat(ctx, bot_method, dataUserSetting)
             }
                 break;
         }
@@ -33,4 +33,4 @@ const listenMessageToHandleChatType = async (ctx: Context) => {
     }
 }
 
-export const handleBotMessage = () => bot_template.tele_bot.on("message", listenMessageToHandleChatType)
+export const handleBotMessage = (bot_method: BotTemplateServiceType) => bot_method.tele_bot.on("message", (ctx) => listenMessageToHandleChatType(ctx, bot_method))
