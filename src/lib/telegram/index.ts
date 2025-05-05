@@ -49,7 +49,7 @@ class TelegramBotService<GReplyMarkup, GTemplate> {
         this.bot_error_list = parameters.bot_error_list
     }
 
-    public init = async () => {
+    public run = async () => {
         const { is_enable, bot_name } = this.init_parameters
         const { is_use_webhook, is_set_description } = this.init_options
         try {
