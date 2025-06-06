@@ -84,14 +84,14 @@ type TOptionSendAnswerCbQuery<GTemplate> = TTemplateMessageConfig<GTemplate> & {
 }
 
 interface IEntitiesMessage {
-    setBoldMessage: (message: string) => string;
-    setItalicMessage: (message: string) => string;
-    setCodeMessage: (message: string) => string;
-    setMonoSpaceMessage: (message: string) => string;
-    setUnderlineMessage: (message: string) => string;
-    setSpoilerMessage: (message: string) => string;
-    setStrikeMessage: (message: string) => string;
-    setTextUrlMessage: (message: string, url: string, toShort?: boolean) => string;
+    setBoldMessage: () => string;
+    setItalicMessage: () => string;
+    setCodeMessage: () => string;
+    setMonoSpaceMessage: () => string;
+    setUnderlineMessage: () => string;
+    setSpoilerMessage: () => string;
+    setStrikeMessage: () => string;
+    setTextUrlMessage: (url: string, toShort?: boolean) => string;
 }
 
 
