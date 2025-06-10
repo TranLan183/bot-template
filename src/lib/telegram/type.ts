@@ -99,10 +99,11 @@ type TTemplateMessage<GTemplate> = (parameters: TTemplateMessageConfig<GTemplate
 
 interface ITelegramBotTemplate<GReplyMarkup, GTemplate> {
     default_language: TTemplateLanguage;
-    entities_message: IEntitiesMessage;
+    entities_message: (message: string) => IEntitiesMessage;
     template_message: TTemplateMessage<GTemplate>
-    reply_markup: () => GReplyMarkup
+    reply_markup: (language?: TTemplateLanguage) => GReplyMarkup
     file_template: TFileTemplate
+    all_commands: (language?: TTemplateLanguage) => BotCommand[]
 }
 
 interface ITelegramBotInlineKeyword<GTemplate> {
@@ -111,7 +112,6 @@ interface ITelegramBotInlineKeyword<GTemplate> {
 }
 
 interface ITelegramConfig<GReplyMarkup, GTemplate> extends ITelegramBotTemplate<GReplyMarkup, GTemplate> {
-    all_commands: (language?: TTemplateLanguage) => BotCommand[]
 }
 
 interface ICache {

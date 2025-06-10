@@ -4,8 +4,8 @@ import { successConsoleLog } from "../../lib/color-log"
 import { MILLISECOND_PER_ONE_SEC } from "../../lib/constants"
 import { ErrorHandler } from "../../lib/error_handler"
 import { sleep } from "../../lib/utils"
-import { TelegramBotScript } from "./script"
-import { TSendMessageError, TTeleErrorList, TTelegramBotInitOptions, TTelegramBotInitParams, TTelegramError } from "./type"
+import { TelegramBotMessageMethod } from "./message_method"
+import { ITelegramConfig, TSendMessageError, TTeleErrorList, TTelegramBotInitOptions, TTelegramBotInitParams, TTelegramError } from "./type"
 import { DEFAULT_DELAY_BOT_START } from "./constant"
 
 class TelegramBotService<GReplyMarkup, GTemplate> {
@@ -17,7 +17,7 @@ class TelegramBotService<GReplyMarkup, GTemplate> {
     private stopListeningFromChatIdCache = new Map<string, number>()
     //Public variables
     public tele_bot: Telegraf
-    public bot_script: TelegramBotScript<GReplyMarkup, GTemplate>
+    public bot_script: TelegramBotMessageMethod<GReplyMarkup, GTemplate> & ITelegramConfig<GReplyMarkup, GTemplate>
     public bot_start_at: Date = new Date()
     public last_bot_message_received_at: Date = new Date()
     public messageInQueue = new Map<number, { type: "start" | "command" | "action" | "message" | "inline_mode", ctx: any }>()
@@ -45,7 +45,8 @@ class TelegramBotService<GReplyMarkup, GTemplate> {
                 webhookReply: is_use_webhook
             }
         })
-        this.bot_script = new TelegramBotScript(this.tele_bot, parameters.bot_config)
+        const message_method = new TelegramBotMessageMethod(this.tele_bot, parameters.bot_config)
+        this.bot_script = Object.assign(message_method, parameters.bot_config)
         this.bot_error_list = parameters.bot_error_list
     }
 

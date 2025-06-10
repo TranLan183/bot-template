@@ -1,28 +1,12 @@
-import { BotCommand, BotCommandScope, InlineKeyboardMarkup } from 'telegraf/typings/core/types/typegram';
-import { ELifetime, IEntitiesMessage, ITelegramConfig, TBotTelegram, TFileTemplate, TOptionEditMessage, TOptionSendAnswerCbQuery, TOptionSendBufferPhoto, TOptionSendMessage, TOptionSendUrlPhoto, TTemplateLanguage, TTemplateMessageConfig } from './type';
 import { Telegraf } from 'telegraf';
+import { BotCommand, BotCommandScope, InlineKeyboardMarkup } from 'telegraf/typings/core/types/typegram';
 import { MILLISECOND_PER_ONE_SEC } from '../constants';
+import { ELifetime, ITelegramConfig, TOptionEditMessage, TOptionSendAnswerCbQuery, TOptionSendBufferPhoto, TOptionSendMessage, TOptionSendUrlPhoto, TTemplateMessageConfig } from './type';
 
-class TelegramBotScript<GReplyMarkup, GTemplate> implements ITelegramConfig<GReplyMarkup, GTemplate> {
+class TelegramBotMessageMethod<GReplyMarkup, GTemplate> {
 
-    public bot_tele: Telegraf
-    public default_language: TTemplateLanguage;
-    public file_template: TFileTemplate
-    public entities_message: IEntitiesMessage
-    public template_message: (parameters: TTemplateMessageConfig<GTemplate>) => string
-    public reply_markup: (language?: TTemplateLanguage) => GReplyMarkup
-    public all_commands: (language?: TTemplateLanguage) => BotCommand[]
-
-    constructor(bot_tele: Telegraf, configBot: ITelegramConfig<GReplyMarkup, GTemplate>) {
-        this.bot_tele = bot_tele
-        this.template_message = configBot.template_message
-        this.entities_message = configBot.entities_message
-        this.reply_markup = configBot.reply_markup
-        this.all_commands = configBot.all_commands
-        this.default_language = configBot.default_language
-        this.file_template = configBot.file_template
+    constructor(public bot_tele: Telegraf, public bot_config: ITelegramConfig<GReplyMarkup, GTemplate>) {
     }
-
 
     private setLifeTime = (chat_id: string | number, message_id: number, life_time: ELifetime) => {
         let result_lifetime_num: number = 0
@@ -45,12 +29,12 @@ class TelegramBotScript<GReplyMarkup, GTemplate> implements ITelegramConfig<GRep
 
     sendMessage = async (chat_id: string | number, options: TOptionSendMessage<GTemplate>) => {
         const { template, language, parse_mode, reply_markup, args, message_id, life_time, callback } = options
-        const resultMessage = await this.bot_tele.telegram.sendMessage(chat_id, this.template_message(options), {
+        const resultMessage = await this.bot_tele.telegram.sendMessage(chat_id, this.bot_config.template_message(options), {
             link_preview_options: {
                 is_disabled: true
             },
             parse_mode: parse_mode ? typeof parse_mode === 'boolean' ? 'Markdown' : parse_mode : undefined,
-            reply_markup: reply_markup ? typeof reply_markup === 'boolean' ? this.reply_markup(language)[template as unknown as string](args) : reply_markup === 'force_reply' ? this.reply_markup(language)['force_reply']() : reply_markup : undefined,
+            reply_markup: reply_markup ? typeof reply_markup === 'boolean' ? this.bot_config.reply_markup(language)[template as unknown as string](args) : reply_markup === 'force_reply' ? this.bot_config.reply_markup(language)['force_reply']() : reply_markup : undefined,
             reply_parameters: message_id ? { message_id } : undefined,
         });
         if (life_time) this.setLifeTime(chat_id, resultMessage.message_id, life_time)
@@ -59,7 +43,7 @@ class TelegramBotScript<GReplyMarkup, GTemplate> implements ITelegramConfig<GRep
     }
 
     sendAnswerCbQuery = (callbackQueryId: string, options: TOptionSendAnswerCbQuery<GTemplate>) => {
-        return this.bot_tele.telegram.answerCbQuery(callbackQueryId, this.template_message(options), options)
+        return this.bot_tele.telegram.answerCbQuery(callbackQueryId, this.bot_config.template_message(options), options)
     }
 
     sendBufferPhoto = async (chat_id: string | number, options: TOptionSendBufferPhoto<GTemplate>) => {
@@ -69,9 +53,9 @@ class TelegramBotScript<GReplyMarkup, GTemplate> implements ITelegramConfig<GRep
                 source,
             },
             {
-                caption: this.template_message(options) + (life_time ? `\n\n_Note: This message will disappear after ${life_time} seconds_` : ""),
+                caption: this.bot_config.template_message(options) + (life_time ? `\n\n_Note: This message will disappear after ${life_time} seconds_` : ""),
                 parse_mode: "Markdown",
-                reply_markup: reply_markup ? typeof reply_markup === 'boolean' ? this.reply_markup(language)[template as unknown as string](args) : reply_markup === 'force_reply' ? this.reply_markup(language)['force_reply']() : reply_markup : undefined,
+                reply_markup: reply_markup ? typeof reply_markup === 'boolean' ? this.bot_config.reply_markup(language)[template as unknown as string](args) : reply_markup === 'force_reply' ? this.bot_config.reply_markup(language)['force_reply']() : reply_markup : undefined,
             }
         );
         if (life_time) this.setLifeTime(chat_id, img_msg_data.message_id, life_time)
@@ -86,9 +70,9 @@ class TelegramBotScript<GReplyMarkup, GTemplate> implements ITelegramConfig<GRep
                 url,
             },
             {
-                caption: this.template_message(options) + (life_time ? `\n\n_Note: This message will disappear after ${life_time} seconds_` : ""),
+                caption: this.bot_config.template_message(options) + (life_time ? `\n\n_Note: This message will disappear after ${life_time} seconds_` : ""),
                 parse_mode: "Markdown",
-                reply_markup: reply_markup ? typeof reply_markup === 'boolean' ? this.reply_markup(language)[template as unknown as string](args) : reply_markup === 'force_reply' ? this.reply_markup(language)['force_reply']() : reply_markup : undefined
+                reply_markup: reply_markup ? typeof reply_markup === 'boolean' ? this.bot_config.reply_markup(language)[template as unknown as string](args) : reply_markup === 'force_reply' ? this.bot_config.reply_markup(language)['force_reply']() : reply_markup : undefined
             }
         );
         if (life_time) this.setLifeTime(chat_id, img_msg_data.message_id, life_time)
@@ -98,12 +82,12 @@ class TelegramBotScript<GReplyMarkup, GTemplate> implements ITelegramConfig<GRep
 
     editMessage = (chat_id: string | number, message_id: number, options: TOptionEditMessage<GTemplate>) => {
         const { template, language, parse_mode, reply_markup, args, life_time, callback } = options
-        const resultEditMessage = this.bot_tele.telegram.editMessageText(chat_id, message_id, undefined, this.template_message(options), {
+        const resultEditMessage = this.bot_tele.telegram.editMessageText(chat_id, message_id, undefined, this.bot_config.template_message(options), {
             link_preview_options: {
                 is_disabled: true
             },
             parse_mode: parse_mode ? typeof parse_mode === 'boolean' ? 'Markdown' : parse_mode : undefined,
-            reply_markup: reply_markup ? typeof reply_markup === 'boolean' ? this.reply_markup(language)[template as unknown as string](args) : reply_markup === 'force_reply' ? this.reply_markup(language)['force_reply']() : reply_markup : undefined
+            reply_markup: reply_markup ? typeof reply_markup === 'boolean' ? this.bot_config.reply_markup(language)[template as unknown as string](args) : reply_markup === 'force_reply' ? this.bot_config.reply_markup(language)['force_reply']() : reply_markup : undefined
         })
         if (life_time) this.setLifeTime(chat_id, message_id, life_time)
         callback && callback(resultEditMessage);
@@ -116,9 +100,9 @@ class TelegramBotScript<GReplyMarkup, GTemplate> implements ITelegramConfig<GRep
 
     editMessageCaption = (chat_id: string | number, message_id: number, options: TOptionSendMessage<GTemplate>) => {
         const { template, language, parse_mode, reply_markup, args, life_time, callback } = options
-        const resultEditMessageCaption = this.bot_tele.telegram.editMessageCaption(chat_id, message_id, undefined, this.template_message(options), {
+        const resultEditMessageCaption = this.bot_tele.telegram.editMessageCaption(chat_id, message_id, undefined, this.bot_config.template_message(options), {
             parse_mode: parse_mode ? typeof parse_mode === 'boolean' ? 'Markdown' : parse_mode : undefined,
-            reply_markup: reply_markup ? typeof reply_markup === 'boolean' ? this.reply_markup(language)[template as unknown as string](args) : reply_markup === 'force_reply' ? this.reply_markup(language)['force_reply']() : reply_markup : undefined
+            reply_markup: reply_markup ? typeof reply_markup === 'boolean' ? this.bot_config.reply_markup(language)[template as unknown as string](args) : reply_markup === 'force_reply' ? this.bot_config.reply_markup(language)['force_reply']() : reply_markup : undefined
         }).catch((err) => console.log(err))
         if (life_time) this.setLifeTime(chat_id, message_id, life_time)
         callback && callback(resultEditMessageCaption);
@@ -135,14 +119,14 @@ class TelegramBotScript<GReplyMarkup, GTemplate> implements ITelegramConfig<GRep
     }
 
     setDescription = (params: TTemplateMessageConfig<GTemplate>) => {
-        return this.bot_tele.telegram.setMyDescription(this.template_message(params))
+        return this.bot_tele.telegram.setMyDescription(this.bot_config.template_message(params))
     }
 
     setShortDescription = (params: TTemplateMessageConfig<GTemplate>) => {
-        return this.bot_tele.telegram.setMyShortDescription(this.template_message(params))
+        return this.bot_tele.telegram.setMyShortDescription(this.bot_config.template_message(params))
     }
 }
 
 export {
-    TelegramBotScript
+    TelegramBotMessageMethod
 };

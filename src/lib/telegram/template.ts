@@ -1,4 +1,5 @@
-import { ITelegramBotTemplate, TDefaultReplyMarkup, TFileTemplate, TTemplateLanguage, TTemplateMessageConfig } from './type';
+import { BotCommand } from 'telegraf/typings/core/types/typegram';
+import { IEntitiesMessage, ITelegramBotTemplate, TDefaultReplyMarkup, TFileTemplate, TTemplateLanguage, TTemplateMessageConfig } from './type';
 
 enum EFlag {
     '🇬🇧' = 'en',
@@ -30,17 +31,19 @@ class TelegramBotTemplate<GReplyMarkup, GTemplate> implements ITelegramBotTempla
         this.file_template = _file_template
     }
 
-    entities_message = {
-        setBoldMessage: (message: string) => '*' + message + '*',
-        setItalicMessage: (message: string) => '_' + message + '_',
-        setCodeMessage: (message: string) => '`' + message + '`', // text blue
-        setMonoSpaceMessage: (message: string) => '```' + message + '```',
-        setUnderlineMessage: (message: string) => '__' + message + '__',
-        setSpoilerMessage: (message: string) => '||' + message + '||',
-        setStrikeMessage: (message: string) => '~' + message + '~',
-        setTextUrlMessage: (message: string, url: string, to_short: boolean = false) => {
-            const covertMessage = to_short ? message.replace(message.slice(4, message.length - 4), '...') : message
-            return '[' + covertMessage + ']' + '(' + url + ')'
+    entities_message(message: string): IEntitiesMessage {
+        return {
+            setBoldMessage: () => '*' + message + '*',
+            setItalicMessage: () => '_' + message + '_',
+            setCodeMessage: () => '`' + message + '`', // text blue
+            setMonoSpaceMessage: () => '```' + message + '```',
+            setUnderlineMessage: () => '__' + message + '__',
+            setSpoilerMessage: () => '||' + message + '||',
+            setStrikeMessage: () => '~' + message + '~',
+            setTextUrlMessage: (url: string, to_short: boolean = false) => {
+                const covertMessage = to_short ? message.replace(message.slice(4, message.length - 4), '...') : message
+                return '[' + covertMessage + ']' + '(' + url + ')'
+            }
         }
     }
 
@@ -54,7 +57,7 @@ class TelegramBotTemplate<GReplyMarkup, GTemplate> implements ITelegramBotTempla
         })
         return message
     }
-    
+
     reply_markup(): GReplyMarkup {
         const dataReplyMarkup: TDefaultReplyMarkup = {
             force_reply: () => {
@@ -69,6 +72,10 @@ class TelegramBotTemplate<GReplyMarkup, GTemplate> implements ITelegramBotTempla
             }
         }
         return dataReplyMarkup as unknown as GReplyMarkup
+    }
+
+    all_commands(language?: TTemplateLanguage): BotCommand[] {
+        return []
     }
 }
 
