@@ -1,27 +1,23 @@
 import { createServer } from "http"
 import { Telegraf } from "telegraf"
-import { successConsoleLog } from "../../../lib/color-log"
-import { MILLISECOND_PER_ONE_SEC } from "../../../lib/constants"
-import { ErrorHandler } from "../../../lib/error_handler"
-import { sleep } from "../../../lib/utils"
-import { TelegramBotScript } from "./script"
-import { TSendMessageError, TTeleErrorList, TTelegramBotInitOptions, TTelegramBotInitParams, TTelegramError } from "./type"
+import { successConsoleLog } from "../../lib/color-log"
+import { MILLISECOND_PER_ONE_SEC } from "../../lib/constants"
+import { ErrorHandler } from "../../lib/error_handler"
+import { sleep } from "../../lib/utils"
+import { TelegramBotMessageMethod } from "./message_method"
+import { ITelegramConfig, TSendMessageError, TTeleErrorList, TTelegramBotInitOptions, TTelegramBotInitParams, TTelegramError } from "./type"
+import { DEFAULT_DELAY_BOT_START } from "./constant"
 
 class TelegramBotService<GReplyMarkup, GTemplate> {
     //Private variab
     private init_parameters: TTelegramBotInitParams<GReplyMarkup, GTemplate>
     private init_options: TTelegramBotInitOptions
-    private startup_func: () => void
-    private DEFAULT_DELAY_BOT_START = 2000
-    private RATE_LIMIT_RESPONSE = 4 * MILLISECOND_PER_ONE_SEC
+    private startup_func: (bot_method: TelegramBotService<GReplyMarkup, GTemplate>) => void
     private bot_error_list: TTeleErrorList[]
+    private stopListeningFromChatIdCache = new Map<string, number>()
     //Public variables
-    public bot_steps = {
-        welcome: "welcome",
-        finish: "finish",
-    }
     public tele_bot: Telegraf
-    public bot_script: TelegramBotScript<GReplyMarkup, GTemplate>
+    public bot_script: TelegramBotMessageMethod<GReplyMarkup, GTemplate> & ITelegramConfig<GReplyMarkup, GTemplate>
     public bot_start_at: Date = new Date()
     public last_bot_message_received_at: Date = new Date()
     public messageInQueue = new Map<number, { type: "start" | "command" | "action" | "message" | "inline_mode", ctx: any }>()
@@ -29,7 +25,7 @@ class TelegramBotService<GReplyMarkup, GTemplate> {
     constructor(
         parameters: TTelegramBotInitParams<GReplyMarkup, GTemplate>,
         options: TTelegramBotInitOptions,
-        startup_func: () => void
+        startup_func: (bot_method: TelegramBotService<GReplyMarkup, GTemplate>) => void
     ) {
         this.startup_func = startup_func
         this.init_parameters = parameters
@@ -49,17 +45,18 @@ class TelegramBotService<GReplyMarkup, GTemplate> {
                 webhookReply: is_use_webhook
             }
         })
-        this.bot_script = new TelegramBotScript(this.tele_bot, parameters.bot_config)
+        const message_method = new TelegramBotMessageMethod(this.tele_bot, parameters.bot_config)
+        this.bot_script = Object.assign(message_method, parameters.bot_config)
         this.bot_error_list = parameters.bot_error_list
     }
 
-    public init = async () => {
+    public run = async () => {
         const { is_enable, bot_name } = this.init_parameters
         const { is_use_webhook, is_set_description } = this.init_options
         try {
             if (is_enable) {
                 this.bot_script.setCommands(this.bot_script.all_commands())
-                this.startup_func()
+                this.startup_func(this)
 
                 if (is_use_webhook) {
                     const path = `/${this.tele_bot.secretPathComponent()}`
@@ -139,10 +136,9 @@ class TelegramBotService<GReplyMarkup, GTemplate> {
         }
     }
 
-    public isBotReadyToStart = () => (+new Date() - +this.bot_start_at) > (this.init_options.delay_bot_start || this.DEFAULT_DELAY_BOT_START)
+    public isBotReadyToStart = () => (+new Date() - +this.bot_start_at) > (this.init_options.delay_bot_start || DEFAULT_DELAY_BOT_START)
     public setLastMessageReceivedDate = () => this.last_bot_message_received_at = new Date()
 
-    private stopListeningFromChatIdCache = new Map<string, number>()
     public isStopListeningFromChatId = (chat_id: string) => {
         const stop_listen_to = this.stopListeningFromChatIdCache.get(chat_id)
         if (!stop_listen_to) return false
@@ -165,7 +161,8 @@ class TelegramBotService<GReplyMarkup, GTemplate> {
         return context_id.length < 19 ? await this.bot_script.sendMessage(context_id, { template: convertErrKey, args, language, message_id, parse_mode: true }) : await this.bot_script.sendAnswerCbQuery(context_id, { template: convertErrKey, args, language })
     }
 
-    public ConvertTeleError = async (e: any, options: TTelegramError) => {
+    public ConvertTeleError = async (e: any, options: TTelegramError, funcName: string,) => {
+        ErrorHandler(e, options.args, funcName)
         try {
             const message = e.message as string
             switch (true) {
@@ -181,6 +178,8 @@ class TelegramBotService<GReplyMarkup, GTemplate> {
             }
         } catch (err) {
             console.log(err)
+        } finally {
+            this.setStopListeningFromChatId(options.context_id as string, NaN)
         }
         return
     }
@@ -189,4 +188,3 @@ class TelegramBotService<GReplyMarkup, GTemplate> {
 export {
     TelegramBotService
 }
-
