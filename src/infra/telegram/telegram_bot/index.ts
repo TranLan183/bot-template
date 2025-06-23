@@ -1,5 +1,5 @@
 import { ENABLE_TELEGRAM, isProductionRun, TELEGRAM_BOT_NAME, TELEGRAM_BOT_TOKEN, TG_BOT_IS_USE_LOCAL_TELEGRAM, TG_BOT_IS_USE_WEBHOOK, TG_BOT_LOCAL_TELEGRAM_URL, TG_BOT_WEBHOOK_PORT, TG_BOT_WEBHOOK_URL } from "../../../config";
-import { TelegramBotService } from "../telegrot";
+import { TelegramBotService } from "../../../lib/telegram";
 import { TeleConfigBotTemplate } from "./config_bot_script";
 import { TeleBotErrorList, TeleBotErrorListLifeTime } from "./error_list";
 import { handleBotAction } from "./telegram_action";
@@ -9,12 +9,11 @@ import { handleBotInlineMode } from "./telegram_inline_query";
 import en from "./telegram_language/en.json";
 import { handleBotMessage } from "./telegram_message";
 import { handleBotStart } from "./telegram_start";
+import { BotTemplateServiceType } from "./type";
 
 const file_template = {
     en
 }
-
-type TTemplate = keyof typeof file_template.en
 
 const bot_template = new TelegramBotService({
     bot_name: TELEGRAM_BOT_NAME,
@@ -29,16 +28,16 @@ const bot_template = new TelegramBotService({
     webhook_url: TG_BOT_WEBHOOK_URL,
     webhook_port: TG_BOT_WEBHOOK_PORT,
     local_telegram_url: TG_BOT_LOCAL_TELEGRAM_URL
-}, () => {
-    handleBotStart()
-    handleBotHelp()
-    handleBotCommand()
-    handleBotAction()
-    handleBotMessage()
-    handleBotInlineMode()
+}, (bot_method: BotTemplateServiceType) => {
+    handleBotStart(bot_method)
+    handleBotHelp(bot_method)
+    handleBotCommand(bot_method)
+    handleBotAction(bot_method)
+    handleBotMessage(bot_method)
+    handleBotInlineMode(bot_method)
 })
 
 export {
     bot_template,
-    TTemplate
+    file_template,
 };

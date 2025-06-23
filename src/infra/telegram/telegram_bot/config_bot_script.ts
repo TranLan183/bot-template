@@ -1,11 +1,10 @@
 import { BotCommand, InlineKeyboardButton } from "telegraf/typings/core/types/typegram"
-import { TelegramBotInlineKeyBoard } from "../telegrot/inline_keyboard"
-import { EFlag, TelegramBotTemplate } from "../telegrot/template"
-import { ITelegramConfig, TCustomInlineKeyboardParams, TFileTemplate, TTemplateLanguage } from "../telegrot/type"
-import { TTemplate } from "./index"
-import { BotReplyMarkup } from "./type"
+import { TelegramBotInlineKeyBoard } from "../../../lib/telegram/inline_keyboard"
+import { EFlag, TelegramBotTemplate } from "../../../lib/telegram/template"
+import { ITelegramConfig, TCustomInlineKeyboardParams, TFileTemplate, TTemplateLanguage } from "../../../lib/telegram/type"
+import { BotReplyMarkup, BotTemplateType } from "./type"
 
-class TelegramConfig extends TelegramBotTemplate<BotReplyMarkup, TTemplate> implements ITelegramConfig<BotReplyMarkup, TTemplate> {
+class TelegramConfig extends TelegramBotTemplate<BotReplyMarkup, BotTemplateType> implements ITelegramConfig<BotReplyMarkup, BotTemplateType> {
 
     private callback_data = {
         unknown_callback: 'unknown_callback',

@@ -1,17 +1,15 @@
-import { bot_template } from "../index";
-import { ErrorHandler } from "../../../../lib/error_handler";
-import { convertActionContext } from "../../telegrot/utils";
+import { Context } from "telegraf";
+import { convertActionContext } from "../../../../lib/telegram/utils";
 import { handleInvalidCacheUserSetting, isCacheUserSettingFieldsMissing } from "../helper_bot";
 import { getDataUserCache } from "../telegram_cache/cache.data_user";
-import { Context } from "telegraf";
-
+import { BotTemplateServiceType } from "../type";
 
 const methodAction = {
 
 }
 
-const listenCallbackQueryToHandleAction = async (ctx: Context) => {
-    const { tele_bot, setLastMessageReceivedDate, isBotReadyToStart, ConvertTeleError, bot_script } = bot_template
+const listenCallbackQueryToHandleAction = async (ctx: Context, bot_method: BotTemplateServiceType) => {
+    const { setLastMessageReceivedDate, isBotReadyToStart, ConvertTeleError, bot_script } = bot_method
     setLastMessageReceivedDate()
     const { callbackData, userId, callbackId, username, timeInSec, chatId } = convertActionContext(ctx);
     if (!isBotReadyToStart()) {
@@ -28,9 +26,8 @@ const listenCallbackQueryToHandleAction = async (ctx: Context) => {
             bot_script.sendMessage(userId, { template: "error" })
         }
     } catch (error) {
-        ErrorHandler(error, { callbackData, userId }, handleBotAction.name)
-        ConvertTeleError(error, { context_id: callbackId })
+        ConvertTeleError(error, { context_id: callbackId }, listenCallbackQueryToHandleAction.name)
     }
 }
 
-export const handleBotAction = () => bot_template.tele_bot.on('callback_query', listenCallbackQueryToHandleAction);
+export const handleBotAction = (bot_method: BotTemplateServiceType) => bot_method.tele_bot.on('callback_query', (ctx) => listenCallbackQueryToHandleAction(ctx, bot_method));

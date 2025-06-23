@@ -1,18 +1,15 @@
-import { bot_template } from "../index";
-import { ErrorHandler } from "../../../../lib/error_handler";
-import { convertMessageContext } from "../../telegrot/utils";
+import { Context } from "telegraf";
+import { convertMessageContext } from "../../../../lib/telegram/utils";
+import { BotTemplateServiceType } from "../type";
 
-export const handleBotHelp = () => {
-    const { ConvertTeleError, tele_bot } = bot_template
-    tele_bot.help(async (ctx) => {
-        const { userId, chatId } = convertMessageContext(ctx)
-        try {
-            //TODO: get cache user language
-            // const message = bot_script.template_message({ template: 'detail_all_commands' })
-            // ctx.reply(message)
-        } catch (error) {
-            ErrorHandler(error, { userId, chatId }, handleBotHelp.name)
-            ConvertTeleError(error, { context_id: chatId })
-        }
-    })
+const handleToListenCommandHelp = async (ctx: Context, bot_method: BotTemplateServiceType) => {
+    const { ConvertTeleError, bot_script } = bot_method
+    const { chatId, userId, messageId } = convertMessageContext(ctx)
+    try {
+        // TODO: handle help command
+    } catch (error) {
+        ConvertTeleError(error, { context_id: chatId }, handleToListenCommandHelp.name)
+    }
 }
+
+export const handleBotHelp = (bot_method: BotTemplateServiceType) => bot_method.tele_bot.help((ctx) => handleToListenCommandHelp(ctx, bot_method))
