@@ -1,7 +1,7 @@
 import { Telegraf } from 'telegraf';
 import { BotCommand, BotCommandScope, InlineKeyboardMarkup } from 'telegraf/typings/core/types/typegram';
 import { MILLISECOND_PER_ONE_SEC } from '../constants';
-import { ELifetime, ITelegramConfig, TOptionEditMessage, TOptionSendAnswerCbQuery, TOptionSendBufferPhoto, TOptionSendMessage, TOptionSendUrlPhoto, TTemplateMessageConfig } from './type';
+import { ELifetime, ITelegramConfig, TOptionEditMessage, TOptionSendAnswerCbQuery, TOptionSendBufferPhoto, TOptionSendMessage, TOptionSendTableMessage, TOptionSendUrlPhoto, TTemplateMessageConfig } from './type';
 
 class TelegramBotMessageMethod<GReplyMarkup, GTemplate> {
 
@@ -78,6 +78,23 @@ class TelegramBotMessageMethod<GReplyMarkup, GTemplate> {
         if (life_time) this.setLifeTime(chat_id, img_msg_data.message_id, life_time)
         callback && callback(img_msg_data);
         return img_msg_data
+    }
+
+    sendTableMessage = async (chat_id: string | number, options: TOptionSendTableMessage) => {
+        const { parse_mode, reply_markup, language, args, message_id, life_time, callback } = options
+        const resultMessage = await this.bot_tele.telegram.sendMessage(chat_id, this.bot_config.template_message({
+            template: 'message_table',
+        }), {
+            link_preview_options: {
+                is_disabled: true
+            },
+            parse_mode: parse_mode ? typeof parse_mode === 'boolean' ? 'Markdown' : parse_mode : undefined,
+            reply_markup: reply_markup ? typeof reply_markup === 'boolean' ? this.bot_config.reply_markup(language)['message_table'](args) : reply_markup === 'force_reply' ? this.bot_config.reply_markup(language)['force_reply']() : reply_markup : undefined,
+            reply_parameters: message_id ? { message_id } : undefined,
+        });
+        if (life_time) this.setLifeTime(chat_id, resultMessage.message_id, life_time)
+        callback && callback(resultMessage);
+        return resultMessage;
     }
 
     editMessage = (chat_id: string | number, message_id: number, options: TOptionEditMessage<GTemplate>) => {

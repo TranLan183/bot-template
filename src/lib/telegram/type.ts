@@ -57,6 +57,12 @@ type TOptionSendUrlPhoto<GTemplate> = TMessageConfigOptions<GTemplate> & {
     url: string,
 }
 
+type TOptionSendTableMessage = Omit<TMessageConfigOptions<any>, 'template'> & {
+    args: {
+        
+    }
+}
+
 type TInputMultipleInlineKeyboard<GTemplate> = Partial<TTemplateMessageConfig<GTemplate>> & {
     callback_key: string
     number_btn_row?: number
@@ -233,5 +239,5 @@ type TTelegramBotInitOptions = {
 }
 
 export {
-    ELifetime, IEntitiesMessage, ITelegramBotInlineKeyword, ITelegramBotTemplate, ITelegramConfig, TBotTelegram, TCacheDataUser, TCacheDataUserNotify, TCallbackData, TCustomInlineKeyboardFunction, TCustomInlineKeyboardParams, TDataContext, TDataContextAction, TDataInlineContext, TDataPagination, TDefaultReplyMarkup, TFileTemplate, TGenerateStartPayloadLink, TInputMultipleInlineKeyboard, TOptionSendAnswerCbQuery, TOptionSendBufferPhoto, TOptionSendMessage, TOptionSendUrlPhoto, TPaginationInlineKeyboardParams, TReplyMarkup, TSendMessageError, TTeleErrorList, TTelegramBotInitOptions, TTelegramBotInitParams, TTelegramError, TTemplateLanguage, TTemplateMessage, TTemplateMessageConfig, ICache, TOptionEditMessage
+    ELifetime, IEntitiesMessage, ITelegramBotInlineKeyword, ITelegramBotTemplate, ITelegramConfig, TBotTelegram, TCacheDataUser, TCacheDataUserNotify, TCallbackData, TCustomInlineKeyboardFunction, TCustomInlineKeyboardParams, TDataContext, TDataContextAction, TDataInlineContext, TDataPagination, TDefaultReplyMarkup, TFileTemplate, TGenerateStartPayloadLink, TInputMultipleInlineKeyboard, TOptionSendAnswerCbQuery, TOptionSendBufferPhoto, TOptionSendMessage, TOptionSendUrlPhoto, TPaginationInlineKeyboardParams, TReplyMarkup, TSendMessageError, TTeleErrorList, TTelegramBotInitOptions, TTelegramBotInitParams, TTelegramError, TTemplateLanguage, TTemplateMessage, TTemplateMessageConfig, ICache, TOptionEditMessage, TOptionSendTableMessage
 };

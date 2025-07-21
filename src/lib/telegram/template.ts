@@ -18,7 +18,8 @@ const DefaultTemplateData = {
     "waiting_bot": "🤖 Thanks for waiting, bot is available now!",
     "full_description": "full_description",
     "short_description": "short_description",
-    "btn_switch_language": "🇬🇧 English@🇨🇳 中文@🇮🇩 Indonesia"
+    "btn_switch_language": "🇬🇧 English@🇨🇳 中文@🇮🇩 Indonesia",
+    "message_table": "{{messageTable}}"
 }
 
 class TelegramBotTemplate<GReplyMarkup, GTemplate> implements ITelegramBotTemplate<GReplyMarkup, GTemplate> {
@@ -76,6 +77,61 @@ class TelegramBotTemplate<GReplyMarkup, GTemplate> implements ITelegramBotTempla
 
     all_commands(language?: TTemplateLanguage): BotCommand[] {
         return []
+    }
+
+
+    /**
+     * The **table_message** function is a function that converts a markdown table to a box drawing table.
+     * @public
+     *
+     * @remarks
+     * The markdownTable is a string that contains a markdown table.
+     *
+     * @example
+     * ```ts
+     * console.log(convertMarkdownTableToBoxDrawing(`
+            | Header 1 | Header 2 | Header 3  | Header 3 |
+            | :------- | :------- | :-------- | :------- |
+            | Cell 1   | Cell 2   | Cell 3    | Cell 3   |
+            | Cell 5   | Cell 6   | Cell 7    | Cell 8   |
+            | Cell 9   | Cell 1   | Cell 1    | Cell 1   |
+        `))
+     * ```
+     */
+    table_message(markdownTable: string): string {
+        const lines = markdownTable.trim().split('\n');
+        const headers = lines[0].split('|').map(header => header.trim()).filter(header => header);
+        const alignments = lines[1].split('|').map(header => header.trim()).filter(header => header);
+        const rows = lines.slice(2).map(line => line.split('|').map(cell => cell.trim()).filter(cell => cell));
+
+        const columnWidths = headers.map((header, i) => {
+            return Math.max(header.length, ...rows.map(row => row[i].length));
+        });
+
+        const drawLine = (char: string, junction: string, start: string, end: string) => {
+            return start + columnWidths.map(width => char.repeat(width + 2)).join(junction) + end;
+        };
+
+        const drawRow = (cells: string[], left: string, middle: string, right: string, alignments: string[]) => {
+            return left + cells.map((cell, i) => {
+                const width = columnWidths[i];
+                if (alignments[i].startsWith(':') && alignments[i].endsWith(':')) {
+                    return ' ' + cell.padStart((width + cell.length) / 2).padEnd(width) + ' ';
+                } else if (alignments[i].endsWith(':')) {
+                    return ' ' + cell.padStart(width) + ' ';
+                } else {
+                    return ' ' + cell.padEnd(width) + ' ';
+                }
+            }).join(middle) + right;
+        };
+
+        const topLine = drawLine('─', '┬', '┌', '┐');
+        const headerLine = drawRow(headers, '│', '│', '│', alignments);
+        const separatorLine = drawLine('─', '┼', '├', '┤');
+        const bottomLine = drawLine('─', '┴', '└', '┘');
+        const bodyLines = rows.map(row => drawRow(row, '│', '│', '│', alignments));
+
+        return [topLine, headerLine, separatorLine, ...bodyLines, bottomLine].join('\n');
     }
 }
 
