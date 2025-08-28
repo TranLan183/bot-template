@@ -41,11 +41,13 @@ type TMessageConfigOptions<GTemplate> = TTemplateMessageConfig<GTemplate> & {
     reply_markup?: boolean | 'force_reply' | TReplyMarkup
     life_time?: ELifetime
     parse_mode?: boolean | ParseMode
-    message_id?: number
+    delete_previous_message_id?: number
     callback?: <GCallback> (params: GCallback) => void
 }
 
-type TOptionSendMessage<GTemplate> = TMessageConfigOptions<GTemplate>
+type TOptionSendMessage<GTemplate> = TMessageConfigOptions<GTemplate> & {
+    reply_message_id?: number
+}
 
 type TOptionEditMessage<GTemplate> = TMessageConfigOptions<GTemplate>
 
