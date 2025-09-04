@@ -1,4 +1,4 @@
-import { BotCommand, InlineKeyboardButton } from "telegraf/typings/core/types/typegram"
+import { BotCommand, InlineKeyboardButton } from 'telegraf/types'
 import { TelegramBotInlineKeyBoard } from "../../../lib/telegram/inline_keyboard"
 import { EFlag, TelegramBotTemplate } from "../../../lib/telegram/template"
 import { ITelegramConfig, TCustomInlineKeyboardParams, TFileTemplate, TTemplateLanguage } from "../../../lib/telegram/type"

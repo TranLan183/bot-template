@@ -1,4 +1,4 @@
-import { InlineKeyboardButton } from "telegraf/typings/core/types/typegram"
+import { InlineKeyboardButton } from 'telegraf/types'
 import { ITelegramBotInlineKeyword, TCallbackData, TCustomInlineKeyboardFunction, TInputMultipleInlineKeyboard, TPaginationInlineKeyboardParams, TTemplateMessage, TTemplateMessageConfig } from "./type"
 
 class TelegramBotInlineKeyBoard<GTemplate> implements ITelegramBotInlineKeyword<GTemplate> {

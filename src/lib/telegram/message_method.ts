@@ -1,5 +1,5 @@
 import { Telegraf } from 'telegraf';
-import { BotCommand, BotCommandScope, InlineKeyboardMarkup } from 'telegraf/typings/core/types/typegram';
+import { BotCommand, BotCommandScope, InlineKeyboardMarkup } from 'telegraf/types'
 import { MILLISECOND_PER_ONE_SEC } from '../constants';
 import { ELifetime, ITelegramConfig, TOptionEditMessage, TOptionSendAnswerCbQuery, TOptionSendBufferPhoto, TOptionSendMessage, TOptionSendTableMessage, TOptionSendUrlPhoto, TTemplateMessageConfig } from './type';
 

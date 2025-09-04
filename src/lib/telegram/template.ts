@@ -1,4 +1,4 @@
-import { BotCommand } from 'telegraf/typings/core/types/typegram';
+import { BotCommand } from 'telegraf/types'
 import { IEntitiesMessage, ITelegramBotTemplate, TDefaultReplyMarkup, TFileTemplate, TTemplateLanguage, TTemplateMessageConfig } from './type';
 
 enum EFlag {
