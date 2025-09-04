@@ -46,7 +46,13 @@ class TelegramBotService<GReplyMarkup, GTemplate> {
             }
         })
         const message_method = new TelegramBotMessageMethod(this.tele_bot, parameters.bot_config)
-        this.bot_script = Object.assign(message_method, parameters.bot_config)
+        this.bot_script = Object.assign(message_method, parameters.bot_config, {
+            reply_markup: parameters.bot_config.reply_markup,
+            template_message: parameters.bot_config.template_message,
+            all_commands: parameters.bot_config.all_commands,
+            entities_message: parameters.bot_config.entities_message,
+            table_message: parameters.bot_config.table_message,
+        })
         this.bot_error_list = parameters.bot_error_list
     }
 

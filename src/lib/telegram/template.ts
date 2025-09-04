@@ -81,23 +81,31 @@ class TelegramBotTemplate<GReplyMarkup, GTemplate> implements ITelegramBotTempla
 
 
     /**
-     * The **table_message** function is a function that converts a markdown table to a box drawing table.
-     * @public
-     *
-     * @remarks
-     * The markdownTable is a string that contains a markdown table.
-     *
-     * @example
-     * ```ts
-     * console.log(convertMarkdownTableToBoxDrawing(`
+     /**
+      * The **table_message** function converts a markdown table into a box drawing table for better display in Telegram.
+      * @public
+      *
+      * @remarks
+      * - Input should be a markdownTable string containing a markdown-formatted table.
+      * - Supports left, right, and center alignment based on the alignment row (e.g., | :--- | ---: | :---: |).
+      * - Automatically calculates column widths for a neat and readable table.
+      * - Useful for sending data tables to Telegram with clear and professional formatting.
+      *
+      * @example
+      * ```ts
+      * const table = table_message(`
             | Header 1 | Header 2 | Header 3  | Header 3 |
             | :------- | :------- | :-------- | :------- |
             | Cell 1   | Cell 2   | Cell 3    | Cell 3   |
             | Cell 5   | Cell 6   | Cell 7    | Cell 8   |
             | Cell 9   | Cell 1   | Cell 1    | Cell 1   |
-        `))
-     * ```
-     */
+        `)
+      * console.log(table)
+      * ```
+      * @note
+      * - If the table does not display correctly, check the alignment row (second row) and ensure all rows have the same number of columns.
+      * - Ideal for reports, statistics, or any scenario where you want a nice-looking table in Telegram.
+      */
     table_message(markdownTable: string): string {
         const lines = markdownTable.trim().split('\n');
         const headers = lines[0].split('|').map(header => header.trim()).filter(header => header);

@@ -1,4 +1,4 @@
-import { BotCommand, ForceReply, InlineKeyboardButton, InlineKeyboardMarkup, Message, ParseMode, ReplyKeyboardMarkup, ReplyKeyboardRemove, Update } from "telegraf/typings/core/types/typegram";
+import { BotCommand, ForceReply, InlineKeyboardButton, InlineKeyboardMarkup, Message, ParseMode, ReplyKeyboardMarkup, ReplyKeyboardRemove, Update } from "telegraf/types";
 import { Context, Telegraf } from "telegraf"
 import { DefaultTemplateData } from "./template";
 
@@ -107,6 +107,7 @@ interface ITelegramBotTemplate<GReplyMarkup, GTemplate> {
     default_language: TTemplateLanguage;
     entities_message: (message: string) => IEntitiesMessage;
     template_message: TTemplateMessage<GTemplate>
+    table_message: (markdownTable: string) => string
     reply_markup: (language?: TTemplateLanguage) => GReplyMarkup
     file_template: TFileTemplate
     all_commands: (language?: TTemplateLanguage) => BotCommand[]
