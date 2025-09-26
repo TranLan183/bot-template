@@ -95,6 +95,8 @@ class TelegramBotService<GReplyMarkup, GTemplate> {
         this.tele_bot.catch((err, ctx) => {
             console.log(`Polling error!`)
             console.log(err, ctx)
+            this.tele_bot.stop()
+            sleep(3000)
             this.tele_bot.launch()
         })
     }
@@ -164,7 +166,7 @@ class TelegramBotService<GReplyMarkup, GTemplate> {
         if (context_id.length < 19 && use_lifetime) {
             return await this.bot_script.sendMessage(context_id, { ...params, template: convertErrKey, parse_mode: true, life_time: 'medium' })
         }
-        return context_id.length < 19 ? await this.bot_script.sendMessage(context_id, { template: convertErrKey, args, language, message_id, parse_mode: true }) : await this.bot_script.sendAnswerCbQuery(context_id, { template: convertErrKey, args, language })
+        return context_id.length < 19 ? await this.bot_script.sendMessage(context_id, { template: convertErrKey, args, language, parse_mode: true }) : await this.bot_script.sendAnswerCbQuery(context_id, { template: convertErrKey, args, language })
     }
 
     public ConvertTeleError = async (e: any, options: TTelegramError, funcName: string,) => {

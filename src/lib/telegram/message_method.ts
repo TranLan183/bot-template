@@ -28,14 +28,15 @@ class TelegramBotMessageMethod<GReplyMarkup, GTemplate> {
     }
 
     sendMessage = async (chat_id: string | number, options: TOptionSendMessage<GTemplate>) => {
-        const { template, language, parse_mode, reply_markup, args, message_id, life_time, callback } = options
+        const { template, language, parse_mode, reply_markup, args, reply_message_id, life_time, callback, delete_previous_message_id } = options
+        if (delete_previous_message_id) this.deleteMessage(chat_id, delete_previous_message_id)
         const resultMessage = await this.bot_tele.telegram.sendMessage(chat_id, this.bot_config.template_message(options), {
             link_preview_options: {
                 is_disabled: true
             },
             parse_mode: parse_mode ? typeof parse_mode === 'boolean' ? 'Markdown' : parse_mode : undefined,
             reply_markup: reply_markup ? typeof reply_markup === 'boolean' ? this.bot_config.reply_markup(language)[template as unknown as string](args) : reply_markup === 'force_reply' ? this.bot_config.reply_markup(language)['force_reply']() : reply_markup : undefined,
-            reply_parameters: message_id ? { message_id } : undefined,
+            reply_parameters: reply_message_id ? { message_id: reply_message_id } : undefined,
         });
         if (life_time) this.setLifeTime(chat_id, resultMessage.message_id, life_time)
         callback && callback(resultMessage);
@@ -47,7 +48,8 @@ class TelegramBotMessageMethod<GReplyMarkup, GTemplate> {
     }
 
     sendBufferPhoto = async (chat_id: string | number, options: TOptionSendBufferPhoto<GTemplate>) => {
-        const { life_time, source, reply_markup, callback, language, template, args } = options
+        const { life_time, source, reply_markup, callback, language, template, args, delete_previous_message_id } = options
+        if (delete_previous_message_id) this.deleteMessage(chat_id, delete_previous_message_id)
         const img_msg_data = await this.bot_tele.telegram.sendPhoto(chat_id,
             {
                 source,
@@ -64,7 +66,8 @@ class TelegramBotMessageMethod<GReplyMarkup, GTemplate> {
     }
 
     sendUrlPhoto = async (chat_id: string | number, options: TOptionSendUrlPhoto<GTemplate>) => {
-        const { life_time, url, reply_markup, callback, language, template, args } = options
+        const { life_time, url, reply_markup, callback, language, template, args, delete_previous_message_id } = options
+        if (delete_previous_message_id) this.deleteMessage(chat_id, delete_previous_message_id)
         const img_msg_data = await this.bot_tele.telegram.sendPhoto(chat_id,
             {
                 url,
@@ -81,7 +84,8 @@ class TelegramBotMessageMethod<GReplyMarkup, GTemplate> {
     }
 
     sendTableMessage = async (chat_id: string | number, options: TOptionSendTableMessage<GTemplate>) => {
-        const { parse_mode = true, reply_markup, language, args, message_id, life_time, callback, content } = options
+        const { parse_mode = true, reply_markup, language, args, life_time, callback, content, delete_previous_message_id } = options
+        if (delete_previous_message_id) this.deleteMessage(chat_id, delete_previous_message_id)
         const table_message = this.bot_config.table_message(content)
         const message = this.bot_config.template_message({
             template: 'custom_message',
@@ -95,7 +99,6 @@ class TelegramBotMessageMethod<GReplyMarkup, GTemplate> {
             },
             parse_mode: parse_mode ? typeof parse_mode === 'boolean' ? 'Markdown' : parse_mode : undefined,
             reply_markup: reply_markup ? typeof reply_markup === 'boolean' ? this.bot_config.reply_markup(language)['message_table'](args) : reply_markup === 'force_reply' ? this.bot_config.reply_markup(language)['force_reply']() : reply_markup : undefined,
-            reply_parameters: message_id ? { message_id } : undefined,
         });
         if (life_time) this.setLifeTime(chat_id, resultMessage.message_id, life_time)
         callback && callback(resultMessage);
