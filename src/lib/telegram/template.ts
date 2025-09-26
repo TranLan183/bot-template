@@ -1,4 +1,4 @@
-import { BotCommand } from 'telegraf/typings/core/types/typegram';
+import { BotCommand } from 'telegraf/types'
 import { IEntitiesMessage, ITelegramBotTemplate, TDefaultReplyMarkup, TFileTemplate, TTemplateLanguage, TTemplateMessageConfig } from './type';
 
 enum EFlag {
@@ -18,7 +18,8 @@ const DefaultTemplateData = {
     "waiting_bot": "🤖 Thanks for waiting, bot is available now!",
     "full_description": "full_description",
     "short_description": "short_description",
-    "btn_switch_language": "🇬🇧 English@🇨🇳 中文@🇮🇩 Indonesia"
+    "btn_switch_language": "🇬🇧 English@🇨🇳 中文@🇮🇩 Indonesia",
+    "custom_message": "{{customMessage}}"
 }
 
 class TelegramBotTemplate<GReplyMarkup, GTemplate> implements ITelegramBotTemplate<GReplyMarkup, GTemplate> {
@@ -76,6 +77,69 @@ class TelegramBotTemplate<GReplyMarkup, GTemplate> implements ITelegramBotTempla
 
     all_commands(language?: TTemplateLanguage): BotCommand[] {
         return []
+    }
+
+
+    /**
+     /**
+      * The **table_message** function converts a markdown table into a box drawing table for better display in Telegram.
+      * @public
+      *
+      * @remarks
+      * - Input should be a markdownTable string containing a markdown-formatted table.
+      * - Supports left, right, and center alignment based on the alignment row (e.g., | :--- | ---: | :---: |).
+      * - Automatically calculates column widths for a neat and readable table.
+      * - Useful for sending data tables to Telegram with clear and professional formatting.
+      *
+      * @example
+      * ```ts
+      * const table = table_message(`
+            | 1111111  | 2222222  | 3333333  |
+            | :-----:  | :-----:  | :-----:  | 
+            | Cell 1   | Cell 2   | Cell 3   | 
+            | Cell 5   | Cell 6   | Cell 7   | 
+            | Cell 9   | Cell 1   | Cell 1   |
+        `)
+      * console.log(table)
+      * ```
+      * @note
+      * - If the table does not display correctly, check the alignment row (second row) and ensure all rows have the same number of columns.
+      * - Ideal for reports, statistics, or any scenario where you want a nice-looking table in Telegram.
+      */
+    table_message(markdownTable: string): string {
+        const lines = markdownTable.trim().split('\n');
+        const headers = lines[0].split('|').map(header => header.trim()).filter(header => header);
+        const alignments = lines[1].split('|').map(header => header.trim()).filter(header => header);
+        const rows = lines.slice(2).map(line => line.split('|').map(cell => cell.trim()).filter(cell => cell));
+
+        const columnWidths = headers.map((header, i) => {
+            return Math.max(header.length, ...rows.map(row => row[i].length));
+        });
+
+        const drawLine = (char: string, junction: string, start: string, end: string) => {
+            return start + columnWidths.map(width => char.repeat(width + 2)).join(junction) + end;
+        };
+
+        const drawRow = (cells: string[], left: string, middle: string, right: string, alignments: string[]) => {
+            return left + cells.map((cell, i) => {
+                const width = columnWidths[i];
+                if (alignments[i].startsWith(':') && alignments[i].endsWith(':')) {
+                    return ' ' + cell.padStart((width + cell.length) / 2).padEnd(width) + ' ';
+                } else if (alignments[i].endsWith(':')) {
+                    return ' ' + cell.padStart(width) + ' ';
+                } else {
+                    return ' ' + cell.padEnd(width) + ' ';
+                }
+            }).join(middle) + right;
+        };
+
+        const topLine = drawLine('─', '┬', '┌', '┐');
+        const headerLine = drawRow(headers, '│', '│', '│', alignments);
+        const separatorLine = drawLine('─', '┼', '├', '┤');
+        const bottomLine = drawLine('─', '┴', '└', '┘');
+        const bodyLines = rows.map(row => drawRow(row, '│', '│', '│', alignments));
+
+        return [topLine, headerLine, separatorLine, ...bodyLines, bottomLine].join('\n');
     }
 }
 
