@@ -19,7 +19,7 @@ const DefaultTemplateData = {
     "full_description": "full_description",
     "short_description": "short_description",
     "btn_switch_language": "🇬🇧 English@🇨🇳 中文@🇮🇩 Indonesia",
-    "message_table": "{{messageTable}}"
+    "custom_message": "{{customMessage}}"
 }
 
 class TelegramBotTemplate<GReplyMarkup, GTemplate> implements ITelegramBotTemplate<GReplyMarkup, GTemplate> {
@@ -94,11 +94,11 @@ class TelegramBotTemplate<GReplyMarkup, GTemplate> implements ITelegramBotTempla
       * @example
       * ```ts
       * const table = table_message(`
-            | Header 1 | Header 2 | Header 3  | Header 3 |
-            | :------- | :------- | :-------- | :------- |
-            | Cell 1   | Cell 2   | Cell 3    | Cell 3   |
-            | Cell 5   | Cell 6   | Cell 7    | Cell 8   |
-            | Cell 9   | Cell 1   | Cell 1    | Cell 1   |
+            | 1111111  | 2222222  | 3333333  |
+            | :-----:  | :-----:  | :-----:  | 
+            | Cell 1   | Cell 2   | Cell 3   | 
+            | Cell 5   | Cell 6   | Cell 7   | 
+            | Cell 9   | Cell 1   | Cell 1   |
         `)
       * console.log(table)
       * ```

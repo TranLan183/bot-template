@@ -80,11 +80,16 @@ class TelegramBotMessageMethod<GReplyMarkup, GTemplate> {
         return img_msg_data
     }
 
-    sendTableMessage = async (chat_id: string | number, options: TOptionSendTableMessage) => {
-        const { parse_mode, reply_markup, language, args, message_id, life_time, callback } = options
-        const resultMessage = await this.bot_tele.telegram.sendMessage(chat_id, this.bot_config.template_message({
-            template: 'message_table',
-        }), {
+    sendTableMessage = async (chat_id: string | number, options: TOptionSendTableMessage<GTemplate>) => {
+        const { parse_mode = true, reply_markup, language, args, message_id, life_time, callback, content } = options
+        const table_message = this.bot_config.table_message(content)
+        const message = this.bot_config.template_message({
+            template: 'custom_message',
+            args: {
+                customMessage: table_message
+            }
+        })
+        const resultMessage = await this.bot_tele.telegram.sendMessage(chat_id, '`' + message + '`', {
             link_preview_options: {
                 is_disabled: true
             },

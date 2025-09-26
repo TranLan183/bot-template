@@ -57,10 +57,8 @@ type TOptionSendUrlPhoto<GTemplate> = TMessageConfigOptions<GTemplate> & {
     url: string,
 }
 
-type TOptionSendTableMessage = Omit<TMessageConfigOptions<any>, 'template'> & {
-    args: {
-        
-    }
+type TOptionSendTableMessage<GTemplate> = Omit<TMessageConfigOptions<GTemplate>, 'template'> & {
+    content: string
 }
 
 type TInputMultipleInlineKeyboard<GTemplate> = Partial<TTemplateMessageConfig<GTemplate>> & {
