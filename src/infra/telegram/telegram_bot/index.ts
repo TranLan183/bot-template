@@ -15,11 +15,13 @@ const file_template = {
     en
 }
 
+const bot_config = new TeleConfigBotTemplate(file_template)
+
 const bot_template = new TelegramBotService({
     bot_name: TELEGRAM_BOT_NAME,
     bot_token: TELEGRAM_BOT_TOKEN,
     is_enable: ENABLE_TELEGRAM,
-    bot_config: new TeleConfigBotTemplate(file_template),
+    bot_config,
     bot_error_list: [TeleBotErrorList, TeleBotErrorListLifeTime],
 }, {
     is_use_local_telegram: TG_BOT_IS_USE_LOCAL_TELEGRAM,

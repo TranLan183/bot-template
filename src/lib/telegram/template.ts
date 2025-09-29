@@ -106,7 +106,7 @@ class TelegramBotTemplate<GReplyMarkup, GTemplate> implements ITelegramBotTempla
       * - If the table does not display correctly, check the alignment row (second row) and ensure all rows have the same number of columns.
       * - Ideal for reports, statistics, or any scenario where you want a nice-looking table in Telegram.
       */
-    table_message(markdownTable: string): string {
+    table_message: (markdownTable: string) => string = (markdownTable) => {
         const lines = markdownTable.trim().split('\n');
         const headers = lines[0].split('|').map(header => header.trim()).filter(header => header);
         const alignments = lines[1].split('|').map(header => header.trim()).filter(header => header);

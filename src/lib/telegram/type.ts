@@ -105,11 +105,11 @@ type TTemplateMessage<GTemplate> = (parameters: TTemplateMessageConfig<GTemplate
 
 interface ITelegramBotTemplate<GReplyMarkup, GTemplate> {
     default_language: TTemplateLanguage;
-    entities_message: (message: string) => IEntitiesMessage;
+    file_template: TFileTemplate
     template_message: TTemplateMessage<GTemplate>
+    entities_message: (message: string) => IEntitiesMessage;
     table_message: (markdownTable: string) => string
     reply_markup: (language?: TTemplateLanguage) => GReplyMarkup
-    file_template: TFileTemplate
     all_commands: (language?: TTemplateLanguage) => BotCommand[]
 }
 

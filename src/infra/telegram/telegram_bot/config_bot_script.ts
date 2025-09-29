@@ -1,10 +1,10 @@
 import { BotCommand, InlineKeyboardButton } from 'telegraf/types'
 import { TelegramBotInlineKeyBoard } from "../../../lib/telegram/inline_keyboard"
 import { EFlag, TelegramBotTemplate } from "../../../lib/telegram/template"
-import { ITelegramConfig, TCustomInlineKeyboardParams, TFileTemplate, TTemplateLanguage } from "../../../lib/telegram/type"
+import { IEntitiesMessage, ITelegramConfig, TCustomInlineKeyboardParams, TFileTemplate, TTemplateLanguage } from "../../../lib/telegram/type"
 import { BotReplyMarkup, BotTemplateType } from "./type"
 
-class TelegramConfig extends TelegramBotTemplate<BotReplyMarkup, BotTemplateType> implements ITelegramConfig<BotReplyMarkup, BotTemplateType> {
+class TelegramConfig extends TelegramBotTemplate<BotReplyMarkup, BotTemplateType> {
 
     private callback_data = {
         unknown_callback: 'unknown_callback',
@@ -43,7 +43,13 @@ class TelegramConfig extends TelegramBotTemplate<BotReplyMarkup, BotTemplateType
         return commands
     }
 
-    reply_markup(language?: TTemplateLanguage): BotReplyMarkup {
+    entities_message: (message: string) => IEntitiesMessage = (message) => {
+        return {
+            ...super.entities_message(message),
+        }
+    }
+
+    reply_markup: (language?: TTemplateLanguage) => BotReplyMarkup = (language) => {
         const dataReplyMarkup: BotReplyMarkup = {
             ...super.reply_markup(),
             welcome: () => {
