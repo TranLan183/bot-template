@@ -1,7 +1,7 @@
 import { Telegraf } from 'telegraf';
 import { BotCommand, BotCommandScope, InlineKeyboardMarkup } from 'telegraf/types'
 import { MILLISECOND_PER_ONE_SEC } from '../constants';
-import { ELifetime, ITelegramConfig, TOptionEditMessage, TOptionSendAnswerCbQuery, TOptionSendBufferPhoto, TOptionSendMessage, TOptionSendTableMessage, TOptionSendUrlPhoto, TTemplateMessageConfig } from './type';
+import { ELifetime, ITelegramConfig, TOptionEditMessage, TOptionSendAnswerCbQuery, TOptionSendBufferPhoto, TOptionSendMessage, TOptionSendTableMessage, TOptionSendUrlPhoto, TTemplateLanguage, TTemplateMessageConfig } from './type';
 
 class TelegramBotMessageMethod<GReplyMarkup, GTemplate> {
 
@@ -149,6 +149,12 @@ class TelegramBotMessageMethod<GReplyMarkup, GTemplate> {
 
     setShortDescription = (params: TTemplateMessageConfig<GTemplate>) => {
         return this.bot_tele.telegram.setMyShortDescription(this.bot_config.template_message(params))
+    }
+
+    resetCommands = async (new_language: TTemplateLanguage, chatId: number) => {
+        await this.bot_tele.telegram.deleteMyCommands({ scope: { type: "chat", chat_id: chatId } })
+        const commands = this.bot_config.all_commands(new_language)
+        if (commands.length > 0) this.setCommands(commands, { type: 'chat', chat_id: chatId })
     }
 }
 
