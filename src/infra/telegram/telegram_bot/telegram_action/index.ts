@@ -3,6 +3,7 @@ import { convertActionContext } from "../../../../lib/telegram/utils";
 import { handleInvalidCacheUserSetting, isCacheUserSettingFieldsMissing } from "../helper_bot";
 import { getDataUserCache } from "../telegram_cache/cache.data_user";
 import { BotTemplateServiceType } from "../type";
+import { DATA_SEPARATOR } from "../../../../lib/telegram/constant";
 
 const methodAction = {
 
@@ -18,10 +19,10 @@ const listenCallbackQueryToHandleAction = async (ctx: Context, bot_method: BotTe
     try {
         let dataUserSetting = await getDataUserCache(userId)
         if (!dataUserSetting || isCacheUserSettingFieldsMissing(dataUserSetting)) dataUserSetting = await handleInvalidCacheUserSetting(userId)
-        const [keyCallback] = callbackData.split('&')
+        const [keyCallback] = callbackData.split(DATA_SEPARATOR)
         if (methodAction[keyCallback]) await methodAction[keyCallback](ctx, dataUserSetting)
         try {
-            await ctx.telegram.answerCbQuery(callbackId)
+            await ctx.answerCbQuery()
         } catch (err) {
             bot_script.sendMessage(userId, { template: "error" })
         }

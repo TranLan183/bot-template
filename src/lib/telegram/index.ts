@@ -1,6 +1,6 @@
 import { createServer } from "http"
 import { Telegraf } from "telegraf"
-import { successConsoleLog } from "../../lib/color-log"
+import { errorConsoleLog, successConsoleLog } from "../../lib/color-log"
 import { MILLISECOND_PER_ONE_SEC } from "../../lib/constants"
 import { ErrorHandler } from "../../lib/error_handler"
 import { sleep } from "../../lib/utils"
@@ -130,15 +130,19 @@ class TelegramBotService<GReplyMarkup, GTemplate> {
     private checkRestartBot = async () => {
         try {
             if (+new Date() > +this.last_bot_message_received_at + 2 * 60 * MILLISECOND_PER_ONE_SEC) {
-                console.log(`Restarting Bot ...`)
-                this.tele_bot.stop()
+                successConsoleLog(`Restarting Bot ...`)
+                try {
+                    this.tele_bot.stop()
+                } catch (error) {
+                    errorConsoleLog(`Stop bot error ${error?.['message']}`);
+                }
                 await sleep(3000)
                 this.tele_bot.launch()
-                console.log(`Bot restart successfully`)
+                successConsoleLog(`Bot restart successfully`)
                 this.last_bot_message_received_at = new Date()
             }
-        } catch (e) {
-            console.log(e)
+        } catch (e: any) {
+            errorConsoleLog(e.message)
         } finally {
             setTimeout(this.checkRestartBot, 3000)
         }
