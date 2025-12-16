@@ -1,5 +1,3 @@
-import { lowerCase } from "./utils"
-
 const getEnvString = (key: string) => {
     if (!process.env[key]) throw new Error(`${key} must be provided`)
     return process.env[key] as string
@@ -8,7 +6,7 @@ const getEnvString = (key: string) => {
 const getBooleanFromEnv = (key: string) => {
     const envString = getEnvString(key)
     if (!["true", "false"].includes(envString.toLowerCase())) throw new Error(`${key} must be true|false|TRUE|FALSE`)
-    return JSON.parse(process.env[key] as string) as boolean
+    return JSON.parse(envString) as boolean
 }
 
 const getArrStringFromEnv = (key: string, split_char: string) => {
@@ -32,7 +30,7 @@ const getIntFromEnv = (key: string, options?: { greater_than?: number, less_than
             if (envNumber <= options.greater_than) throw new Error(`${key} must be int number and greater than ${options.greater_than}`)
         }
         if (options.less_than) {
-            if (envNumber >= options.less_than) throw new Error(`${key} must be int number and less than ${options.greater_than}`)
+            if (envNumber >= options.less_than) throw new Error(`${key} must be int number and less than ${options.less_than}`)
         }
     }
     return parseInt(envString)
@@ -47,7 +45,7 @@ const getFloatFromEnv = (key: string, options?: { greater_than?: number, less_th
             if (envNumber <= options.greater_than) throw new Error(`${key} must be float number and greater than ${options.greater_than}`)
         }
         if (options.less_than) {
-            if (envNumber >= options.less_than) throw new Error(`${key} must be float number and less than ${options.greater_than}`)
+            if (envNumber >= options.less_than) throw new Error(`${key} must be float number and less than ${options.less_than}`)
         }
     }
     return envNumber

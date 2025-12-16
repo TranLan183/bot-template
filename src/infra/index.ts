@@ -1,4 +1,4 @@
-import { REDIS_DB_NUMBER, isLocalRun } from "../config";
+import { REDIS_DB_NUMBER } from "../config";
 import { MONGO_DB_NAME, MONGO_URI } from './../config';
 import { initRedis } from "./cache/redis";
 import { connectMongo, mongo } from "./database/mongo/mongo";
@@ -19,4 +19,3 @@ const connectInfra = async () => {
 export {
     connectInfra
 };
-
