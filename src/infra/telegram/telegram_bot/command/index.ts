@@ -1,8 +1,8 @@
 import { bot_template } from "../index"
 import { ERROR_CODE, ErrMsg, ErrorHandler } from "../../../../lib/error_handler"
 import { convertMessageContext } from "../../../../lib/telegram/utils"
-import { handleInvalidCacheUserSetting, isCacheUserSettingFieldsMissing } from '../helper_bot'
-import { getDataUserCache } from "../telegram_cache/cache.data_user"
+import { handleInvalidCacheUserSetting, isCacheUserSettingFieldsMissing } from '../helper'
+import { getDataUserCache } from "../cache/cache.data_user"
 import { BotTemplateServiceType } from "../type"
 import { Context } from "telegraf"
 

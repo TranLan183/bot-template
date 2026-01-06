@@ -1,4 +1,4 @@
-import { setDataUserCache, TUserSetting } from "./telegram_cache/cache.data_user"
+import { setDataUserCache, TUserSetting } from "./cache/cache.data_user"
 
 export const handleInvalidCacheUserSetting = async (userId: string) => {
     const dataUserSetting: TUserSetting = {

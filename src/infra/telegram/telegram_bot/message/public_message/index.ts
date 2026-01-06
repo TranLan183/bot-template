@@ -1,6 +1,6 @@
 import { Context } from "telegraf"
 import { convertMessageContext } from "../../../../../lib/telegram/utils"
-import { TUserSetting } from "../../telegram_cache/cache.data_user"
+import { TUserSetting } from "../../cache/cache.data_user"
 import { BotTemplateServiceType } from "../../type"
 
 export const handlePublicChat = async (ctx: Context, bot_method: BotTemplateServiceType, dataUserSetting: TUserSetting) => {

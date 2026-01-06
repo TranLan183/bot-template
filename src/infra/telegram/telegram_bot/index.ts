@@ -1,14 +1,14 @@
 import { ENABLE_TELEGRAM, isProductionRun, TELEGRAM_BOT_NAME, TELEGRAM_BOT_TOKEN, TG_BOT_IS_USE_LOCAL_TELEGRAM, TG_BOT_IS_USE_WEBHOOK, TG_BOT_LOCAL_TELEGRAM_URL, TG_BOT_WEBHOOK_PORT, TG_BOT_WEBHOOK_URL } from "../../../config";
 import { TelegramBotService } from "../../../lib/telegram";
-import { TeleConfigBotTemplate } from "./config_bot_script";
-import { TeleBotErrorList, TeleBotErrorListLifeTime } from "./error_list";
-import { handleBotAction } from "./telegram_action";
-import { handleBotCommand } from "./telegram_command";
-import { handleBotHelp } from "./telegram_help";
-import { handleBotInlineMode } from "./telegram_inline_query";
+import { TeleConfigBotTemplate } from "./config_script";
+import { TeleBotErrorList, TeleBotErrorListLifeTime } from "./error";
+import { handleBotAction } from "./action";
+import { handleBotCommand } from "./command";
+import { handleBotHelp } from "./help";
+import { handleBotInlineMode } from "./inline_query";
 import en from "./telegram_language/en.json";
-import { handleBotMessage } from "./telegram_message";
-import { handleBotStart } from "./telegram_start";
+import { handleBotMessage } from "./message";
+import { handleBotStart } from "./start";
 import { BotTemplateServiceType } from "./type";
 
 const file_template = {

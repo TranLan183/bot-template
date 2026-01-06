@@ -1,7 +1,7 @@
 import { Context } from "telegraf";
 import { convertActionContext } from "../../../../lib/telegram/utils";
-import { handleInvalidCacheUserSetting, isCacheUserSettingFieldsMissing } from "../helper_bot";
-import { getDataUserCache } from "../telegram_cache/cache.data_user";
+import { handleInvalidCacheUserSetting, isCacheUserSettingFieldsMissing } from "../helper";
+import { getDataUserCache } from "../cache/cache.data_user";
 import { BotTemplateServiceType } from "../type";
 import { DATA_SEPARATOR } from "../../../../lib/telegram/constant";
 

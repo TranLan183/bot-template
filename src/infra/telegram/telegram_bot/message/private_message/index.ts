@@ -1,7 +1,7 @@
 import { Context } from "telegraf";
 import { TDataContext, TTemplateLanguage } from "../../../../../lib/telegram/type";
 import { convertMessageContext } from "../../../../../lib/telegram/utils";
-import { TUserSetting } from "../../telegram_cache/cache.data_user";
+import { TUserSetting } from "../../cache/cache.data_user";
 import { BotTemplateServiceType } from "../../type";
 
 export const BotTradingSteps = {
